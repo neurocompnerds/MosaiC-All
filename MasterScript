@@ -1,0 +1,84 @@
+#!/bin/bash
+# MasterScript: Phase 1 of mosaic variant finding pipeline, which includes
+# 1. Coverage Analysis of every bam file
+# 2. GATK-HC: germline variant calling in each family
+# 3. Mutect2: Parents and Probands and Siblings (if available)
+# 4. MosaicHunter: Parents and Probands and Siblings (if available)
+# 5. MosaicForecast on Mutect2 variant callset
+# UniAdelaide-HPC friendly
+# Date: 9th June 2023
+
+## Set hard-coded paths and define functions ##
+SCRIPTDIR="/hpcfs/groups/phoenix-hpc-neurogenetics/scripts/git/neurocompnerds/map-n-call"
+LOGDIR="/hpcfs/users/${USER}/log"
+
+if [ ! -d "${logDir}" ]; then
+    mkdir -p ${logDir}
+    echo "## INFO: New log directory created, you'll find all of the log information from this pipeline here: ${logDir}"
+fi
+
+usage()
+{
+echo "#MasterScript: Phase 1 of mosaic variant finding pipeline, which includes
+# 1. Coverage Analysis of every bam file
+# 2. GATK-HC: germline variant calling in each family
+# 3. Mutect2: Parents and Probands and Siblings (if available)
+# 4. MosaicHunter: Parents and Probands and Siblings (if available)
+# 5. MosaicForecast on Mutect2 variant callset
+#
+# Requires: 
+#
+# Usage $0 -p file_prefix -s /path/to/sequences -o /path/to/output -c /path/to/config.cfg -S Sample -L LIBRARY -I ID] | [ - h | --help ]
+#
+# Options
+#-s REQUIRED sampleID list
+#-b REQUIRED Bamfile directory 
+#-o REQUIRED Output directory
+#-r REQUIRED Referencegenome (i.e /hpcfs/groups/phoenix-hpc-neurogenetics/RefSeq/hs37d5.fa)
+#-p OPTIONAL PanelOfNormal (i.e /gpfs/users/a1149120/GA_Mutect2_ReCalling/PON
+# -h or --help  Prints this message.  Or if you got one of the options above wrong you'll be reading this too!
+#
+# Original: Nandini Sandran, 9/6/2023
+# Modified: (Date; Name; Description)
+# 
+#
+#
+"
+}
+
+## Set Variables ##
+while [ "$1" != "" ]; do
+        case $1 in
+                -s )                    shift
+                                        SAMPLEID=$1
+                                        ;;
+                -b )                    shift
+                                        BAM=$1
+                                        ;;
+               	-o )                    shift
+                                        OUTDIR=$1
+                                        ;;
+                -r )                    shift
+                                        REFGEN=$1
+                                       	;;
+                -p )                    shift
+                                        PONDIR=$1
+                                        ;;
+                * )                     usage
+                                        exit 1
+        esac
+        shift
+done
+
+
+#MosaicHunter variant calling
+sbatch --array 0-38 $DIR/MosaicHunter_WES_Trio_GA.sh -s $DIR/Batch2_Probands_Female -b $BAM -d $OUTDIR -g F -r $REFGEN
+sbatch --array 0-46 $DIR/MosaicHunter_WES_Trio_GA.sh -s $DIR/Batch2_Probands_Male   -b $BAM -d $OUTDIR -g M -r $REFGEN
+sbatch --array 0-1 $DIR/MosaicHunter_WES_Trio_GA.sh -s $DIR/Batch2_Sib_Female   -b $BAM -d $OUTDIR -g F -r $REFGEN
+sbatch --array 0-5 $DIR/MosaicHunter_WES_Trio_GA.sh -s $DIR/Batch2_Sib_Male  -b $BAM -d $OUTDIR -g M -r $REFGEN
+sbatch --array 0-86 $DIR/MosaicHunter_WES_Singlemode_GA.sh -s $DIR/Batch2_fathers -b $BAM -d $OUTDIR -g M -r $REFGEN
+sbatch --array 0-86 $DIR/MosaicHunter_WES_Singlemode_GA.sh -s $DIR/Batch2_mothers -b $BAM -d $OUTDIR -g F -r $REFGEN
+
+#Mutect2: variant calling in Parents to create PON
+sbatch --array 0-86 $DIR/Mutect2.array.PON_GA.sh -b $BAM -s $DIR/Batch2_fathers -d $PONDIR
+sbatch --array 0-86 $DIR/Mutect2.array.PON_GA.sh -b $BAM -s $DIR/Batch2_mothers -d $PONDIR
