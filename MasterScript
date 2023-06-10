@@ -70,15 +70,39 @@ while [ "$1" != "" ]; do
         shift
 done
 
+#Define variables from SAMPLEID list file
+Proband=
+ProbandGender=
+Sibling=
+SiblingGender=
+Mother=
+Father=
 
-#MosaicHunter variant calling
-sbatch --array 0-38 $DIR/MosaicHunter_WES_Trio_GA.sh -s $DIR/Batch2_Probands_Female -b $BAM -d $OUTDIR -g F -r $REFGEN
-sbatch --array 0-46 $DIR/MosaicHunter_WES_Trio_GA.sh -s $DIR/Batch2_Probands_Male   -b $BAM -d $OUTDIR -g M -r $REFGEN
-sbatch --array 0-1 $DIR/MosaicHunter_WES_Trio_GA.sh -s $DIR/Batch2_Sib_Female   -b $BAM -d $OUTDIR -g F -r $REFGEN
-sbatch --array 0-5 $DIR/MosaicHunter_WES_Trio_GA.sh -s $DIR/Batch2_Sib_Male  -b $BAM -d $OUTDIR -g M -r $REFGEN
-sbatch --array 0-86 $DIR/MosaicHunter_WES_Singlemode_GA.sh -s $DIR/Batch2_fathers -b $BAM -d $OUTDIR -g M -r $REFGEN
-sbatch --array 0-86 $DIR/MosaicHunter_WES_Singlemode_GA.sh -s $DIR/Batch2_mothers -b $BAM -d $OUTDIR -g F -r $REFGEN
+#VARIANT CALLER1: MOSAICHUNTER
+#MosaicHunter variant calling in probands
+sbatch $DIR/MosaicHunter_WES_Trio_GA.sh -s $Proband -b $BAM -d $OUTDIR -g $ProbandGender -r $REFGEN
+#MosaicHunter variant calling in siblings if there is
+sbatch $DIR/MosaicHunter_WES_Trio_GA.sh -s $Sibling -b $BAM -d $OUTDIR -g $SiblingGender -r $REFGEN
+#MosaicHunter variant calling in father if there is
+sbatch $DIR/MosaicHunter_WES_Singlemode_GA.sh -s $Father -b $BAM -d $OUTDIR -g M -r $REFGEN
+#MosaicHunter variant calling in mother if there is
+sbatch $DIR/MosaicHunter_WES_Singlemode_GA.sh -s $Mother -b $BAM -d $OUTDIR -g F -r $REFGEN
 
-#Mutect2: variant calling in Parents to create PON
-sbatch --array 0-86 $DIR/Mutect2.array.PON_GA.sh -b $BAM -s $DIR/Batch2_fathers -d $PONDIR
-sbatch --array 0-86 $DIR/Mutect2.array.PON_GA.sh -b $BAM -s $DIR/Batch2_mothers -d $PONDIR
+#VARIANT CALLER 2: MUTECT2
+#Mutect2: variant calling in Probands
+#check if PON contains the the sample that we are testing, or else use different PON
+
+
+#Execute Mutect2 for probands
+MUT_Pro='sbatch Mutect2.singlemode.sh -b $BAM -m $MUTDIR-s $Proband -d $OUTDIR -r $REF'
+#Execute Mutect2 for sibling
+MUT_Sib='sbatch Mutect2.singlemode.sh -b $BAM -m $MUTDIR-s $Sibling -d $OUTDIR -r $REF'
+#Execute Mutect2 for father
+MUT_Fa='sbatch Mutect2.singlemode.sh -b $BAM -m $MUTDIR-s $Father -d $OUTDIR -r $REF'
+#Execute Mutect2 for mother
+MUT_Mo='sbatch Mutect2.singlemode.sh -b $BAM -m $MUTDIR-s $Mother -d $OUTDIR -r $REF'
+
+#VARIANT CALLER 3: MOSAICFORECAST
+#This has to be executed only after Mutect2 is completed
+#Preprocess (this are just commands)
+sbatch --export=ALL --dependency=afterok:${MUT_Pro} 
