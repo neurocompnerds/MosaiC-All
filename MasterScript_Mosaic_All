@@ -8,9 +8,10 @@
 # UniAdelaide-HPC friendly
 # Date: 9th June 2023
 
-## Set hard-coded paths and define functions ##
-SCRIPTDIR="/hpcfs/groups/phoenix-hpc-neurogenetics/scripts/git/neurocompnerds/map-n-call"
-LOGDIR="/hpcfs/users/${USER}/log"
+## Define Directories##
+SCRIPTDIR="/hpcfs/groups/phoenix-hpc-neurogenetics/Nandini/Mosaic-All"
+#SCRIPTDIR="/hpcfs/groups/phoenix-hpc-neurogenetics/scripts/git/neurocompnerds/Mosaic-All"
+LOGDIR="/hpcfs/users/${USER}/Mosaic_log"
 
 if [ ! -d "${logDir}" ]; then
     mkdir -p ${logDir}
@@ -26,16 +27,14 @@ echo "#MasterScript: Phase 1 of mosaic variant finding pipeline, which includes
 # 4. MosaicHunter: Parents and Probands and Siblings (if available)
 # 5. MosaicForecast on Mutect2 variant callset
 #
-# Requires: 
 #
-# Usage $0 -p file_prefix -s /path/to/sequences -o /path/to/output -c /path/to/config.cfg -S Sample -L LIBRARY -I ID] | [ - h | --help ]
+# Usage $0 -p file_prefix -s sampleID.list -o $Output.folder -r $ReferenceGenomewithDirectory -p $PON | [ - h | --help ]
 #
 # Options
-#-s REQUIRED sampleID list (tab-delimited columns $ProbandID,$ProbandGender,$SibID,$SibGender,$Mother,$Father)
-#-b REQUIRED Bamfile directory 
-#-o REQUIRED Output directory
+#-s REQUIRED sampleID.list (tab-delimited columns $BAMdir,$ProbandID,$Gender,$Mother,$Father)
+#-o REQUIRED Output directory (all variant calls_output in a single output directory)
 #-r REQUIRED Referencegenome (i.e /hpcfs/groups/phoenix-hpc-neurogenetics/RefSeq/hs37d5.fa)
-#-p OPTIONAL PanelOfNormal (i.e /gpfs/users/a1149120/GA_Mutect2_ReCalling/PON
+#-p OPTIONAL PanelOfNormal (i.e /gpfs/users/a1149120/GA_Mutect2_ReCalling/PON)
 # -h or --help  Prints this message.  Or if you got one of the options above wrong you'll be reading this too!
 #
 # Original: Nandini Sandran, 9/6/2023
@@ -51,9 +50,6 @@ while [ "$1" != "" ]; do
         case $1 in
                 -s )                    shift
                                         SAMPLEID=$1
-                                        ;;
-                -b )                    shift
-                                        BAM=$1
                                         ;;
                	-o )                    shift
                                         OUTDIR=$1
@@ -73,25 +69,35 @@ done
 #Define variables from SAMPLEID list file
 Proband=
 ProbandGender=
-Sibling=
-SiblingGender=
 Mother=
 Father=
 
+#CHeck if singleton or Trios
+
+
 # VARIANT CALLER 1: MOSAICHUNTER
+
 ## Part1:Variant Calling
-### MosaicHunter variant calling in probands
-sbatch $DIR/MosaicHunter_WES_Trio_GA.sh -s $Proband -b $BAM -d $OUTDIR -g $ProbandGender -r $REFGEN
-### MosaicHunter variant calling in siblings if there is
-sbatch $DIR/MosaicHunter_WES_Trio_GA.sh -s $Sibling -b $BAM -d $OUTDIR -g $SiblingGender -r $REFGEN
-### MosaicHunter variant calling in father if there is
-sbatch $DIR/MosaicHunter_WES_Singlemode_GA.sh -s $Father -b $BAM -d $OUTDIR -g M -r $REFGEN
-### MosaicHunter variant calling in mother if there is
-sbatch $DIR/MosaicHunter_WES_Singlemode_GA.sh -s $Mother -b $BAM -d $OUTDIR -g F -r $REFGEN
+
+### MosaicHunter variant calling in probands for Trios:
+sbatch $SCRIPTDIR/MosaicHunter_WES_Trio_GA.sh -s $Proband -b $BAM -d $OUTDIR -g $ProbandGender -r $REFGEN
+
+### MosaicHunter variant calling in probands for Singleton:
+sbatch $SCRIPTDIR/MosaicHunter_WES_Trio_GA.sh -s $Proband -b $BAM -d $OUTDIR -g $ProbandGender -r $REFGEN
+
+### FATHER
+sbatch $SCRIPTDIR/MosaicHunter_WES_Singlemode_GA.sh -s $Father -b $BAM -d $OUTDIR -g M -r $REFGEN
+
+### MOTHER
+sbatch $SCRIPTDIR/MosaicHunter_WES_Singlemode_GA.sh -s $Mother -b $BAM -d $OUTDIR -g F -r $REFGEN
 
 ## Part2: Check and Record the status based on SlurmOutput
 
 ## Part3: Accumulate the variants in meta-file, that contains all other samples
+
+
+
+
 
 #VARIANT CALLER 2: MUTECT2
 ## Part1: Check if PON db contains the sample, or else use the other PON
