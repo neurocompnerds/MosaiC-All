@@ -7,6 +7,7 @@
 # 5. MosaicForecast on Mutect2 variant callset, followed by Filter
 # UniAdelaide-HPC friendly
 # Date: 9th June 2023
+#Trying git pull
 
 ## Define Directories##
 SCRIPTDIR="/hpcfs/groups/phoenix-hpc-neurogenetics/Nandini/Mosaic-All"
