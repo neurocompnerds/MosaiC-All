@@ -7,7 +7,7 @@
 # 5. MosaicForecast on Mutect2 variant callset, followed by Filter
 # UniAdelaide-HPC friendly
 # Date: 9th June 2023
-#Trying git pull
+# 
 
 ## Define Directories##
 SCRIPTDIR="/hpcfs/groups/phoenix-hpc-neurogenetics/Nandini/Mosaic-All"
@@ -50,7 +50,7 @@ echo "#MasterScript: Phase 1 of mosaic variant finding pipeline, which includes
 while [ "$1" != "" ]; do
         case $1 in
                 -s )                    shift
-                                        SAMPLEID=$1
+                                        SAMPLELIST=$1
                                         ;;
                	-o )                    shift
                                         OUTDIR=$1
@@ -67,11 +67,15 @@ while [ "$1" != "" ]; do
         shift
 done
 
+
+
 #Define variables from SAMPLEID list file
-Proband=
-ProbandGender=
-Mother=
-Father=
+readarray -t  $SAMPLEID < $SAMPLELIST
+BamDIR=$(awk '{print $1}' $SAMPLEID)
+ProbandID=$(awk '{print $2}' $SAMPLEID)
+ProbandGender=$(awk '{print $3}' $SAMPLEID)
+MotherID=$(awk '{print $4}' $SAMPLEID)
+FatherID=$(awk '{print $5}' $SAMPLEID)
 
 #CHeck if singleton or Trios
 
