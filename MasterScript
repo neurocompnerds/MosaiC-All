@@ -129,6 +129,8 @@ sbatch --export=ALL --dependency=afterok:${MUT}
 #VARIANT CALLER 4: GATK HC
 ## Part1: Variant calling
 
+## Part2: gatherVCFs of each sample
+
 
 
 #COVERAGE ANALYSIS
