@@ -1,4 +1,4 @@
-## Mosaic-All
+## MosaiC-All
 Comprehensive analysis of somatic and gonosomal mosaicism using trio and singleton design.
 
 Part A: Variant calling using four existing tools
