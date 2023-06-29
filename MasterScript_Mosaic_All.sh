@@ -7,17 +7,7 @@
 # 5. MosaicForecast on Mutect2 variant callset, followed by Filter
 # UniAdelaide-HPC friendly
 # Date: 9th June 2023
-# trying other git commands
-
-## Define Directories##
-SCRIPTDIR="/hpcfs/groups/phoenix-hpc-neurogenetics/Nandini/Mosaic-All"
-#SCRIPTDIR="/hpcfs/groups/phoenix-hpc-neurogenetics/scripts/git/neurocompnerds/Mosaic-All"
-LOGDIR="/hpcfs/users/${USER}/Mosaic_log"
-
-if [ ! -d "${logDir}" ]; then
-    mkdir -p ${logDir}
-    echo "## INFO: New log directory created, you'll find all of the log information from this pipeline here: ${logDir}"
-fi
+# 
 
 usage()
 {
@@ -29,20 +19,24 @@ echo "#MasterScript: Phase 1 of mosaic variant finding pipeline, which includes
 # 5. MosaicForecast on Mutect2 variant callset
 #
 #
-# Usage $0 -p file_prefix -s sampleID.list -o $Output.folder -r $ReferenceGenomewithDirectory -p $PON | [ - h | --help ]
+# Usage $0 -s $sampleID_list -o $Output_folder -c $Config_File | [ - h | --help ]
 #
 # Options
 #-s REQUIRED sampleID.list (tab-delimited columns $BAMdir,$ProbandID,$Gender,$Mother,$Father)
-#-o REQUIRED Output directory (all variant calls_output in a single output directory)
-#-r REQUIRED Referencegenome (i.e /hpcfs/groups/phoenix-hpc-neurogenetics/RefSeq/hs37d5.fa)
-#-p OPTIONAL PanelOfNormal (i.e /gpfs/users/a1149120/GA_Mutect2_ReCalling/PON)
+#-o REQUIRED Output_directory (all variant calls_output in a single output directory)
+#-c REQUIRED ConfigFile (i.e /hpcfs/groups/phoenix-hpc-neurogenetics/Nandini/Mosaic-All/Mosaic-S/Mosaic-All.config)
+#
 # -h or --help  Prints this message.  Or if you got one of the options above wrong you'll be reading this too!
 #
 # Original: Nandini Sandran, 9/6/2023
 # Modified: (Date; Name; Description)
 # 
-#
-#
+
+#TEST (delete after finalising the scripts)
+#MAIN=/hpcfs/groups/phoenix-hpc-neurogenetics/Nandini
+#Test01: bash $MAIN/Mosaic-All/Mosaic-S/MasterScript_Mosaic_All.sh -s $MAIN/Mosaic-All/SampleID -o $MAIN/Mosaic-All/Outputs -p $MAIN/Mutect2_ReCalling_batch1/PON/PON_Batch01_hs37dh_GAparents.vcf
+#Test02: bash $MAIN/Mosaic-All/Mosaic-S/MasterScript_Mosaic_All.sh -s $MAIN/Mosaic-All/SampleID -o $MAIN/Mosaic-All/Outputs -c $MAIN/Mosaic-All/Mosaic-S/Mosaic-All.config
+
 "
 }
 
@@ -50,108 +44,134 @@ echo "#MasterScript: Phase 1 of mosaic variant finding pipeline, which includes
 while [ "$1" != "" ]; do
         case $1 in
                 -s )                    shift
-                                        SAMPLEID=$1
+                                        SAMPLELIST=$1
                                         ;;
-               	-o )                    shift
+                -o )                    shift
                                         OUTDIR=$1
                                         ;;
-                -r )                    shift
-                                        REFGEN=$1
-                                       	;;
-                -p )                    shift
-                                        PONDIR=$1
+                -c )                    shift
+                                        CONFIG_FILE=$1
                                         ;;
-                * )                     usage
+                 * )                    usage
                                         exit 1
         esac
         shift
 done
 
-#Define variables from SAMPLEID list file
-Proband=
-ProbandGender=
-Mother=
-Father=
 
-#CHeck if singleton or Trios
+## Define Directories##
+SCRIPTDIR="/hpcfs/groups/phoenix-hpc-neurogenetics/Nandini/Mosaic-All/Mosaic-S"
+LOGDIR="/hpcfs/groups/phoenix-hpc-neurogenetics/Nandini/Mosaic-All/Log"
 
+if [ ! -d "${LOGDIR}" ]; then
+    mkdir -p ${LOGDIR}
+    echo "## INFO: New log directory created, you'll find all of the log information from this pipeline here: ${LOGDIR}" >> $LOGDIR/$ProbandID.pipeline.log
+fi
 
-# VARIANT CALLER 1: MOSAICHUNTER
-
-## Part1:Variant Calling
-
-### MosaicHunter variant calling in probands for Trios:
-sbatch $SCRIPTDIR/MosaicHunter_WES_Trio_GA.sh -s $Proband -b $BAM -d $OUTDIR -g $ProbandGender -r $REFGEN
-
-### MosaicHunter variant calling in probands for Singleton:
-sbatch $SCRIPTDIR/MosaicHunter_WES_Trio_GA.sh -s $Proband -b $BAM -d $OUTDIR -g $ProbandGender -r $REFGEN
-
-### FATHER
-sbatch $SCRIPTDIR/MosaicHunter_WES_Singlemode_GA.sh -s $Father -b $BAM -d $OUTDIR -g M -r $REFGEN
-
-### MOTHER
-sbatch $SCRIPTDIR/MosaicHunter_WES_Singlemode_GA.sh -s $Mother -b $BAM -d $OUTDIR -g F -r $REFGEN
-
-## Part2: Check and Record the status based on SlurmOutput
-
-## Part3: Accumulate the variants in meta-file, that contains all other samples
+if [ ! -d "${OUTDIR}" ]; then
+    mkdir -p ${OUTDIR}
+    echo "## INFO: output directory created, you'll find all of the outputs in here: ${OUTDIR}" >> $LOGDIR/$ProbandID.pipeline.log
+fi
 
 
 
+#Array from list of Samples (ignoring the header of the file)
+mapfile -t SAMPLEID < <(tail -n +2 "$SAMPLELIST")
 
+#modules
+module purge
+module load BCFtools/1.17-GCC-11.2.0
 
-#VARIANT CALLER 2: MUTECT2
-## Part1: Check if PON db contains the sample, or else use the other PON
+source $CONFIG_FILE
 
-## Part2: Variant Calling
-### Execute Mutect2 for all members in a family
-for Sample in $Proband, $Sibling, $Father, $Mother; do
-MUT='sbatch Mutect2.singlemode.sh -b $BAM -m $MUTDIR -s $Sample -d $OUTDIR -r $REF'
+# Iteration starts here
+for SAMPLEID in "${SAMPLEID[@]}"; do
+
+    #Defining variables from each row
+			BamDIR=$(awk '{print $1}' <<< "$SAMPLEID ")
+    		ProbandID=$(awk '{print $2}' <<< "$SAMPLEID ")
+    		ProbandGender=$(awk '{print $3}' <<< "$SAMPLEID ")
+    		MotherID=$(awk '{print $4}' <<< "$SAMPLEID ")
+    		FatherID=$(awk '{print $5}' <<< "$SAMPLEID ")
+
+		echo "Pipeline for $ProbandID,$MotherID,$FatherID in $BamDIR" >> $LOGDIR/$ProbandID.pipeline.log
+
+    #1.MosaicHunter 
+            	# Check if both MotherID and FatherID are present
+            	if [[ -n "$MotherID" && -n "$FatherID" ]]; then
+            	sbatch $SCRIPTDIR/MosaicHunter_WES_Trio.sh -s $ProbandID -b $BamDIR -d $OUTDIR -g $ProbandGender -f $FatherID -m $MotherID -c $CONFIG_FILE
+            	else
+            	sbatch $SCRIPTDIR/MosaicHunter_WES_Singlemode.sh -s $ProbandID -b $BamDIR -d $OUTDIR -g $ProbandGender -c $CONFIG_FILE 
+            	fi
+		
+		# For Parents (if available)
+		# Check if either MotherID or FatherID is present
+				if [[ -n "$MotherID" || -n "$FatherID" ]]; then
+  					if [[ -n "$MotherID" ]]; then
+    				sbatch "$SCRIPTDIR/MosaicHunter_WES_Singlemode.sh" -s "$MotherID" -b "$BamDIR" -d "$OUTDIR" -g "F" -c "$CONFIG_FILE"
+  					fi
+
+  					if [[ -n "$FatherID" ]]; then
+    				sbatch "$SCRIPTDIR/MosaicHunter_WES_Singlemode.sh" -s "$FatherID" -b "$BamDIR" -d "$OUTDIR" -g "M" -c "$CONFIG_FILE"
+  					fi
+				fi
+			
+    #2.Mutect2
+
+		#Check if the PON contains the sample in the family
+       		for samples in "$ProbandID" "$MotherID" "$FatherID"; do 
+
+		# Store the result of the grep command in a variable
+			normalSample=$(bcftools view $PON | grep "$samples")
+
+		# Check if $SampleID is present in the result
+			if [ -n "$normalSample" ]; then
+    			echo "$samples is present. No Mutect2 will be performed. Provide another Panel Of Normal." >> $LOGDIR/$ProbandID.pipeline.log
+			else
+
+			#sbatch $SCRIPTDIR/Mutect2.singlemode.sh -b $BamDIR -s $samples -c $CONFIG_FILE -o $OUTDIR
+			
+			Mutect2="sbatch $SCRIPTDIR/Mutect2.singlemode.sh -b $BamDIR -s $samples -c $CONFIG_FILE -o $OUTDIR"
+
+			# Submit the Mutect2 job
+			Mutect2JobID=$($Mutect2 | awk '{print $NF}')
+
+			# Submit the FilterMutect2 job with a dependency on Mutect2
+			sbatch --export=ALL --dependency=afterok:${Mutect2JobID} $SCRIPTDIR/Mutect2.FilterMutect2.sh -s $samples -v $OUTDIR -c $CONFIG_FILE
+			fi
+   			
+
+   #3.MosaicForecast
+
+    		MF1="sbatch --export=ALL --dependency=afterok:${Mutect2JobID} $SCRIPTDIR/MF1_ProcessInput.sh -s $samples -b $BamDIR -o $OUTDIR -c $CONFIG_FILE"
+    		MF1_job_id=$($MF1 | awk '{print $NF}')
+
+    		MF2="sbatch --export=ALL --dependency=afterok:${MF1_job_id} $SCRIPTDIR/MF2_Extractreadlevel-singularity.sh -b $BamDIR -s $samples -c $CONFIG_FILE -o $OUTDIR"
+    		MF2_job_id=$($MF2 | awk '{print $NF}')
+
+    		MF3="sbatch --export=ALL --dependency=afterok:${MF2_job_id} $SCRIPTDIR/MF3.GenotypePredictionsl-singularity.sh -s $samples -c $CONFIG_FILE -o $OUTDIR"
+    		MF3_job_id=$($MF3 | awk '{print $NF}')
+
+			done
+
+	#4. Germline variant calling- GATKHC
+			for samples in "$ProbandID" "$MotherID" "$FatherID"; do
+
+			 	if [ $CONFIG="hs37d5" ]; then
+
+				CONFIG_for_GATKHC=$SCRIPTDIR/BWA-GATKHC.hs37d5_phoenix.cfg
+
+				GATKHCjob=`sbatch --array=0-23 $SCRIPTDIR/GATK.HC_Universal_phoenix.sh -S $samples $OUTDIR -c $CONFIG_for_GATKHC`
+				GATKHCjob=$(echo $GATKHCjob | awk '{print $NF}')
+
+				sbatch --export=ALL --dependency=afterok:${GATKHCjob} $SCRIPTDIR/GATK.gatherVCFs_Universal_phoenix.sh -c $CONFIG_for_GATKHC -S $samples -o $OUTDIR 	
+
+				else
+
+				echo "Please provide alternate config for GATK-HC, that looks like 
+					$SCRIPTDIR/BWA-GATKHC.TEMPLATE_phoenix.cfg" >> $LOGDIR/$ProbandID.pipeline.log
+				fi
+
+			done
+	
 done
-
-## Part3: Filter Mutect2
-#>>>>only after Mutect2 is completed
-for Sample in $Proband, $Sibling, $Father, $Mother; do
-sbatch --export=ALL --dependency=afterok:${MUT} 
-
-## Part4: Check the slurm and Record variant frequency
-
-## Part5: Accumulate the variants in meta-file, that contains all other samples
-
-#VARIANT CALLER 3: MOSAICFORECAST
-#>>>>This has to be executed only after Mutect2 is completed
-## Part1:Preprocess
-sbatch --export=ALL --dependency=afterok:${MUT} 
-
-## Part2:Extract features
-
-## Part3:Genotype
-
-## Part4:Filter
-
-## Part5: Check slurm and record
-
-## Part6: Accumulate the variants in meta-file, that contains all other samples
-
-#VARIANT CALLER 4: GATK HC
-## Part1: Variant calling
-
-## Part2: gatherVCFs of each sample
-
-
-
-#COVERAGE ANALYSIS
-
-
-
-
-
-
-
-MUT_Pro='sbatch Mutect2.singlemode.sh -b $BAM -m $MUTDIR -s $Proband -d $OUTDIR -r $REF'
-### Execute Mutect2 for sibling
-MUT_Sib='sbatch Mutect2.singlemode.sh -b $BAM -m $MUTDIR -s $Sibling -d $OUTDIR -r $REF'
-### Execute Mutect2 for father
-MUT_Fa='sbatch Mutect2.singlemode.sh -b $BAM -m $MUTDIR -s $Father -d $OUTDIR -r $REF'
-### Execute Mutect2 for mother
-MUT_Mo='sbatch Mutect2.singlemode.sh -b $BAM -m $MUTDIR -s $Mother -d $OUTDIR -r $REF'

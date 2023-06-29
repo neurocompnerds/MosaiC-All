@@ -29,14 +29,14 @@ echo "
 #
 #SCRIPT EXECUTE
 #
-#sbatch $SCRIPTDIR/MosaicHunter_WES_Singlemode.sh -s $SAMPLE -b $BAMDIR -d $OUTDIR -g M -r $REFGEN 
+#sbatch $SCRIPTDIR/MosaicHunter_WES_Singlemode.sh -s $SAMPLE -b $BAMDIR -d $OUTDIR -g M -c $CONFIG_FILE 
 #all of this will be "specified" in MasterScript
 #
 #-s REQUIRED SampleID   					(e.g 004P, or 004M, or 004F no suffix)
 #-b REQUIRED Directory of Bam files 		(e.g /hpcfs/groups/phoenix-hpc-sacgf/scratch/ali/GA_bams)
 #-d REQUIRED Directory of Outputs   		(/gpfs/users/a1149120/MosaicHunter_single)
-#-g REQUIRED Gender of Sample 	  		(M or F)
-#-r REQUIRED Directory/Reference Genome     	(e.g /hpcfs/groups/phoenix-hpc-sacgf/reference/hs37d5/hs37d5.fa) 
+#-g REQUIRED Gender of Sample 	  				(M or F)
+#-c REQUIRED Config_File     				(e.g $SCRIPT.DIR/CONFIG_FILE) 
 #
 #OUTPUT lists
 #1.$DIR/${sample[$SLURM_ARRAY_TASK_ID]} 						-> Two Folders consisting MHexecution but will removed due to storage
@@ -62,8 +62,8 @@ while [ "$1" != "" ]; do
                 -g )                    shift
                                         Gender=$1
                                         ;;
-                -r )                    shift
-                                        RefGen=$1
+                -c )                    shift
+                                        CONFIG_FILE=$1
                                         ;;
                 * )                     usage
                                         exit 1
@@ -71,9 +71,6 @@ while [ "$1" != "" ]; do
         shift
 done
 
-#directory for MosaicHunter
-MHDIR=/hpcfs/groups/phoenix-hpc-neurogenetics/executables/MosaicHunter-master/MosaicHunter-master
-ProbandBamFile=$(/usr/bin/find "$BAMDIR" -type f -name "$SampleID.*.bam")
 
 #module for HPCs
 export HOME=/hpcfs/users/$USER
@@ -82,10 +79,17 @@ module use /apps/modules/all
 module load Java/1.8.0_121
 module load BLAT/3.5-foss-2016b
 
+#specify variables and directories based on config files
+
+ProbandBamFile=$(/usr/bin/find "$BAMDIR" -type f -name "$SampleID.*.bam")
+source $CONFIG_FILE
+
+
+
 #1.prefilter
 
 java -jar $MHDIR/build/mosaichunter.jar -C $MHDIR/conf/exome_parameters.properties \
--P reference_file=$RefGen \
+-P reference_file=$REFGEN \
 -P input_file=$ProbandBamFile \
 -P heterozygous_filter.sex=$Gender \
 -P output_dir=$DIR/$SampleID.parameters.log
@@ -106,15 +110,15 @@ Depth=$(echo "$Dp" | sed 's/^ *//g')
 #3.execute mosaic variant calling
 
 java -Djava.io.tmpdir=${TMPDIR} -jar $MHDIR/build/mosaichunter.jar -C $MHDIR/conf/exome.properties \
--P reference_file=$RefGen \
+-P reference_file=$REFGEN \
 -P input_file=$ProbandBamFile \
 -P mosaic_filter.sex=$Gender \
 -P depth=$Depth \
 -P mosaic_filter.alpha_param=$Alpha \
 -P mosaic_filter.beta_param=$Beta \
--P mosaic_filter.dbsnp_file=/hpcfs/groups/phoenix-hpc-neurogenetics/RefSeq/GATK4/hs37d5/b37_dbsnp_138.b37.vcf \
--P repetitive_region_filter.bed_file=$MHDIR/resources/all_repeats.b37.bed \
--P common_site_filter.bed_file=$MHDIR/resources/WES_Agilent_71M.error_prone.b37.bed \
+-P mosaic_filter.dbsnp_file=$DBSNP \
+-P repetitive_region_filter.bed_file=$REPEATS \
+-P common_site_filter.bed_file=$COMMONERROR \
 -P output_dir=$DIR/$SampleID
 
 echo "Somatic variant calling completed for $SampleID" 
@@ -128,7 +132,7 @@ cat $DIR/$SampleID/final.passed.tsv | awk '{print $1, $2, $7, $9}' | tr " " "\t"
 
 grep "input_file =" $DIR/$SampleID/stdout_*.log > $DIR/$SampleID.summary.log
 tail  $DIR/$SampleID/stdout_*.log -n16 >> $DIR/$SampleID.summary.log
-mv $DIR/$SampleID/stdout_*.log $DIR
+cat $DIR/$SampleID/stdout_*.log >> $DIR/$SampleID.stdout.log
 
 echo "done for $SampleID"
 

@@ -1,0 +1,153 @@
+#!/bin/bash
+# MasterScript: Phase 1 of mosaic variant finding pipeline, which includes
+# 1. Coverage Analysis of every bam file
+# 2. GATK-HC: germline variant calling in each family
+# 3. Mutect2 and FilterMutect2: Parents,Probands and Siblings (if available)
+# 4. MosaicHunter: Parents,Probands and Siblings (if available)
+# 5. MosaicForecast on Mutect2 variant callset, followed by Filter
+# UniAdelaide-HPC friendly
+# Date: 9th June 2023
+# 
+
+usage()
+{
+echo "#MasterScript: Phase 1 of mosaic variant finding pipeline, which includes
+# 1. Coverage Analysis of every bam file
+# 2. GATK-HC: germline variant calling in each family
+# 3. Mutect2: Parents and Probands and Siblings (if available)
+# 4. MosaicHunter: Parents and Probands and Siblings (if available)
+# 5. MosaicForecast on Mutect2 variant callset
+#
+#
+# Usage $0 -s $sampleID_list -o $Output_folder -r $ReferenceGenome | [ - h | --help ]
+#
+# Options
+#-s REQUIRED sampleID.list (tab-delimited columns $BAMdir,$ProbandID,$Gender,$Mother,$Father)
+#-o REQUIRED Output_directory (all variant calls_output in a single output directory)
+#-r REQUIRED Referencegenome (i.e /hpcfs/groups/phoenix-hpc-neurogenetics/RefSeq/hs37d5.fa)
+#
+# -h or --help  Prints this message.  Or if you got one of the options above wrong you'll be reading this too!
+#
+# Original: Nandini Sandran, 9/6/2023
+# Modified: (Date; Name; Description)
+# 
+
+#TEST (delete after finalising the scripts)
+#MAIN=/hpcfs/groups/phoenix-hpc-neurogenetics/Nandini
+#Test01: bash $MAIN/Mosaic-All/Mosaic-S/MasterScript_Mosaic_All.sh -s $MAIN/Mosaic-All/SampleID -o $MAIN/Mosaic-All/Outputs -p $MAIN/Mutect2_ReCalling_batch1/PON/PON_Batch01_hs37dh_GAparents.vcf
+#Test02:
+"
+}
+
+## Set Variables ##
+while [ "$1" != "" ]; do
+        case $1 in
+                -s )                    shift
+                                        SAMPLELIST=$1
+                                        ;;
+                -o )                    shift
+                                        OUTDIR=$1
+                                        ;;
+                -r )                    shift
+                                        REFGEN=$1
+                                        ;;
+                 * )                    usage
+                                        exit 1
+        esac
+        shift
+done
+
+
+## Define Directories##
+SCRIPTDIR="/hpcfs/groups/phoenix-hpc-neurogenetics/Nandini/Mosaic-All/Mosaic-S"
+LOGDIR="/hpcfs/groups/phoenix-hpc-neurogenetics/Nandini/Mosaic-All/Log"
+
+if [ ! -d "${LOGDIR}" ]; then
+    mkdir -p ${LOGDIR}
+    echo "## INFO: New log directory created, you'll find all of the log information from this pipeline here: ${LOGDIR}"
+fi
+
+if [ ! -d "${OUTDIR}" ]; then
+    mkdir -p ${OUTDIR}
+    echo "## INFO: output directory created, you'll find all of the outputs in here: ${OUTDIR}"
+fi
+
+
+#Array from list of Samples (ignoring the header of the file)
+mapfile -t SAMPLEID < <(tail -n +2 "$SAMPLELIST")
+
+# Iteration starts here
+for SAMPLEID in "${SAMPLEID[@]}"; do
+
+    #Defining variables from each row
+		BamDIR=$(awk '{print $1}' <<< "$SAMPLEID ")
+    		ProbandID=$(awk '{print $2}' <<< "$SAMPLEID ")
+    		ProbandGender=$(awk '{print $3}' <<< "$SAMPLEID ")
+    		MotherID=$(awk '{print $4}' <<< "$SAMPLEID ")
+    		FatherID=$(awk '{print $5}' <<< "$SAMPLEID ")
+
+		echo "Pipeline for $ProbandID,$MotherID,$FatherID in $BamDIR" > $LOGDIR/$ProbandID.pipeline.log
+
+    #1.MosaicHunter 
+            	# Check if both MotherID and FatherID are present
+            	if [[ -n "$MotherID" && -n "$FatherID" ]]; then
+            	sbatch $SCRIPTDIR/MosaicHunter_WES_Trio.sh -s $ProbandID -b $BamDIR -d $OUTDIR -g $ProbandGender -f $FatherID -m $MotherID -r $REFGEN
+            	else
+            	sbatch $SCRIPTDIR/MosaicHunter_WES_Singlemode.sh -s $ProbandID -b $BamDIR -d $OUTDIR -g M -r $REFGEN 
+            	fi
+		
+		# For Parents (if available)
+		# Check if either MotherID or FatherID is present
+		if [[ -n "$MotherID" || -n "$FatherID" ]]; then
+  			for parent in "$MotherID" "$FatherID"; do
+			sbatch "$SCRIPTDIR/MosaicHunter_WES_Singlemode.sh" -s "$ProbandID" -b "$BamDIR" -d "$OUTDIR" -g "M" -r "$REFGEN" -p "$parent"
+    			done
+		fi    
+
+    #2.Mutect2
+		#Check if the PON contains the sample in the family
+       		for samples in "$ProbandID" "$MotherID" "$FatherID"; do 
+		# Store the result of the grep command in a variable
+			normalSample=$(bcftools view $PON | grep "$samples")
+
+		# Check if $SampleID is present in the result
+			if [ -n "$normalSample" ]; then
+    			echo "$samples is present. No Mutect2 will be performed. Provide another Panel Of Normal."
+			else
+			Mutect2="sbatch $SCRIPTDIR/Mutect2.singlemode.sh -s $sample -b $BamDIR -d $OUTDIR -r $REFGEN"
+			sbatch --export=ALL --dependency=afterok:${Mutect2} $SCRIPTDIR/FilterMutect2.sh -s $sample -b $BamDIR -d $OUTDIR -r $REFGEN 
+			fi
+   		done
+
+   #3.MosaicForecast
+		for sample in "$ProbandID" "$MotherID" "$FatherID"; do
+                Mutect2_vcfFile=$(find "$OUTDIR" -name "$sample*.vcf")
+                Mutect2_rawCalls=$(bcftools query -f "%CHROM\n" "$Mutect2_vcfFile" | wc -l)
+
+                	if [ "$Mutect2_rawCalls" -gt 0 ]; then
+                	MF1="sbatch $SCRIPTDIR/MF1 -s $sample"
+	                MF1_job_id=$($MF1 | awk '{print $NF}')
+
+                       		if [ -n "$MF1_job_id" ]; then
+                       		MF2="sbatch --export=ALL --dependency=afterany:$MF1_job_id $SCRIPTDIR/MF2_Extractreadfeatures-singularity.sh -s $sample -b $BamDIR -d $OUTDIR -r $REFGEN"
+                       		MF2_job_id=$($MF2 | awk '{print $NF}')
+
+             				if [ -n "$MF2_job_id" ]; then
+                			MF3="sbatch --export=ALL --dependency=afterany:$MF2_job_id $SCRIPTDIR/MF3_Genotype.sh -s $sample -b $BamDIR -d $OUTDIR -r $REFGEN"
+                			$MF3
+            				else
+                			echo "Failed to submit MF2 job for $sample."
+            				fi
+        			else
+            			echo "Failed to submit MF1 job for $sample."
+        			fi
+    			else
+        		echo "$Mutect2_vcfFile has no variant calls. So, MF will not be run on this sample."
+    			fi
+		done
+	
+	#4. Germline Variant caller: GATKHC
+	#5. Record the SUCCESS and number of variantsof each VC in metadata
+	#6. Output all variant calls in Metadata of each sample according to Variant callers
+
+done
