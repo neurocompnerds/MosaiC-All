@@ -59,7 +59,7 @@ while [ "$1" != "" ]; do
 done
 
 
-## Define Directories##
+## Define Directories## (how to change this accordingly)
 SCRIPTDIR="/hpcfs/groups/phoenix-hpc-neurogenetics/Nandini/Mosaic-All/Mosaic-S"
 LOGDIR="/hpcfs/groups/phoenix-hpc-neurogenetics/Nandini/Mosaic-All/Log"
 
@@ -108,11 +108,11 @@ for SAMPLEID in "${SAMPLEID[@]}"; do
 		# Check if either MotherID or FatherID is present
 				if [[ -n "$MotherID" || -n "$FatherID" ]]; then
   					if [[ -n "$MotherID" ]]; then
-    				sbatch "$SCRIPTDIR/MosaicHunter_WES_Singlemode.sh" -s "$MotherID" -b "$BamDIR" -d "$OUTDIR" -g "F" -c "$CONFIG_FILE"
+    					sbatch "$SCRIPTDIR/MosaicHunter_WES_Singlemode.sh" -s "$MotherID" -b "$BamDIR" -d "$OUTDIR" -g "F" -c "$CONFIG_FILE"
   					fi
 
   					if [[ -n "$FatherID" ]]; then
-    				sbatch "$SCRIPTDIR/MosaicHunter_WES_Singlemode.sh" -s "$FatherID" -b "$BamDIR" -d "$OUTDIR" -g "M" -c "$CONFIG_FILE"
+    					sbatch "$SCRIPTDIR/MosaicHunter_WES_Singlemode.sh" -s "$FatherID" -b "$BamDIR" -d "$OUTDIR" -g "M" -c "$CONFIG_FILE"
   					fi
 				fi
 			
@@ -143,19 +143,19 @@ for SAMPLEID in "${SAMPLEID[@]}"; do
 
    #3.MosaicForecast
 
-    		MF1="sbatch --export=ALL --dependency=afterok:${Mutect2JobID} $SCRIPTDIR/MF1_ProcessInput.sh -s $samples -b $BamDIR -o $OUTDIR -c $CONFIG_FILE"
-    		MF1_job_id=$($MF1 | awk '{print $NF}')
+    			MF1="sbatch --export=ALL --dependency=afterok:${Mutect2JobID} $SCRIPTDIR/MF1_ProcessInput.sh -s $samples -b $BamDIR -o $OUTDIR -c $CONFIG_FILE"
+    			MF1_job_id=$($MF1 | awk '{print $NF}')
 
-    		MF2="sbatch --export=ALL --dependency=afterok:${MF1_job_id} $SCRIPTDIR/MF2_Extractreadlevel-singularity.sh -b $BamDIR -s $samples -c $CONFIG_FILE -o $OUTDIR"
-    		MF2_job_id=$($MF2 | awk '{print $NF}')
+    			MF2="sbatch --export=ALL --dependency=afterok:${MF1_job_id} $SCRIPTDIR/MF2_Extractreadlevel-singularity.sh -b $BamDIR -s $samples -c $CONFIG_FILE -o $OUTDIR"
+    			MF2_job_id=$($MF2 | awk '{print $NF}')
 
-    		MF3="sbatch --export=ALL --dependency=afterok:${MF2_job_id} $SCRIPTDIR/MF3.GenotypePredictionsl-singularity.sh -s $samples -c $CONFIG_FILE -o $OUTDIR"
-    		MF3_job_id=$($MF3 | awk '{print $NF}')
+    			MF3="sbatch --export=ALL --dependency=afterok:${MF2_job_id} $SCRIPTDIR/MF3.GenotypePredictionsl-singularity.sh -s $samples -c $CONFIG_FILE -o $OUTDIR"
+    			MF3_job_id=$($MF3 | awk '{print $NF}')
 
-			done
+		done
 
 	#4. Germline variant calling- GATKHC
-			for samples in "$ProbandID" "$MotherID" "$FatherID"; do
+		for samples in "$ProbandID" "$MotherID" "$FatherID"; do
 
 			 	if [ $CONFIG="hs37d5" ]; then
 
@@ -172,6 +172,6 @@ for SAMPLEID in "${SAMPLEID[@]}"; do
 					$SCRIPTDIR/BWA-GATKHC.TEMPLATE_phoenix.cfg" >> $LOGDIR/$ProbandID.pipeline.log
 				fi
 
-			done
+		done
 	
 done
