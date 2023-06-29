@@ -88,7 +88,7 @@ source $CONFIG_FILE
 for SAMPLEID in "${SAMPLEID[@]}"; do
 
     #Defining variables from each row
-			BamDIR=$(awk '{print $1}' <<< "$SAMPLEID ")
+		BamDIR=$(awk '{print $1}' <<< "$SAMPLEID ")
     		ProbandID=$(awk '{print $2}' <<< "$SAMPLEID ")
     		ProbandGender=$(awk '{print $3}' <<< "$SAMPLEID ")
     		MotherID=$(awk '{print $4}' <<< "$SAMPLEID ")
@@ -128,8 +128,6 @@ for SAMPLEID in "${SAMPLEID[@]}"; do
 			if [ -n "$normalSample" ]; then
     			echo "$samples is present. No Mutect2 will be performed. Provide another Panel Of Normal." >> $LOGDIR/$ProbandID.pipeline.log
 			else
-
-			#sbatch $SCRIPTDIR/Mutect2.singlemode.sh -b $BamDIR -s $samples -c $CONFIG_FILE -o $OUTDIR
 			
 			Mutect2="sbatch $SCRIPTDIR/Mutect2.singlemode.sh -b $BamDIR -s $samples -c $CONFIG_FILE -o $OUTDIR"
 
@@ -155,6 +153,7 @@ for SAMPLEID in "${SAMPLEID[@]}"; do
 		done
 
 	#4. Germline variant calling- GATKHC
+ 
 		for samples in "$ProbandID" "$MotherID" "$FatherID"; do
 
 			 	if [ $CONFIG="hs37d5" ]; then
