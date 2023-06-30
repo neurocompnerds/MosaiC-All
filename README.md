@@ -12,17 +12,18 @@ Command:
 > MosaiC-All/MasterScript_Mosaic_All.sh -s SampleID -o Outputs -c MosaiC-All/Mosaic-All.config
 
 Requirements:-
-1. SampleID file (tab-separated-file) should be like this:-
+1. SampleID file (tab-separated-file) should be like this:- 
 
-|  BAMDIR  | ProbandID | Gender | MotherID | FatherID | 
-|----------|-----------|--------|----------|----------|
-|          |           |        |          |          |
+|  Directory of Bam files  | ProbandID | Gender   | MotherID | FatherID | 
+|--------------------------|-----------|----------|----------|----------|
+|   ./path                 |   001P    |   F      |  001M    |   001F   |
 
-2. 
+2. Specify the necessary details/pathways in the config
+   - Reference genome
+   - Installation of MosaicHunter, MosaicForecast, GATK (Mutect2 and HC)
+   - Panel of Of Normals (for Mutect2); see (need to include link to Mutect2 page)
 
-
-
-
+3. Output directory: To store
 ### Part B: Analysis for somatic mosaicism (M3 pipeline)
 ### Part C: Analysis for parental gonosomal mosaicims (pGoM)
 
