@@ -1,6 +1,6 @@
 #!/bin/bash
 # MasterScript: Phase 1 of mosaic variant finding pipeline, which includes
-# 1. Coverage Analysis of every bam file
+# 1. 
 # 2. GATK-HC: germline variant calling in each family
 # 3. Mutect2 and FilterMutect2: Parents,Probands and Siblings (if available)
 # 4. MosaicHunter: Parents,Probands and Siblings (if available)
@@ -59,15 +59,13 @@ while [ "$1" != "" ]; do
 done
 
 
-## Define Directories##
+## Define Directories## (how to change this accordingly)
 SCRIPTDIR="/hpcfs/groups/phoenix-hpc-neurogenetics/Nandini/Mosaic-All/Mosaic-S"
 
 if [ ! -d "${OUTDIR}" ]; then
     mkdir -p ${OUTDIR}
-    echo "## INFO: output directory created, you'll find all of the outputs in here: ${OUTDIR}" >> $OUTDIR/$ProbandID.pipeline.log
+	echo "## INFO: output directory created, you'll find all of the outputs and log files in here: ${OUTDIR}" >> $LOGDIR/$ProbandID.pipeline.log
 fi
-
-
 
 #Array from list of Samples (ignoring the header of the file)
 mapfile -t SAMPLEID < <(tail -n +2 "$SAMPLELIST")
@@ -82,7 +80,7 @@ source $CONFIG_FILE
 for SAMPLEID in "${SAMPLEID[@]}"; do
 
     #Defining variables from each row
-			BamDIR=$(awk '{print $1}' <<< "$SAMPLEID ")
+		BamDIR=$(awk '{print $1}' <<< "$SAMPLEID ")
     		ProbandID=$(awk '{print $2}' <<< "$SAMPLEID ")
     		ProbandGender=$(awk '{print $3}' <<< "$SAMPLEID ")
     		MotherID=$(awk '{print $4}' <<< "$SAMPLEID ")
@@ -102,11 +100,11 @@ for SAMPLEID in "${SAMPLEID[@]}"; do
 		# Check if either MotherID or FatherID is present
 				if [[ -n "$MotherID" || -n "$FatherID" ]]; then
   					if [[ -n "$MotherID" ]]; then
-    				sbatch "$SCRIPTDIR/MosaicHunter_WES_Singlemode.sh" -s "$MotherID" -b "$BamDIR" -d "$OUTDIR" -g "F" -c "$CONFIG_FILE"
+    					sbatch "$SCRIPTDIR/MosaicHunter_WES_Singlemode.sh" -s "$MotherID" -b "$BamDIR" -d "$OUTDIR" -g "F" -c "$CONFIG_FILE"
   					fi
 
   					if [[ -n "$FatherID" ]]; then
-    				sbatch "$SCRIPTDIR/MosaicHunter_WES_Singlemode.sh" -s "$FatherID" -b "$BamDIR" -d "$OUTDIR" -g "M" -c "$CONFIG_FILE"
+    					sbatch "$SCRIPTDIR/MosaicHunter_WES_Singlemode.sh" -s "$FatherID" -b "$BamDIR" -d "$OUTDIR" -g "M" -c "$CONFIG_FILE"
   					fi
 				fi
 			
@@ -122,8 +120,6 @@ for SAMPLEID in "${SAMPLEID[@]}"; do
 			if [ -n "$normalSample" ]; then
     			echo "$samples is present. No Mutect2 will be performed. Provide another Panel Of Normal." >> $OUTDIR/$ProbandID.pipeline.log
 			else
-
-			#sbatch $SCRIPTDIR/Mutect2.singlemode.sh -b $BamDIR -s $samples -c $CONFIG_FILE -o $OUTDIR
 			
 			Mutect2="sbatch $SCRIPTDIR/Mutect2.singlemode.sh -b $BamDIR -s $samples -c $CONFIG_FILE -o $OUTDIR"
 
@@ -137,19 +133,20 @@ for SAMPLEID in "${SAMPLEID[@]}"; do
 
    #3.MosaicForecast
 
-    		MF1="sbatch --export=ALL --dependency=afterok:${Mutect2JobID} $SCRIPTDIR/MF1_ProcessInput.sh -s $samples -b $BamDIR -o $OUTDIR -c $CONFIG_FILE"
-    		MF1_job_id=$($MF1 | awk '{print $NF}')
+    			MF1="sbatch --export=ALL --dependency=afterok:${Mutect2JobID} $SCRIPTDIR/MF1_ProcessInput.sh -s $samples -b $BamDIR -o $OUTDIR -c $CONFIG_FILE"
+    			MF1_job_id=$($MF1 | awk '{print $NF}')
 
-    		MF2="sbatch --export=ALL --dependency=afterok:${MF1_job_id} $SCRIPTDIR/MF2_Extractreadlevel-singularity.sh -b $BamDIR -s $samples -c $CONFIG_FILE -o $OUTDIR"
-    		MF2_job_id=$($MF2 | awk '{print $NF}')
+    			MF2="sbatch --export=ALL --dependency=afterok:${MF1_job_id} $SCRIPTDIR/MF2_Extractreadlevel-singularity.sh -b $BamDIR -s $samples -c $CONFIG_FILE -o $OUTDIR"
+    			MF2_job_id=$($MF2 | awk '{print $NF}')
 
-    		MF3="sbatch --export=ALL --dependency=afterok:${MF2_job_id} $SCRIPTDIR/MF3.GenotypePredictionsl-singularity.sh -s $samples -c $CONFIG_FILE -o $OUTDIR"
-    		MF3_job_id=$($MF3 | awk '{print $NF}')
+    			MF3="sbatch --export=ALL --dependency=afterok:${MF2_job_id} $SCRIPTDIR/MF3.GenotypePredictionsl-singularity.sh -s $samples -c $CONFIG_FILE -o $OUTDIR"
+    			MF3_job_id=$($MF3 | awk '{print $NF}')
 
-			done
+		done
 
-	#4. Germline variant calling- GATKHC
-			for samples in "$ProbandID" "$MotherID" "$FatherID"; do
+ #4. Germline variant calling- GATKHC (Cannot run in HPC yet with this script)
+ 
+		for samples in "$ProbandID" "$MotherID" "$FatherID"; do
 
 			 	if [ $CONFIG="hs37d5" ]; then
 
@@ -166,7 +163,7 @@ for SAMPLEID in "${SAMPLEID[@]}"; do
 					$SCRIPTDIR/BWA-GATKHC.TEMPLATE_phoenix.cfg" >> $OUTDIR/$ProbandID.pipeline.log
 				fi
 
-			done
+		done
 	
 done
 
