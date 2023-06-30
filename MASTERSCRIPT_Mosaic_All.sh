@@ -144,7 +144,7 @@ for SAMPLEID in "${SAMPLEID[@]}"; do
 
 		done
 
-	#4. Germline variant calling- GATKHC (Cannot run in HPC yet with this script)
+ #4. Germline variant calling- GATKHC (Cannot run in HPC yet with this script)
  
 		for samples in "$ProbandID" "$MotherID" "$FatherID"; do
 
