@@ -126,7 +126,7 @@ echo "Somatic variant calling completed for $SampleID"
 #5.Process the outputs files
 
 cat $DIR/$SampleID/final.passed.tsv  > $DIR/$SampleID.final.passed.tsv
-cat $DIR/$SampleID/final.passed.tsv | awk '{print $1, $2, $7, $9}' | tr " " "\t" > $DIR/$SampleID.forAnnovar.singlemode.vcf
+cat $DIR/$SampleID/final.passed.tsv | awk '{print $1, $2, $7, $9}' | tr " " "\t" > $DIR/$SampleID.MH.forAnnovar.singlemode.vcf
 
 #6 log file
 

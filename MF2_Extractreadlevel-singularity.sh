@@ -46,10 +46,10 @@ while [ "$1" != "" ]; do
                                         ;;
                 -o )                   	shift
                                         OUTDIR=$1
-										;;
-				-c )                   	shift
+					;;
+		-c )                   	shift
                                         CONFIG_FILE=$1
-										;;
+					;;
                  * )                    usage
                                         exit 1
         esac
@@ -66,7 +66,7 @@ module load Singularity/3.7.1
 
 source $CONFIG_FILE
 
-BAMFILE=$(find "$BAMDIR -type f -name "$SAMPLE*.bam")
+BAMFILE=$(find "$BAMDIR" -type f -name "$SAMPLE*.bam")
 BAMprefix=$(basename "$BAMFILE" | sed 's/\.[^.]*$//')
 
 /usr/bin/mkdir -p ${TMPDIR}

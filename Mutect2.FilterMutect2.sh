@@ -83,7 +83,7 @@ gatk FilterMutectCalls \
 
 module load BCFtools/1.17-GCC-11.2.0
 
-bcftools view -O v -f PASS -i '(FORMAT/AD[0:1] >= 5 & FORMAT/DP[0]>=20) && (FORMAT/AF[0:0] <=0.4 || FORMAT/AF[0:0]>=0.7)' $VCFDIR/$SAMPLE.singlemode.filtered.vcf > $VCFDIR/$SAMPLE.singlemode.PASS.aaf.vcf
+bcftools view -O v -f PASS -i '(FORMAT/AD[0:1] >= 5 & FORMAT/DP[0]>=20) && (FORMAT/AF[0:0] <=0.4 || FORMAT/AF[0:0]>=0.7)' $VCFDIR/$SAMPLE.singlemode.filtered.vcf > $VCFDIR/$SAMPLE.mutect2.singlemode.PASS.aaf.vcf
 
 
 

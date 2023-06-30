@@ -66,5 +66,5 @@ source $CONFIG_FILE
 #singularity run -B /hpcfs -B ${TMPDIR}/tmp /hpcfs/groups/phoenix-hpc-neurogenetics/executables/MosaicForecast-master/mosaicforecast_0.0.1.sif Prediction.R /tmp/${sample[$SLURM_ARRAY_TASK_ID]}.features.bed $MFORECAST/models_trained/50xRFmodel_addRMSK_Refine.rds Refine $DIR/${sample[$SLURM_ARRAY_TASK_ID]}.genotype.predictions.refined.bed
 #singularity run -B /hpcfs -B ${TMPDIR} /hpcfs/users/$USER/mosaicforecast_0.0.1.sif Prediction.R $DIR/${sample[$SLURM_ARRAY_TASK_ID]}.features.bed $MFORECAST/models_trained/50xRFmodel_addRMSK_Refine.rds Phased $DIR/${sample[$SLURM_ARRAY_TASK_ID]}.genotype.predictions.phased.bed
 
-singularity run -B /hpcfs $MFORECAST/mosaicforecast_0.0.1.sif Prediction.R $OUTDIR/$SAMPLE.features.bed $MFORECAST/models_trained/50xRFmodel_addRMSK_Refine.rds Refine $OUTDIR/$SAMPLE.genotype.predictions.refined.bed
+singularity run -B /hpcfs $MFORECAST/mosaicforecast_0.0.1.sif Prediction.R $OUTDIR/$SAMPLE.features.bed $MFORECAST/models_trained/50xRFmodel_addRMSK_Refine.rds Refine $OUTDIR/$SAMPLE.mosaicforecast.genotype.predictions.refined.bed
 
