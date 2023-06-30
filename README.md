@@ -5,7 +5,12 @@
 ### Part A: Variant calling using four existing tools
 
 Summary: 
-To detect variants either in singletons or trios using three mosaic variant callers (MosaicHunter, MosaicForecast, Mutect2) and GATK-HC
+Variants are either detected in singletons and/or trios using three mosaic variant callers (MosaicHunter, MosaicForecast, Mutect2) and GATK-HC. 
+The results of the entire batch (as listed in SampleID) are stored in three separate files (MH.calls.txt,MF.calls.txt,Mutect2.,calls.txt), and the number of variants of each sample in Counts.txt
+
+Wrapper-script Progress (will be deleted after finalising)
+- Mosaic variant callers are tested on HPC, but not GATK-HC. 
+- still need to include Variant Counting and coverage analysis
 
 Command:
 
@@ -26,18 +31,9 @@ Requirements:-
 3. Output directory: To store all final outputs
    
 ### Part B: Analysis for somatic mosaicism (M3 pipeline)
+Summary: Using Outputs in Part A, R is used to find the overlap.
+
 ### Part C: Analysis for parental gonosomal mosaicims (pGoM)
+SCript npt included yet.
 
-#Part A
 
-Output:
-
-#Part B
-1. First item
-2. Second item
-3. Third item
-    1. Indented item
-    2. Indented item
-4. Fourth item
-
-#Part C
