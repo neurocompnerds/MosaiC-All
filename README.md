@@ -23,7 +23,8 @@ Requirements:-
    - Installation of MosaicHunter, MosaicForecast, GATK (Mutect2 and HC)
    - Panel of Of Normals (for Mutect2); see (need to include link to Mutect2 page)
 
-3. Output directory: To store
+3. Output directory: To store all final outputs
+   
 ### Part B: Analysis for somatic mosaicism (M3 pipeline)
 ### Part C: Analysis for parental gonosomal mosaicims (pGoM)
 
