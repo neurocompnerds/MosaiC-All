@@ -61,19 +61,11 @@ done
 
 ## Define Directories## (how to change this accordingly)
 SCRIPTDIR="/hpcfs/groups/phoenix-hpc-neurogenetics/Nandini/Mosaic-All/Mosaic-S"
-LOGDIR="/hpcfs/groups/phoenix-hpc-neurogenetics/Nandini/Mosaic-All/Log"
-
-if [ ! -d "${LOGDIR}" ]; then
-    mkdir -p ${LOGDIR}
-    echo "## INFO: New log directory created, you'll find all of the log information from this pipeline here: ${LOGDIR}" >> $LOGDIR/$ProbandID.pipeline.log
-fi
 
 if [ ! -d "${OUTDIR}" ]; then
     mkdir -p ${OUTDIR}
-    echo "## INFO: output directory created, you'll find all of the outputs in here: ${OUTDIR}" >> $LOGDIR/$ProbandID.pipeline.log
+    echo "## INFO: output directory created, you'll find all of the outputs and log files in here: ${OUTDIR}" >> $LOGDIR/$ProbandID.pipeline.log
 fi
-
-
 
 #Array from list of Samples (ignoring the header of the file)
 mapfile -t SAMPLEID < <(tail -n +2 "$SAMPLELIST")
@@ -94,7 +86,7 @@ for SAMPLEID in "${SAMPLEID[@]}"; do
     		MotherID=$(awk '{print $4}' <<< "$SAMPLEID ")
     		FatherID=$(awk '{print $5}' <<< "$SAMPLEID ")
 
-		echo "Pipeline for $ProbandID,$MotherID,$FatherID in $BamDIR" >> $LOGDIR/$ProbandID.pipeline.log
+		echo "Pipeline for $ProbandID,$MotherID,$FatherID in $BamDIR" >> $OUTDIR/$ProbandID.pipeline.log
 
     #1.MosaicHunter 
             	# Check if both MotherID and FatherID are present
@@ -126,7 +118,7 @@ for SAMPLEID in "${SAMPLEID[@]}"; do
 
 		# Check if $SampleID is present in the result
 			if [ -n "$normalSample" ]; then
-    			echo "$samples is present. No Mutect2 will be performed. Provide another Panel Of Normal." >> $LOGDIR/$ProbandID.pipeline.log
+    			echo "$samples is present. No Mutect2 will be performed. Provide another Panel Of Normal." >> $OUTDIR/$ProbandID.pipeline.log
 			else
 			
 			Mutect2="sbatch $SCRIPTDIR/Mutect2.singlemode.sh -b $BamDIR -s $samples -c $CONFIG_FILE -o $OUTDIR"
@@ -152,7 +144,7 @@ for SAMPLEID in "${SAMPLEID[@]}"; do
 
 		done
 
-	#4. Germline variant calling- GATKHC
+	#4. Germline variant calling- GATKHC (Cannot run in HPC yet with this script)
  
 		for samples in "$ProbandID" "$MotherID" "$FatherID"; do
 
@@ -168,7 +160,7 @@ for SAMPLEID in "${SAMPLEID[@]}"; do
 				else
 
 				echo "Please provide alternate config for GATK-HC, that looks like 
-					$SCRIPTDIR/BWA-GATKHC.TEMPLATE_phoenix.cfg" >> $LOGDIR/$ProbandID.pipeline.log
+					$SCRIPTDIR/BWA-GATKHC.TEMPLATE_phoenix.cfg" >> $OUTDIR/$ProbandID.pipeline.log
 				fi
 
 		done
