@@ -152,7 +152,7 @@ for SAMPLEID in "${SAMPLEID[@]}"; do
     			echo "$samples is present. No Mutect2 will be performed. Provide another Panel Of Normal." >> $OUTDIR/$ProbandID.pipeline.log
 			else
 			    # Submit the Mutect2 job
-				Mutect2=`sbatch $SCRIPTDIR/Mutect2.singlemode.sh -b $BamDIR -s $samples -c $CONFIG_FILE -o $OUTDIR`
+				Mutect2="sbatch $SCRIPTDIR/Mutect2.singlemode.sh -b $BamDIR -s $samples -c $CONFIG_FILE -o $OUTDIR"
                 Mutect2JobID=$($Mutect2 | awk '{print $NF}')
                 # Submit the FilterMutect2 job with a dependency on Mutect2
 			    sbatch --export=ALL --dependency=afterok:${Mutect2JobID} $SCRIPTDIR/Mutect2.FilterMutect2.sh -s $samples -v $OUTDIR -c $CONFIG_FILE
@@ -162,13 +162,13 @@ for SAMPLEID in "${SAMPLEID[@]}"; do
     #3.MosaicForecast
             # Logic problem.  Next job depends on Mutect2JobID but it's possible not to create that job if the sample is in the PON
 			# The above "if" needs to exit the remaining script when true or the following jobs need to be part of the "else" actions above
-    		MF1=`sbatch --export=ALL --dependency=afterok:${Mutect2JobID} $SCRIPTDIR/MF1_ProcessInput.sh -s $samples -b $BamDIR -o $OUTDIR -c $CONFIG_FILE`
+    		MF1="sbatch --export=ALL --dependency=afterok:${Mutect2JobID} $SCRIPTDIR/MF1_ProcessInput.sh -s $samples -b $BamDIR -o $OUTDIR -c $CONFIG_FILE"
     		MF1_job_id=$($MF1 | awk '{print $NF}')
 
-    		MF2=`sbatch --export=ALL --dependency=afterok:${MF1_job_id} $SCRIPTDIR/MF2_Extractreadlevel-singularity.sh -b $BamDIR -s $samples -c $CONFIG_FILE -o $OUTDIR`
+    		MF2="sbatch --export=ALL --dependency=afterok:${MF1_job_id} $SCRIPTDIR/MF2_Extractreadlevel-singularity.sh -b $BamDIR -s $samples -c $CONFIG_FILE -o $OUTDIR"
     		MF2_job_id=$($MF2 | awk '{print $NF}')
 
-   			MF3=`sbatch --export=ALL --dependency=afterok:${MF2_job_id} $SCRIPTDIR/MF3.GenotypePredictionsl-singularity.sh -s $samples -c $CONFIG_FILE -o $OUTDIR`
+   			MF3="sbatch --export=ALL --dependency=afterok:${MF2_job_id} $SCRIPTDIR/MF3.GenotypePredictionsl-singularity.sh -s $samples -c $CONFIG_FILE -o $OUTDIR"
    			MF3_job_id=$($MF3 | awk '{print $NF}')
 
 		done
