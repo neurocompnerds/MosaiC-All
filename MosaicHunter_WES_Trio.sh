@@ -1,6 +1,6 @@
 #!/bin/sh
 #SBATCH -J MosaicHunter_Trio.sh
-#SBATCH -o /hpcfs/groups/phoenix-hpc-neurogenetics/Nandini/Mosaic-All/Log/MH_Trio-slurm-%j.out
+#SBATCH -o /hpcfs/users/%u/Mosaic-All/Log/MH_Trio-slurm-%j.out
 #SBATCH -A robinson
 #SBATCH -p skylake,icelake
 #SBATCH -N 1
@@ -12,13 +12,16 @@
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=nandini.sandran@adelaide.edu.au
 
+# Define fixed paths
+LOGDIR="/hpcfs/users/${USER}/Mosaic-All/Log"
+
 usage()
 {
 echo "
 #
 #README
 #This script detects variants in exome data in trio mode
-#Three major step (Prefilter-> MH variant caller-> Process output files -> Log files)
+#There are three major steps (Prefilter-> MH variant caller-> Process output files -> Log files)
 #
 #DESIGNED for HPC, which needs to be executed with MasterScript only, or else,
 #for standalone-script, find in another place (need to update the folder, latest one in GA_Scripts)
@@ -28,23 +31,23 @@ echo "
 #
 #SCRIPT EXECUTE
 #
-#sbatch $SCRIPTDIR/MosaicHunter_WES_Trio.sh -s $Proband -b $BamDIR -d $OUTDIR -g M -f $FATHERID -m $MOTHERID -c $CONFIG_FILE
+#sbatch $SCRIPTDIR/MosaicHunter_WES_Trio.sh -s \$Proband -b \$BamDIR -d \$OUTDIR -g M -f \$FATHERID -m \$MOTHERID -c \$CONFIG_FILE
 #all of this will be "specified" in MasterScript
 #
-#-s REQUIRED SampleID   				(e.g 004P, no suffix)
+#-s REQUIRED SampleID   			(e.g 004P, no suffix)
 #-b REQUIRED Directory of Bam files 		(e.g $HOME/SSC/ProSib/Bam)
 #-d REQUIRED Directory of Outputs   		(MH gives a folder as output, only speficy the directory intended)
 #-g REQUIRED Gender of Proband 	  		(M or F)
-#-f REQUIRED FatherID 	  				(004F)
-#-m REQUIRED MotherID		 	  		(004M)
+#-f REQUIRED FatherID 	  			(004F)
+#-m REQUIRED MotherID		 	  	(004M)
 #-c REQUIRED Config_File     			(e.g /hpcfs/groups/phoenix-hpc-neurogenetics/Nandini/Mosaic-All/Mosaic-S/Mosaic-All.config) 
 #
 #OUTPUT lists
-#1.$DIR/${sample[$SLURM_ARRAY_TASK_ID]} 						-> Two Major Folder consisting MHexecution temp files and final.passed.tsv
-#2.$DIR/${sample[$SLURM_ARRAY_TASK_ID]}.final.passed.tsv			-> Raw variants output file
-#3.$DIR/${sample[$SLURM_ARRAY_TASK_ID]}.forAnnovar.triomode.vcf		-> List of variants with useful info only
-#4.$DIR/${sample[$SLURM_ARRAY_TASK_ID]}.log				  		-> StdOutput.lof file from MH
-#5.$DIR/${sample[$SLURM_ARRAY_TASK_ID]}.summary.log				-> Logfile produced by MH
+#1.\$DIR/\${sample[$SLURM_ARRAY_TASK_ID]} 						-> Two Major Folder consisting MHexecution temp files and final.passed.tsv
+#2.\$DIR/\${sample[$SLURM_ARRAY_TASK_ID]}.final.passed.tsv			-> Raw variants output file
+#3.\$DIR/\${sample[$SLURM_ARRAY_TASK_ID]}.forAnnovar.triomode.vcf		-> List of variants with useful info only
+#4.\$DIR/\${sample[$SLURM_ARRAY_TASK_ID]}.log				  		-> StdOutput.lof file from MH
+#5.\$DIR/\${sample[$SLURM_ARRAY_TASK_ID]}.summary.log				-> Logfile produced by MH
 #
 "
 }
@@ -60,7 +63,7 @@ while [ "$1" != "" ]; do
                                         BAMDIR=$1
                                         ;;
                 -d )                    shift
-                                        DIR=$1
+                                        DIR=$1  ## Recommend $OUTDIR to be consistent with your master script
                                         ;;
                 -g )                    shift
                                         Gender=$1
@@ -80,6 +83,8 @@ while [ "$1" != "" ]; do
         shift
 done
 
+## Note: There are no tests for any required arguments
+
 #define variables and directory for MosaicHunter
 ProbandBamFile=$(/usr/bin/find "$BAMDIR" -type f -name "$SampleID.*.bam")
 MotherBamFile=$(/usr/bin/find "$BAMDIR" -type f -name "$MOTHER.*.bam")
@@ -88,7 +93,6 @@ FatherBamFile=$(/usr/bin/find "$BAMDIR" -type f -name "$FATHER.*.bam")
 source $CONFIG_FILE
 
 #module for HPCs
-export HOME=/hpcfs/users/$USER
 module purge
 module use /apps/modules/all
 module load Java/1.8.0_121

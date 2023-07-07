@@ -1,6 +1,6 @@
 #!/bin/sh -l
 #SBATCH -J MF_genotypePredictions-singularity.sh
-#SBATCH -o /gpfs/users/a1149120/MosaicForecast/genotype.GA.slurm-%j.out
+#SBATCH -o /hpcfs/users/%u/Mosaic-All/Log/genotype.GA.slurm-%j.out
 #SBATCH -A robinson
 #SBATCH -p skylake,icelake
 #SBATCH -N 1
@@ -53,8 +53,6 @@ while [ "$1" != "" ]; do
         shift
 done
 
-
-export HOME=/hpcfs/users/$USER
 
 #define directories
 module purge

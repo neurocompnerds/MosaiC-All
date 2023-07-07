@@ -1,10 +1,10 @@
 #!/bin/sh -l
 #SBATCH -J MF1_PrepareInputFile.sh
-#SBATCH -o /hpcfs/groups/phoenix-hpc-neurogenetics/Nandini/Mosaic-All/Log/MF.Input.slurm-%j.out
+#SBATCH -o /hpcfs/users/%u/Mosaic-All/Log/MF.Input.slurm-%j.out
 #SBATCH -A robinson
 #SBATCH -p skylake,icelake
 #SBATCH -N 1
-#SBATCH -n 8
+#SBATCH -n 2
 #SBATCH --time=0:05:00
 #SBATCH --mem=3GB
 
@@ -54,9 +54,6 @@ while [ "$1" != "" ]; do
         shift
 done
 
-
-
-export HOME=/hpcfs/users/$USER
 
 module purge
 

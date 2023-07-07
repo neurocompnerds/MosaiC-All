@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH -J GATKHC
-#SBATCH -o /hpcfs/users/%u/log/GATK4HC-slurm-%j.out
+#SBATCH -o /hpcfs/users/%u/Mosaic-All/Log/GATK4HC-slurm-%j.out
 #SBATCH -p skylake,icelake,skylakehm,v100cpu
 #SBATCH -N 1
 #SBATCH -n 2

@@ -1,6 +1,6 @@
 #!/bin/sh -l
 #SBATCH -J MF_Extractreadlevel-singularity.sh
-#SBATCH -o /hpcfs/groups/phoenix-hpc-neurogenetics/Nandini/Mosaic-All/Log/MF.extract.slurm-%j.out
+#SBATCH -o /hpcfs/users/%u/Mosaic-All/Log/MF.extract.slurm-%j.out
 #SBATCH -A robinson
 #SBATCH -p skylake,icelake
 #SBATCH -N 1
@@ -58,8 +58,6 @@ done
 
 
 #define directories
-export HOME=/gpfs/users/$USER
-
 module purge
 module use /apps/skl/modules/all
 module load Singularity/3.7.1
