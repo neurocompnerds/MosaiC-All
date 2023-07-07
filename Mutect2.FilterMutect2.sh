@@ -1,6 +1,6 @@
 #!/bin/sh
 #SBATCH -J FilterMutect.sh
-#SBATCH -o /hpcfs/groups/phoenix-hpc-neurogenetics/Nandini/Mosaic-All/Log/filter-slurm-%j.out
+#SBATCH -o /hpcfs/users/%u/Mosaic-All/Log/filter-slurm-%j.out
 #SBATCH -A robinson
 #SBATCH -p skylake,icelake
 #SBATCH -N 1
@@ -53,7 +53,6 @@ while [ "$1" != "" ]; do
         shift
 done
 
-export HOME=/hpcfs/users/$USER
 module purge 
 module load GATK/4.4.0.0-GCCcore-11.2.0-Java-17.0.6
 #module load SAMtools/1.17-GCC-11.2.0
@@ -61,7 +60,7 @@ module load GATK/4.4.0.0-GCCcore-11.2.0-Java-17.0.6
 #check and specify
 source $CONFIG_FILE
 
-if [ -z $VCFDIR/$SAMPLE.$CONFIG.PON.gnomad.vcf ]; then # If no vcfDir name specified then do not proceed
+if [ -z "$VCFDIR/$SAMPLE.$CONFIG.PON.gnomad.vcf" ]; then # If no vcfDir name specified then do not proceed
         usage
         echo "#ERROR: You need to tell me where to find the vcf files."
         exit 1
@@ -84,6 +83,3 @@ gatk FilterMutectCalls \
 module load BCFtools/1.17-GCC-11.2.0
 
 bcftools view -O v -f PASS -i '(FORMAT/AD[0:1] >= 5 & FORMAT/DP[0]>=20) && (FORMAT/AF[0:0] <=0.4 || FORMAT/AF[0:0]>=0.7)' $VCFDIR/$SAMPLE.singlemode.filtered.vcf > $VCFDIR/$SAMPLE.mutect2.singlemode.PASS.aaf.vcf
-
-
-

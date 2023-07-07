@@ -1,6 +1,6 @@
 #!/bin/sh
 #SBATCH -J Mutect2.singlemode.sh
-#SBATCH -o /hpcfs/groups/phoenix-hpc-neurogenetics/Nandini/Mosaic-All/Log/Mutect2-slurm-%j.out
+#SBATCH -o /hpcfs/users/%u/Mosaic-All/Log/Mutect2-slurm-%j.out
 #SBATCH -A robinson
 #SBATCH -p skylake,icelake
 #SBATCH -N 1
@@ -62,22 +62,21 @@ while [ "$1" != "" ]; do
                 -b )                    shift
                                         BAMDIR=$1
                                         ;;
-				-s )					shift
-			               			    SAMPLE=$1
+		-s )			shift
+			               	SAMPLE=$1
                                         ;;
                 -c )                    shift
                                         CONFIG_FILE=$1
                                         ;;
                 -o )                    shift
                                         OUTDIR=$1
-										;;
-				 * )					usage
-			                			exit 1
+					;;
+		 * )			usage
+			                exit 1
         esac
         shift
 done
 
-export HOME=/hpcfs/users/$USER
 module purge
 
 module use /apps/modules/all
@@ -86,11 +85,12 @@ module load SAMtools/1.8-foss-2016b
 module load GATK/4.4.0.0-GCCcore-11.2.0-Java-17.0.6
 
 source $CONFIG_FILE
+ProbandBamFile=$(/usr/bin/find "$BAMDIR" -type f -name "$SAMPLE.*.bam")
 
 #execute the script
 gatk Mutect2 \
 -R $REFGEN \
--I $BAMDIR/$SAMPLE.realigned.recal.sorted.bwa.hs37d5.bam  \
+-I $ProbandBamFile  \
 --tumor-sample $SAMPLE \
 --germline-resource $GERMLINE_RESOURCES \
 --panel-of-normals $PON \

@@ -1,6 +1,6 @@
 #!/bin/sh
 #SBATCH -J MosaicHunter_Single.sh
-#SBATCH -o /hpcfs/groups/phoenix-hpc-neurogenetics/Nandini/Mosaic-All/Log/MH_Singleton-slurm-%j.out
+#SBATCH -o /hpcfs/users/%u/Mosaic-All/Log/MH_Singleton-slurm-%j.out
 #SBATCH -A robinson
 #SBATCH -p skylake
 #SBATCH -N 1
@@ -73,7 +73,6 @@ done
 
 
 #module for HPCs
-export HOME=/hpcfs/users/$USER
 module purge
 module use /apps/modules/all
 module load Java/1.8.0_121
