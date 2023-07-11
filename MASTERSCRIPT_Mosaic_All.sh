@@ -115,9 +115,17 @@ for SAMPLEID in "${SAMPLEID[@]}"; do
        	# Submit MHjob for Proband either in triomode or singlemode
 	# so, need to Check if both MotherID and FatherID are present
      		if [[ -n "$MotherID" && -n "$FatherID" ]]; then
-        	sbatch $SCRIPTDIR/MosaicHunter_WES_Trio.sh -s $ProbandID -b $BamDIR -d $OUTDIR -g $ProbandGender -f $FatherID -m $MotherID -c $CONFIG_FILE
+        	MH_P="sbatch $SCRIPTDIR/MosaicHunter_WES_Trio.sh -s $ProbandID -b $BamDIR -d $OUTDIR -g $ProbandGender -f $FatherID -m $MotherID -c $CONFIG_FILE"
+	 	MH_P_JobID=$($MH_P | awk '{print $NF}')
+		sbatch --export=ALL --dependency=afterok:${MH_P_JobID} $SCRIPTDIR/CombineCalls.sh -s $ProbandID -v MH -f $OUTDIR/$samples.final.passed.tsv -o $OUTDIR
+ 		 	if [ "$MH_P_JobID" ]; then
+   			Count_MH=$(cat $OUTDIR/$samples.final.passed.tsv | wc -l)
+			echo "$ProbandID\tTriomode\t$Count_MH" | tr " " "\t" >> Counts.txt
+			fi
         	else
-        	sbatch $SCRIPTDIR/MosaicHunter_WES_Singlemode.sh -s $ProbandID -b $BamDIR -d $OUTDIR -g $ProbandGender -c $CONFIG_FILE 
+        	MH_P="sbatch $SCRIPTDIR/MosaicHunter_WES_Singlemode.sh -s $ProbandID -b $BamDIR -d $OUTDIR -g $ProbandGender -c $CONFIG_FILE"
+	 	MH_P_JobID=$($MH_P | awk '{print $NF}')
+		sbatch --export=ALL --dependency=afterok:${MH_P_JobID} $SCRIPTDIR/CombineCalls.sh -s $ProbandID -v MH -f $OUTDIR/$samples.final.passed.tsv -o $OUTDIR
         	fi
 		
 	# Submit MHjob for Parents
