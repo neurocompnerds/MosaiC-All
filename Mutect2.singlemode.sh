@@ -45,13 +45,14 @@ echo "
 #
 #SCRIPT EXECUTION
 #SCRIPTDIR=/hpcfs/groups/phoenix-hpc-neurogenetics/Mosaic-All/Mosaic-S
-#sbatch $SCRIPTDIR/Mutect2.singlemode.sh -b BAMDIR -s SAMPLE -c CONFIG_FILE -o OUTDIR  
+#sbatch $SCRIPTDIR/Mutect2.singlemode.sh -b BAMDIR -s SAMPLE -c CONFIG_FILE -o OUTDIR  -p PON
 #all of this will be "specified" in MasterScript
 #
 #-s REQUIRED SampleID   					(e.g 004P, or 004M, or 004F no suffix)
 #-b REQUIRED Directory of Bam files 		(e.g /hpcfs/groups/phoenix-hpc-sacgf/scratch/ali/GA_bams)
 #-c REQUIRED Directory of Outputs   		(/gpfs/users/a1149120/MosaicHunter_single)
 #-o REQUIRED Reference Genome     	        (e.g hs37d5.fa) 
+#-p REQUIRED Panel of Normals			(specify with the directory)
 "
 }
 
@@ -70,6 +71,9 @@ while [ "$1" != "" ]; do
                                         ;;
                 -o )                    shift
                                         OUTDIR=$1
+					;;
+                -p )                    shift
+                                        PON=$1
 					;;
 		 * )			usage
 			                exit 1
