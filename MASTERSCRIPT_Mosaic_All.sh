@@ -36,7 +36,8 @@ echo "#MasterScript: Phase 1 of mosaic variant finding pipeline, which includes
 #MAIN=/hpcfs/groups/phoenix-hpc-neurogenetics/Nandini
 #Test01: bash $MAIN/Mosaic-All/Mosaic-S/MasterScript_Mosaic_All.sh -s $MAIN/Mosaic-All/SampleID -o $MAIN/Mosaic-All/Outputs -p $MAIN/Mutect2_ReCalling_batch1/PON/PON_Batch01_hs37dh_GAparents.vcf
 #Test02: bash $MAIN/Mosaic-All/Mosaic-S/MasterScript_Mosaic_All.sh -s $MAIN/Mosaic-All/SampleID -o $MAIN/Mosaic-All/Outputs -c $MAIN/Mosaic-All/Mosaic-S/Mosaic-All.config
-
+#Test03: bash $SCRIPTDIR/MASTERSCRIPT_Mosaic_All.sh -s /hpcfs/users/a1742674/MosaiC-All/SampleID -o /hpcfs/users/a1742674/MosaiC-All/Outputs -c $SCRIPTDIR/MosaiC-All.config
+#Test04: bash $SCRIPTDIR/MASTERSCRIPT_Mosaic_All.sh -s /hpcfs/users/a1742674/MosaiC-All/SampleID_All -o /hpcfs/users/a1742674/MosaiC-All/Output_160823 -c $SCRIPTDIR/MosaiC-All.config
 "
 }
 
@@ -200,8 +201,4 @@ for SAMPLEID in "${SAMPLEID[@]}"; do
 	
 done
 
-
-#    awk -v ID="$samples" '$0 !~ /^##/ {print ID "\t" "Mut" "\t" $0}' $OUTDIR/$samples.mutect2.singlemode.PASS.aaf.vcf >> Mutect2.calls
- #   awk -v ID="$samples" '$0 !~ /^##/ {print ID "\t" "MF" "\t" $0}' $OUTDIR/$samples.mosaicforecast.genotype.predictions.refined.bed >> MosaicForecast.calls
-#    awk -v ID="$samples" '$0 !~ /^##/ {print ID "\t" "MH" "\t" $0}' $OUTDIR/$samples.final.passed.tsv >> MosaicHunter.calls.txt
 
