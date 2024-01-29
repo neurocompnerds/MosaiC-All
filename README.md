@@ -57,6 +57,7 @@ Aims:
 - Merge all variants based on each tool.
 
 > sbatch $SCRIPTDIR/CombineCalls.sh -s $sampleID -d $Outputs
+
 Requirements:-
 - sampleID (i.e 001P)
 - Outputs (Output directory as specified in Step 3)
