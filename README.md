@@ -2,43 +2,74 @@
 
 ## Comprehensive analysis of somatic and parental gonosomal mosaicism using trio and singleton design.
 
-The analysis is divided into three sections (Part A,B and C).
+### Step 1: Pre-requisites/ Softwares Installation
 
-### Part A: Variant calling using four existing tools
+The following are softwares and resources that can be dowloaded/prepared based specified instructions.
 
-Summary: 
+#### 1.1 Downloadable sources<br>
+MosaicHunter: https://github.com/zzhang526/MosaicHunter<br>
+MosaicForecast: https://github.com/parklab/MosaicForecast<br>
+GATK: https://github.com/broadinstitute/gatk/releases
+
+#### 1.2 General Resources
+
+|  Resources                    |     Example/Sources/Notes          | 
+|-------------------------------|------------------------------------|  
+|  Reference genome             |     e.g hs37d5.fa                  |
+|  Common variant databases     |     dbSNP (e.g b37_dbsnp_138.b37.vcf)<br> gnomAD (e.g somatic-b37_af-only-gnomad.raw.sites.vcf)      |
+|  Repeats                      |     e.g all_repeats.b37.bed;<br> can be found in MosaicHunter installation (i.e $MHDIR/MosaicHunter-master/resources) |
+|  Exome errors databases       |     e.g WES_Agilent_71M.error_prone.b37.bed;<br> can be found in MosaicHunter installation (i.e $MHDIR/MosaicHunter-master/resources)                |
+|  Panel of Normal (PON)        |     Should be prepared based on samples that are not part of the analysis.<br>As a suggestion for large cohort analysis, samples can be divided into two cohorts to create two Panel of Normals (PON_A and PON_B).<br>This PON can be prepared based on GATK option-CreateSomaticPanelOfNormals (i.e https://gatk.broadinstitute.org/hc/en-us/articles/4405451431963-CreateSomaticPanelOfNormals-BETA)          |
+
+### Step 2: Config-files
+There are two config-files, in which directories of softwares/resources (as prepared in Step 1) should be specified.
+
+#### 2.1 Mosaic-All.config
+#### 2.2 BWA-GATKHC.hs37d5_phoenix.cfg
+
+### Step 3: Variant calling using four tools
+
+#### 3.1 Summary: 
 Variants are either detected in singletons and/or trios using three mosaic variant callers (MosaicHunter, MosaicForecast, Mutect2) and GATK-HC. 
-The results of the entire batch (as listed in SampleID) are stored in three separate files (MH.calls.txt,MF.calls.txt,Mutect2.,calls.txt), and the number of variants of each sample in Counts.txt
-A wrapper-script (MasterScript_Mosaic_All.sh) was developed for this purpose, and can be executable in University of Adelaide HPC environment using the following command.
+A wrapper-script (MasterScript_MosaiC-All.sh) was developed for this purpose, and can be executable in University of Adelaide HPC environment using the following command.
 
-Wrapper-script Progress (will be deleted after finalising)
-- Mosaic variant callers are tested on HPC, but not GATK-HC. 
-- still need to include Variant Counting and coverage analysis
+#### 3.2 Command:
 
-Command:
+> MosaiC-All/MasterScript_MosaiC-All.sh -s $SampleID.list -o $Outputs -c MosaiC-All/Mosaic-All.config
 
-> MosaiC-All/MasterScript_Mosaic_All.sh -s SampleID -o Outputs -c MosaiC-All/Mosaic-All.config
+#### 3.3 Requirements:-
 
-Requirements:-
-1. SampleID file (tab-separated-file) should be like this:- 
+1. $SampleID.list: A tab-separated-file as following format based on the Bam.files of each sample (e.g 001P.realigned.bam)
 
 |  Directory of Bam files  | ProbandID | Gender   | MotherID | FatherID | 
 |--------------------------|-----------|----------|----------|----------|
 |   ./path                 |   001P    |   F      |  001M    |   001F   |
 
-2. Necessary details/pathways are specified in the config
-   - Reference genome
-   - Installation of MosaicHunter, MosaicForecast, GATK (Mutect2 and HC)
-   - Panel of Normals (PON)
-     -> for Mutect2;
-     -> in our study, we used two PONs developed using parental data of respective cohorts, to ensure samples that are accessed by Mutect2 for mosaic variants are not in PON.
-
-3. Output directory: To store all final outputs
+2. $Outputs: An Output directory to store all final outputs
    
-### Part B: Analysis for somatic mosaicism (M3 pipeline)
-Summary: Using Outputs in Part A, R is used to find the overlap between variant callers.
+3. $DIR/MosaiC-All/MosaiC-All.config: A config file prepared as mentioned in Step 1 and 2.
+   
+### Step 4: Analysis for somatic mosaicism (M3 pipeline)
 
-### Part C: Analysis for parental gonosomal mosaicims (pGoM)
-SCript npt included yet.
+#### 4.1 Processing all outputs 
+Aims:
+- to filter MFcalls manually and
+- Merge all variants based on each tool.
 
+> sbatch $SCRIPTDIR/CombineCalls.sh -s $sampleID -d $Outputs
+Requirements:-
+- sampleID (i.e 001P)
+- Outputs (Output directory as specified in Step 3)
+
+#### 4.2 Find overlaps using R script (M3pipeline.R)
+Aims:
+- To flag variants that were found in same sample, using 1-3 mosaic variant calling tools
+- Followed by filtering out variants that were found only by one tool
+
+### Step 5: Analysis for parental gonosomal mosaicism (pGoM)
+
+> sbatch $SCRIPTDIR/pGoM.sh -v $VCFDIR -s $OUTDIR/FamilyID.txt -o $OUTDIR
+- VCFDIR					(directory for family VCFs)
+- FAMILYID   			(familyID.txt:list of familyIDs in a txt file; $FAMILYID*.vcf)
+- OUTDIR					(output directory) 
 
