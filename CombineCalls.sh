@@ -20,7 +20,8 @@ echo "
 #
 #README
 #This script is designed to be used after Mosaic-All wrapper script,
-#to COMBINE all variant calls (of all samples executed by batch) in one meta-file based on each mosaic variant calling too
+#Post-processing MF variants
+#to COMBINE all variant calls (of all samples executed by batch) in one meta-file based on each mosaic variant calling
 #for M3 pipeline
 #sbatch $SCRIPTDIR/CombineCalls.sh
 #-s REQUIRED sampleID 
@@ -64,4 +65,7 @@ awk -v ID="$SAMPLEID" '$0 !~ /^##/ {print ID "\t" "Mutect2" "\t" $0}' $DIR/$SAMP
 awk -v ID="$SAMPLEID" '$0 !~ /^##/ {print ID "\t" "MH" "\t" $0}' $DIR/$SAMPLEID.$MH >> $DIR/MH.variants.txt
 
 #MosaicForecast
+awk '$35=="mosaic" {OFS="\t"; print}' $DIR/$SAMPLEID.genotype.predictions.phased.singlemode.bed > $DIR/$SAMPLEID.RefinedMosaicOnly.txt
+awk '$25>=20  {OFS="\t"; print}' $DIR/$SAMPLEID.RefinedMosaicOnly.txt > $DIR/$SAMPLEID.Refined.dp20.MosaicOnly.txt
+awk '$24>=0.03  {OFS="\t"; print}' $DIR/$SAMPLEID.Refined.dp20.MosaicOnly.txt > $DIR/$SAMPLEID.Refined.dpaf.MosaicOnly.txt
 awk -v ID="$SAMPLEID" '$0 !~ /^##/ {print ID "\t" "MF" "\t" $0}' $DIR/$SAMPLEID.$MF >> $DIR/MF.variants.txt
