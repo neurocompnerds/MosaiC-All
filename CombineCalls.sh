@@ -19,36 +19,49 @@ usage()
 echo "
 #
 #README
-#This script is designed for Mosaic-All wrapper script,
-#to COMBINE all variant calls (of all samples executed by batch) in one meta-file
-#sbatch $SCRIPTDIR/Mutect2.singlemode.sh -f FILE -O BIGFILE
-#-s REQUIRED SAMPLEID
-#-v REQUIRED VARIANTCALLER
-#-f REQUIRED FILE   					
-#-o REQUIRED BIGFILE
+#This script is designed to be used after Mosaic-All wrapper script,
+#to COMBINE all variant calls (of all samples executed by batch) in one meta-file based on each mosaic variant calling too
+#for M3 pipeline
+#sbatch $SCRIPTDIR/CombineCalls.sh
+#-s REQUIRED sampleID 
+#-d REQUIRED DIRECTORY OF VARIANT LIST OF EACH SAMPLE BEFORE MERGING
 "
 }
 
 
 ## Set Variables ##
 while [ "$1" != "" ]; do
-        case $1 in
-                -s )                    shift
-                                        SAMPLEID=$1
-                                        ;;
-                -v )                    shift
-                                        VC=$1
-                                        ;;
-                -f )                    shift
-                                        FILE=$1
-                                        ;;
-                -o )                    shift
-                                        OUTPUT=$1
-					                              ;;
-		             * )			              usage
-			                                  exit 1
-        esac
-        shift
+    case $1 in
+        -s ) shift
+             SAMPLEID=$1
+             ;;
+	-d ) shift
+             DIR=$1
+             ;;
+        * ) usage
+            exit 1
+    esac
+    shift
 done
 
-awk -v ID="$SAMPLEID" '$0 !~ /^##/ {print ID "\t" "$VC" "\t" $0}' $OUTPUT >> $VC.calls.txt
+# Check if input files exist
+for FILE in "$DIR/$SAMPLEID.$MUT" "$DIR/$SAMPLEID.$MH" "$DIR/$SAMPLEID.$MF"; do
+    if [ ! -f "$FILE" ]; then
+        echo "Error: File $FILE does not exist."
+        exit 1
+    fi
+done
+
+##Define Suffix of each output files
+MUT="mutect2.singlemode.PASS.aaf.vcf"
+MH="final.passed.tsv" 
+MF="Refined.dpaf.MosaicOnly.txt"
+
+#Mutect2
+awk -v ID="$SAMPLEID" '$0 !~ /^##/ {print ID "\t" "Mutect2" "\t" $0}' $DIR/$SAMPLEID.$MUT >> $DIR/Mutect2.variants.txt
+
+#MosaicHunter
+awk -v ID="$SAMPLEID" '$0 !~ /^##/ {print ID "\t" "MH" "\t" $0}' $DIR/$SAMPLEID.$MH >> $DIR/MH.variants.txt
+
+#MosaicForecast
+awk -v ID="$SAMPLEID" '$0 !~ /^##/ {print ID "\t" "MF" "\t" $0}' $DIR/$SAMPLEID.$MF >> $DIR/MF.variants.txt
