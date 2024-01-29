@@ -1,5 +1,5 @@
 #!/bin/bash
-# MasterScript: Phase 1 of mosaic variant finding pipeline, which includes
+# MasterScript: Variant calling step 
 # 1. Coverage Analysis of every bam file
 # 2. GATK-HC: germline variant calling in each family
 # 3. Mutect2 and FilterMutect2: Parents,Probands and Siblings (if available)
@@ -11,7 +11,7 @@
 
 usage()
 {
-echo "#MasterScript: Phase 1 of mosaic variant finding pipeline, which includes
+echo "#MasterScript: Variant calling steps, which includes
 # 1. Coverage Analysis of every bam file
 # 2. GATK-HC: germline variant calling in each family
 # 3. Mutect2: Parents and Probands and Siblings (if available)
@@ -29,14 +29,9 @@ echo "#MasterScript: Phase 1 of mosaic variant finding pipeline, which includes
 # -h or --help  Prints this message.  Or if you got one of the options above wrong you'll be reading this too!
 #
 # Original: Nandini Sandran, 9/6/2023
-# Modified: (Date; Name; Description)
+# Last Modified: NS, 29/1/2024, Tidying up (Deleting CombineCall and Counting steps in this script)
 # 
 
-#TEST (delete after finalising the scripts)
-#MAIN=/hpcfs/groups/phoenix-hpc-neurogenetics/Nandini
-#Test01: bash $MAIN/Mosaic-All/Mosaic-S/MasterScript_Mosaic_All.sh -s $MAIN/Mosaic-All/SampleID -o $MAIN/Mosaic-All/Outputs -p $MAIN/Mutect2_ReCalling_batch1/PON/PON_Batch01_hs37dh_GAparents.vcf
-#Test02: bash $MAIN/Mosaic-All/Mosaic-S/MasterScript_Mosaic_All.sh -s $MAIN/Mosaic-All/SampleID -o $MAIN/Mosaic-All/Outputs -c $MAIN/Mosaic-All/Mosaic-S/Mosaic-All.config
-#Test03: bash $SCRIPTDIR/MASTERSCRIPT_Mosaic_All.sh -s /hpcfs/users/a1742674/MosaiC-All/SampleID -o /hpcfs/users/a1742674/MosaiC-All/Outputs -c $SCRIPTDIR/MosaiC-All.config
 #Test04: bash $SCRIPTDIR/MASTERSCRIPT_Mosaic_All.sh -s /hpcfs/users/a1742674/MosaiC-All/SampleID_All -o /hpcfs/users/a1742674/MosaiC-All/Output_160823 -c $SCRIPTDIR/MosaiC-All.config
 "
 }
@@ -114,17 +109,9 @@ for SAMPLEID in "${SAMPLEID[@]}"; do
     # Submit MHjob for Proband either in triomode or singlemode
 	# so, need to Check if both MotherID and FatherID are present
     if [[ -n "$MotherID" && -n "$FatherID" ]]; then
-        MH_P="sbatch $SCRIPTDIR/MosaicHunter_WES_Trio.sh -s $ProbandID -b $BamDIR -d $OUTDIR -g $ProbandGender -f $FatherID -m $MotherID -c $CONFIG_FILE"
- 	    MH_P_JobID=$($MH_P | awk '{print $NF}')
-	    sbatch --export=ALL --dependency=afterok:${MH_P_JobID} $SCRIPTDIR/CombineCalls.sh -s $ProbandID -v MH -f $OUTDIR/$samples.final.passed.tsv -o $OUTDIR
-	    if [ "$MH_P_JobID" ]; then
-	        Count_MH=$(cat $OUTDIR/$samples.final.passed.tsv | wc -l)
-	        echo "$ProbandID\tTriomode\t$Count_MH" | tr " " "\t" >> Counts.txt
-	    fi
+        sbatch $SCRIPTDIR/MosaicHunter_WES_Trio.sh -s $ProbandID -b $BamDIR -d $OUTDIR -g $ProbandGender -f $FatherID -m $MotherID -c $CONFIG_FILE
     else
-        MH_P="sbatch $SCRIPTDIR/MosaicHunter_WES_Singlemode.sh -s $ProbandID -b $BamDIR -d $OUTDIR -g $ProbandGender -c $CONFIG_FILE"
- 	    MH_P_JobID=$($MH_P | awk '{print $NF}')
-	    sbatch --export=ALL --dependency=afterok:${MH_P_JobID} $SCRIPTDIR/CombineCalls.sh -s $ProbandID -v MH -f $OUTDIR/$samples.final.passed.tsv -o $OUTDIR
+        sbatch $SCRIPTDIR/MosaicHunter_WES_Singlemode.sh -s $ProbandID -b $BamDIR -d $OUTDIR -g $ProbandGender -c $CONFIG_FILE
     fi
 		
 	# Submit MHjob for Parents
@@ -165,6 +152,7 @@ for SAMPLEID in "${SAMPLEID[@]}"; do
 			    #execute MosaicForecast (step3) which depends on MosaicForecast (step2)
    			    MF3="sbatch --export=ALL --dependency=afterok:${MF2_job_id} $SCRIPTDIR/MF3.GenotypePredictionsl-singularity.sh -s $samples -c $CONFIG_FILE -o $OUTDIR"
    			    MF3_job_id=$($MF3 | awk '{print $NF}')
+	
 		  	else
    				echo "$samples present in both PON, provide another one. No Mutect2 is performed for this sample: MUTECT2 FAIL"
 	  		fi
