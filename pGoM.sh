@@ -1,7 +1,6 @@
 #!/bin/sh
 #SBATCH -J Mosaicparents.sh
-#SBATCH -o /hpcfs/users/a1742674/MosaiC-All/Log/pGoM.slurm-%j.out
-#SBATCH -A robinson
+#SBATCH -o /home/%u/MosaiC-All/Log/pGoM.slurm-%j.out
 #SBATCH -p skylake,icelake
 #SBATCH -N 1
 #SBATCH -n 5
@@ -11,17 +10,10 @@
 # Notification configuration
 #SBATCH --mail-type=END
 #SBATCH --mail-type=FAIL
-#SBATCH --mail-user=Nandini.sandran@adelaide.edu.au
+#SBATCH --mail-user=%u@adelaide.edu.au
 
-#DATE:8th DECEMBER 2021
-##1. to identify legit het variants of probands and siblings (unique and shared) and delete the res
-##2. To identify het variants that are inherited from either one parents
-##3. to identify these variants (in #2) are mosaic in parents
-##4. Counts
-#DATE:10th JAN 2023
-##Simplified for proband and sibling, shared and unique variants identification
-#DATE:17th AUG 2023
-##Amended for MosaiC-All pipeline
+## Hard coded paths you may wish to change for your system
+LOGDIR="/home/${USER}/MosaiC-All/Log"
 
 usage()
 {
@@ -36,23 +28,18 @@ echo "
 #
 #SCRIPT EXECUTION
 #
-#sbatch $SCRIPTDIR/pGoM.sh -v $VCFDIR -s $FAMILYID -o $OUTDIR
-#example
-#SCRIPTDIR=/hpcfs/groups/phoenix-hpc-neurogenetics/scripts/git/nandini/MosaiC-All
-#VCF=/hpcfs/users/a1742674/2021/vcf_WES_Trio/Trio_family_VCFs_3 
-#OUTDIR=/hpcfs/users/a1742674/CP/Incomplete
-#sbatch $SCRIPTDIR/pGoM.sh -v $VCF -s $OUTDIR/FamilyID.txt -o $OUTDIR
+#sbatch $0 -v /path/to/vcf_files/ -s /path/to/ID.list.txt -o /path/to/output/
 #
-#-v REQUIRED VCFDIR					(directory for family VCFs)
-#-s REQUIRED FAMILYID   			(familyID.txt; $FAMILYID*.vcf)
-#-o REQUIRED OUTDIR					(output dir) 
+# Options
+#-v REQUIRED /path/to/vcf_files/  (directory for family VCFs)
+#-s REQUIRED /path/to/ID.list.txt (familyID.txt; $FAMILYID*.vcf)
+#-o REQUIRED /path/to/output/     (output dir) 
 "
 }
 
-#modules
+# Load modules
 module purge
-module use /apps/modules/all
-#ml BCFtools/1.9
+module use /apps/Load modules/all
 module load BCFtools/1.17-GCC-11.2.0
 
 ## Set Variables ##
@@ -73,17 +60,16 @@ while [ "$1" != "" ]; do
         shift
 done
 
-
+## Check for all required arguments
 if [ -z "$FAMILYID" ]; then
     usage
-    echo "## ERROR: You need to provide a list of familyIDs that identifies the VCFs: $familyID*.vcf "
+    echo "## ERROR: You need to provide a list of familyIDs that identifies the VCFs: $FAMILYID*.vcf "
 	exit 1
 fi
 
 readarray -t sample < $FAMILYID
 
 #Defined log files
-LOGDIR="/hpcfs/users/${USER}/MosaiC-All/Log"
 if [ ! -d "$LOGDIR" ]; then
     mkdir -p $LOGDIR
 	echo "## INFO: Slurm log files will be placed in this location $LOGDIR" >> $LOGDIR/$FAMILYID.pGoM.log
@@ -94,7 +80,7 @@ fi
 if [ -z "$VCFDIR" ]; then
     usage
     echo "## ERROR: You need to provide the directory where we can find the familyVCFs" >> $LOGDIR/$FAMILYID.pGoM.log
-        exit 1
+    exit 1
 fi
 
 if [ ! -d "${OUTDIR}" ]; then
