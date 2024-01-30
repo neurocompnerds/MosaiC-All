@@ -13,31 +13,25 @@ usage()
 {
 echo "#MasterScript: Phase 1 of mosaic variant finding pipeline, which includes
 # 1. Coverage Analysis of every bam file
-# 2. GATK-HC: germline variant calling in each family
+# 2. GATK HaplotypeCaller: germline variant calling in each family
 # 3. Mutect2: Parents and Probands and Siblings (if available)
 # 4. MosaicHunter: Parents and Probands and Siblings (if available)
 # 5. MosaicForecast on Mutect2 variant callset
 #
 #
-# Usage $0 -s \$sampleID_list -o \$Output_folder -c \$Config_File | [ - h | --help ]
+# Usage $0 -s /path/to/sampleID.list -o /path/to/output_folder -c /path/to/config_file | [ - h | --help ]
 #
 # Options
-#-s REQUIRED sampleID.list (one header row and then tab-delimited columns \$BAMdir,\$ProbandID,\$Gender,\$Mother,\$Father)
-#-o REQUIRED Output_directory (all variant calls_output in a single output directory)
-#-c REQUIRED ConfigFile (i.e /hpcfs/groups/phoenix-hpc-neurogenetics/Nandini/Mosaic-All/Mosaic-S/Mosaic-All.config)
+#-s <file>      REQUIRED: A file e.g. sampleID.list (one header row and then tab-delimited columns \$BAMdir,\$ProbandID,\$Gender,\$Mother,\$Father)
+#-o <directory> REQUIRED: Output directory (all variant calls for all samples will output into a single directory)
+#-c <file>      REQUIRED: Configuration File (This file sets paths and defaults relevant to your system e.g. see: config/Mosaic-All.config)
 #
 # -h or --help  Prints this message.  Or if you got one of the options above wrong you'll be reading this too!
 #
 # Original: Nandini Sandran, 9/6/2023
 # Modified: (Date; Name; Description)
-# 
-
-#TEST (delete after finalising the scripts)
-#MAIN=/hpcfs/groups/phoenix-hpc-neurogenetics/Nandini
-#Test01: bash $MAIN/Mosaic-All/Mosaic-S/MasterScript_Mosaic_All.sh -s $MAIN/Mosaic-All/SampleID -o $MAIN/Mosaic-All/Outputs -p $MAIN/Mutect2_ReCalling_batch1/PON/PON_Batch01_hs37dh_GAparents.vcf
-#Test02: bash $MAIN/Mosaic-All/Mosaic-S/MasterScript_Mosaic_All.sh -s $MAIN/Mosaic-All/SampleID -o $MAIN/Mosaic-All/Outputs -c $MAIN/Mosaic-All/Mosaic-S/Mosaic-All.config
-#Test03: bash $SCRIPTDIR/MASTERSCRIPT_Mosaic_All.sh -s /hpcfs/users/a1742674/MosaiC-All/SampleID -o /hpcfs/users/a1742674/MosaiC-All/Outputs -c $SCRIPTDIR/MosaiC-All.config
-#Test04: bash $SCRIPTDIR/MASTERSCRIPT_Mosaic_All.sh -s /hpcfs/users/a1742674/MosaiC-All/SampleID_All -o /hpcfs/users/a1742674/MosaiC-All/Output_160823 -c $SCRIPTDIR/MosaiC-All.config
+# See: https://github.com/ngs1810/MosaiC-All for history and new updates.
+#
 "
 }
 
@@ -67,15 +61,15 @@ done
 
 if [ -z "$SAMPLELIST" ]; then
     usage
-    echo "## ERROR: You need to provide a sample list 
-	#-s REQUIRED sampleID.list (one header row and then tab-delimited columns \$BAMdir,\$ProbandID,\$Gender,\$Mother,\$Father)"
+    echo "## ERROR: You need to provide a sample list" 
+    echo "#-s REQUIRED sampleID.list (one header row and then tab-delimited columns \$BAMdir,\$ProbandID,\$Gender,\$Mother,\$Father)"
 	exit 1
 fi
 
 if [ -z "$CONFIG_FILE" ]; then
     usage
-    echo "## ERROR: You need to provide a config file 
-	#-c REQUIRED ConfigFile (i.e /hpcfs/groups/phoenix-hpc-neurogenetics/Nandini/Mosaic-All/Mosaic-S/Mosaic-All.config)"
+    echo "## ERROR: You need to provide a config file. Check the config/Mosaic-All.config file for an example."
+    echo "#-c <file>  REQUIRED: Configuration File (This file sets paths and defaults relevant to your system e.g. see: config/Mosaic-All.config)"
 	exit 1
 fi
 
@@ -88,7 +82,7 @@ fi
 
 if [ ! -d "${OUTDIR}" ]; then
     mkdir -p ${OUTDIR}
-	echo "## INFO: output directory created, you'll find all of the outputs and log files in here: ${OUTDIR}" >> $LOGDIR/$ProbandID.pipeline.log
+	echo "## INFO: output directory created, you'll find all of the outputs and log files in here: ${OUTDIR}" >> $OUTDIR/Mosaic-All.pipeline.log
 fi
 
 #Array from a list of Samples (ignoring the header of the file)
@@ -102,103 +96,82 @@ module load BCFtools/1.17-GCC-11.2.0
 for SAMPLEID in "${SAMPLEID[@]}"; do
 
     #Defining variables from each row
-	BamDIR=$(awk '{print $1}' <<< "$SAMPLEID ")
+	BAMDIR=$(awk '{print $1}' <<< "$SAMPLEID ")
     ProbandID=$(awk '{print $2}' <<< "$SAMPLEID ")
-   	ProbandGender=$(awk '{print $3}' <<< "$SAMPLEID ")
+   	Gender=$(awk '{print $3}' <<< "$SAMPLEID ")
    	MotherID=$(awk '{print $4}' <<< "$SAMPLEID ")
    	FatherID=$(awk '{print $5}' <<< "$SAMPLEID ")
 
-	echo "Pipeline for $ProbandID,$MotherID,$FatherID in $BamDIR" >> $OUTDIR/$ProbandID.pipeline.log
+	echo "Pipeline for $ProbandID, $MotherID, $FatherID in $BAMDIR" >> $OUTDIR/$ProbandID.pipeline.log
 
     #1.MosaicHunter 
     # Submit MHjob for Proband either in triomode or singlemode
 	# so, need to Check if both MotherID and FatherID are present
     if [[ -n "$MotherID" && -n "$FatherID" ]]; then
-        MH_P="sbatch $SCRIPTDIR/MosaicHunter_WES_Trio.sh -s $ProbandID -b $BamDIR -d $OUTDIR -g $ProbandGender -f $FatherID -m $MotherID -c $CONFIG_FILE"
+        MH_P="sbatch $SCRIPTDIR/scripts/MosaicHunter_WES_Trio.sh -s $ProbandID -b $BAMDIR -d $OUTDIR -g $Gender -f $FatherID -m $MotherID -c $CONFIG_FILE"
  	    MH_P_JobID=$($MH_P | awk '{print $NF}')
-	    sbatch --export=ALL --dependency=afterok:${MH_P_JobID} $SCRIPTDIR/CombineCalls.sh -s $ProbandID -v MH -f $OUTDIR/$samples.final.passed.tsv -o $OUTDIR
+	    sbatch --export=ALL --dependency=afterok:${MH_P_JobID} $SCRIPTDIR/scripts/CombineCalls.sh -s $ProbandID -v MH -f $OUTDIR/$ProbandID.final.passed.tsv -o $OUTDIR
 	    if [ "$MH_P_JobID" ]; then
-	        Count_MH=$(cat $OUTDIR/$samples.final.passed.tsv | wc -l)
-	        echo "$ProbandID\tTriomode\t$Count_MH" | tr " " "\t" >> Counts.txt
+	        Count_MH=$(wc -l $OUTDIR/$ProbandID.final.passed.tsv)
+	        echo "$ProbandID\tTriomode\t$Count_MH" | tr " " "\t" >> $OUTDIR/Counts.txt
 	    fi
     else
-        MH_P="sbatch $SCRIPTDIR/MosaicHunter_WES_Singlemode.sh -s $ProbandID -b $BamDIR -d $OUTDIR -g $ProbandGender -c $CONFIG_FILE"
+        MH_P="sbatch $SCRIPTDIR/scripts/MosaicHunter_WES_Singlemode.sh -s $ProbandID -b $BAMDIR -d $OUTDIR -g $Gender -c $CONFIG_FILE"
  	    MH_P_JobID=$($MH_P | awk '{print $NF}')
-	    sbatch --export=ALL --dependency=afterok:${MH_P_JobID} $SCRIPTDIR/CombineCalls.sh -s $ProbandID -v MH -f $OUTDIR/$samples.final.passed.tsv -o $OUTDIR
+	    sbatch --export=ALL --dependency=afterok:${MH_P_JobID} $SCRIPTDIR/scripts/CombineCalls.sh -s $ProbandID -v MH -f $OUTDIR/$ProbandID.final.passed.tsv -o $OUTDIR
     fi
 		
 	# Submit MHjob for Parents
 	# Check if either MotherID or FatherID is present
 	if [[ -n "$MotherID" ]]; then
-    	sbatch "$SCRIPTDIR/MosaicHunter_WES_Singlemode.sh" -s "$MotherID" -b "$BamDIR" -d "$OUTDIR" -g "F" -c "$CONFIG_FILE"
+    	sbatch "$SCRIPTDIR/scripts/MosaicHunter_WES_Singlemode.sh" -s "$MotherID" -b "$BAMDIR" -d "$OUTDIR" -g "F" -c "$CONFIG_FILE"
   	fi
 
   	if [[ -n "$FatherID" ]]; then
-       	sbatch "$SCRIPTDIR/MosaicHunter_WES_Singlemode.sh" -s "$FatherID" -b "$BamDIR" -d "$OUTDIR" -g "M" -c "$CONFIG_FILE"
+       	sbatch "$SCRIPTDIR/scripts/MosaicHunter_WES_Singlemode.sh" -s "$FatherID" -b "$BAMDIR" -d "$OUTDIR" -g "M" -c "$CONFIG_FILE"
   	fi
 			
     #2.Mutect2 and MosaicForecast
 
 	#Check if the PON contains the sample in the family
-    for samples in "$ProbandID" "$MotherID" "$FatherID"; do 
+    for SampleID in "$ProbandID" "$MotherID" "$FatherID"; do 
 
 	# Store the result of the grep command in a variable
-		normalSample=$(bcftools view $PON_A | grep "$samples")
+		normalSample=$(bcftools query -l $PON_A | grep "$SampleID")
 
 		# Check if $SampleID is present in the result
 		if [ -n "$normalSample" ]; then
-    		echo "$samples is present in $PON_A. So, let's do Mutect2 on this sample using $PON_B. But, we still have to check $PON_B first"
-    		normalSample_B=$(bcftools view $PON_B | grep "$samples")
+    		echo "## WARN: $SampleID is present in $PON_A. Checking for this sample in $PON_B." >> $OUTDIR/$SampleID.pipeline.log
+    		normalSample_B=$(bcftools query -l $PON_B | grep "$SampleID")
 	    	#check sample in PON_B
-	   		if [ -n "$normalSample_B" ]; then
-       			#execute Mutect2 using PON_B
-       			Mutect2="sbatch $SCRIPTDIR/Mutect2.singlemode.sh -b $BamDIR -s $samples -c $CONFIG_FILE -o $OUTDIR -p $PON_B"
-           		Mutect2JobID=$($Mutect2 | awk '{print $NF}')
-			    #execute FilterMutect2 which depends on Mutect2
-		        sbatch --export=ALL --dependency=afterok:${Mutect2JobID} $SCRIPTDIR/Mutect2.FilterMutect2.sh -s $samples -v $OUTDIR -c $CONFIG_FILE
-       			#execute MosaicForecast (step1) which depends on Mutect2
-       			MF1="sbatch --export=ALL --dependency=afterok:${Mutect2JobID} $SCRIPTDIR/MF1_ProcessInput.sh -s $samples -b $BamDIR -o $OUTDIR -c $CONFIG_FILE"
-    			MF1_job_id=$($MF1 | awk '{print $NF}')
-			    #execute MosaicForecast (step2) which depends on MosaicForecast (step1)
-    			MF2="sbatch --export=ALL --dependency=afterok:${MF1_job_id} $SCRIPTDIR/MF2_Extractreadlevel-singularity.sh -b $BamDIR -s $samples -c $CONFIG_FILE -o $OUTDIR"
-    			MF2_job_id=$($MF2 | awk '{print $NF}')
-			    #execute MosaicForecast (step3) which depends on MosaicForecast (step2)
-   			    MF3="sbatch --export=ALL --dependency=afterok:${MF2_job_id} $SCRIPTDIR/MF3.GenotypePredictionsl-singularity.sh -s $samples -c $CONFIG_FILE -o $OUTDIR"
-   			    MF3_job_id=$($MF3 | awk '{print $NF}')
+	   		if [ -z "$normalSample_B" ]; then
+                echo "## INFO: $SampleID is not present in $PON_B. So, let's do Mutect2 on this sample using $PON_B" >> $OUTDIR/$SampleID.pipeline.log
+       			PON=$PON_B
 		  	else
-   				echo "$samples present in both PON, provide another one. No Mutect2 is performed for this sample: MUTECT2 FAIL"
+   				echo "## WARN: $SampleID present in both Panel of Normal VCFs, you will need to provide another one and set this in $CONFIG_FILE. Mutect2 was not performed for this sample." >> $OUTDIR/$SampleID.pipeline.log
 	  		fi
 		else
 		   	# Submit the Mutect2 job using PON_A
-			echo "$samples is not present in $PON_A. So, let's do Mutect2 on this sample using $PON_A"
-			Mutect2="sbatch $SCRIPTDIR/Mutect2.singlemode.sh -b $BamDIR -s $samples -c $CONFIG_FILE -o $OUTDIR -p $PON_A"
-        	Mutect2JobID=$($Mutect2 | awk '{print $NF}')
-        	#execute FilterMutect2 which depends on Mutect2
-    		sbatch --export=ALL --dependency=afterok:${Mutect2JobID} $SCRIPTDIR/Mutect2.FilterMutect2.sh -s $samples -v $OUTDIR -c $CONFIG_FILE
-    		#execute MosaicForecast (step1) which depends on Mutect2
-    		MF1="sbatch --export=ALL --dependency=afterok:${Mutect2JobID} $SCRIPTDIR/MF1_ProcessInput.sh -s $samples -b $BamDIR -o $OUTDIR -c $CONFIG_FILE"
-    		MF1_job_id=$($MF1 | awk '{print $NF}')
-			#execute MosaicForecast (step2) which depends on MosaicForecast (step1)
-    		MF2="sbatch --export=ALL --dependency=afterok:${MF1_job_id} $SCRIPTDIR/MF2_Extractreadlevel-singularity.sh -b $BamDIR -s $samples -c $CONFIG_FILE -o $OUTDIR"
-    		MF2_job_id=$($MF2 | awk '{print $NF}')
-			#execute MosaicForecast (step3) which depends on MosaicForecast (step2)
-   			MF3="sbatch --export=ALL --dependency=afterok:${MF2_job_id} $SCRIPTDIR/MF3.GenotypePredictionsl-singularity.sh -s $samples -c $CONFIG_FILE -o $OUTDIR"
-   			MF3_job_id=$($MF3 | awk '{print $NF}')
-		   	sbatch --export=ALL --dependency=afterok:${Mutect2JobID} $SCRIPTDIR/Mutect2.FilterMutect2.sh -s $samples -v $OUTDIR -c $CONFIG_FILE
+			echo "## INFO: $SampleID is not present in $PON_A. So, let's do Mutect2 on this sample using $PON_A" >> $OUTDIR/$SampleID.pipeline.log
+            PON=$PON_A
 		fi
-			
-	done
 
-    #4. Germline variant calling- GATKHC (Cannot run in HPC yet with this script)
- 
-	for samples in "$ProbandID" "$MotherID" "$FatherID"; do # The GATK.HC config is now defined in the Mosaic-All.config
-
-		GATKHCjob=`sbatch --array=0-23 $SCRIPTDIR/GATK.HC_Universal_phoenix.sh -S $samples -o $BamDIR -c $SCRIPTDIR/$CONFIG_for_GATKHC`
-		GATKHCjob=$(echo $GATKHCjob | awk '{print $NF}')
-		sbatch --export=ALL --dependency=afterok:${GATKHCjob} $SCRIPTDIR/GATK.gatherVCFs_Universal_phoenix.sh -c $SCRIPTDIR/$CONFIG_for_GATKHC -S $samples -o $OUTDIR	
-
+		# Run Mutect2 and MosaicForecast using the selected PON
+        Mutect2="sbatch $SCRIPTDIR/scripts/Mutect2.singlemode.sh -b $BAMDIR -s $SampleID -c $CONFIG_FILE -o $OUTDIR -p $PON"
+        Mutect2JobID=$($Mutect2 | awk '{print $NF}')
+        #execute FilterMutect2 which depends on Mutect2
+        sbatch --export=ALL --dependency=afterok:${Mutect2JobID} $SCRIPTDIR/scripts/Mutect2.FilterMutect2.sh -s $SampleID -v $OUTDIR -c $CONFIG_FILE
+        #execute MosaicForecast (step1) which depends on Mutect2
+        MF1="sbatch --export=ALL --dependency=afterok:${Mutect2JobID} $SCRIPTDIR/scripts/MF1_ProcessInput.sh -s $SampleID -b $BAMDIR -o $OUTDIR -c $CONFIG_FILE"
+        MF1_job_id=$($MF1 | awk '{print $NF}')
+        #execute MosaicForecast (step2) which depends on MosaicForecast (step1)
+        MF2="sbatch --export=ALL --dependency=afterok:${MF1_job_id} $SCRIPTDIR/scripts/MF2_Extractreadlevel-singularity.sh -b $BAMDIR -s $SampleID -c $CONFIG_FILE -o $OUTDIR"
+        MF2_job_id=$($MF2 | awk '{print $NF}')
+        #execute MosaicForecast (step3) which depends on MosaicForecast (step2)
+        MF3="sbatch --export=ALL --dependency=afterok:${MF2_job_id} $SCRIPTDIR/scripts/MF3.GenotypePredictions-singularity.sh -s $SampleID -c $CONFIG_FILE -o $OUTDIR"
+        MF3_job_id=$($MF3 | awk '{print $NF}')
+        sbatch --export=ALL --dependency=afterok:${Mutect2JobID} $SCRIPTDIR/scripts/Mutect2.FilterMutect2.sh -s $SampleID -v $OUTDIR -c $CONFIG_FILE
+	
 	done
 	
 done
-
-
