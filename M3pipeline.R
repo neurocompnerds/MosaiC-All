@@ -2,7 +2,7 @@
 #Overlap between two or more mosaic variant caller, flagging each group
 
 #set the directory
-setwd("D:/Genomic Autopsy")
+setwd(" ")
 
 library(tidyverse)
 
