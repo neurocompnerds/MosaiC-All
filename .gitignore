@@ -81,3 +81,6 @@ creds.js
 *.vcf.gz
 Counts.txt
 MH.calls.txt
+*_phoenix.cfg
+MF4.Postprocessing
+M3pipeline.R

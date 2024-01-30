@@ -1,7 +1,7 @@
 #!/bin/sh -l
 #SBATCH -J MF1_PrepareInputFile.sh
-#SBATCH -o /hpcfs/users/%u/Mosaic-All/Log/MF.Input.slurm-%j.out
-#SBATCH -A robinson
+#SBATCH -o /home/%u/Mosaic-All/Log/MF.Input.slurm-%j.out
+
 #SBATCH -p skylake,icelake
 #SBATCH -N 1
 #SBATCH -n 2
@@ -11,7 +11,7 @@
 # Notification configuration
 #SBATCH --mail-type=END
 #SBATCH --mail-type=FAIL
-#SBATCH --mail-user=a1742674@adelaide.edu.au
+#SBATCH --mail-user=%u@adelaide.edu.au
 
 usage()
 {
@@ -19,17 +19,16 @@ echo "
 #
 #README
 #This script is designed for Mosaic-All wrapper script
-#For standalone script,look for the original
 #
 #SCRIPT EXECUTION
-#SCRIPTDIR=/hpcfs/groups/phoenix-hpc-neurogenetics/Mosaic-All/Mosaic-S
-#sbatch $SCRIPTDIR/MF1_ProcessInput.sh -s SAMPLE -b BAMDIR -o OUTDIR -c CONFIG_FILE   
+#sbatch $0 -s SampleID -b BAMDIR -o OUTDIR -c CONFIG_FILE   
 #all of this will be "specified" in MasterScript
 #
-#-s REQUIRED SampleID   					(e.g 004P, or 004M, or 004F no suffix)
-#-b REQUIRED Directory of Bam files 		(e.g /hpcfs/groups/phoenix-hpc-sacgf/scratch/ali/GA_bams)
-#-c REQUIRED Directory of Outputs   		(/gpfs/users/a1149120/MosaicHunter_single)
-#-o REQUIRED Reference Genome     	        (e.g hs37d5.fa) 
+#-s REQUIRED SampleID                       (e.g. A unique identifier for your sample that is also in the BAM file name)
+#-b REQUIRED Directory of BAM files         (e.g. /path/to/bam_file_directory/)
+#-c REQUIRED The script configuration file  (/path/to/config_file.cfg)
+#-o REQUIRED Directory of outputs           (e.g. /path/to/output/)
+#
 "
 }
 
@@ -37,7 +36,7 @@ echo "
 while [ "$1" != "" ]; do
         case $1 in
                 -s )                    shift
-                                        SAMPLE=$1
+                                        SampleID=$1
                                         ;;
                 -b )                   	shift
                                         BAMDIR=$1
@@ -54,22 +53,27 @@ while [ "$1" != "" ]; do
         shift
 done
 
-
-module purge
+## Check for all required arguments
+for ARG in $BAMDIR $OUTDIR $CONFIG_FILE $SampleID; do
+    if [ -z "${ARG}" ]; then
+        usage
+        echo "## ERROR: Please check that you have supplied all required argunments for this script"
+        exit 1
+    fi
+done
 
 source $CONFIG_FILE
 
 #process Mutect2 files
-BAMFILE=$(find "$BAMDIR" -type f -name "$SAMPLE*.bam")
+BAMFILE=$(find "$BAMDIR" -type f -name "$SampleID*.bam")
 BAMprefix=$(basename "$BAMFILE" | sed 's/\.[^.]*$//')
 
 tmp_file=$(mktemp)  # Create a temporary file
 
-grep -v "#" $OUTDIR/$SAMPLE.$CONFIG.PON.gnomad.vcf | tr " " "\t" > "$tmp_file"
+grep -v "#" $OUTDIR/$SampleID.$CONFIG.PON.gnomad.vcf | tr " " "\t" > "$tmp_file"
 
-awk -F  '\t' '{print $1, $2-1, $2, $4, $5}' "$tmp_file" > "$OUTDIR/$SAMPLE.forPhasing.bed"
+awk -F  '\t' '{print $1, $2-1, $2, $4, $5}' "$tmp_file" > "$OUTDIR/$SampleID.forPhasing.bed"
 
 rm "$tmp_file"  # Remove the temporary file
 
-awk -v prefix="$BAMprefix" 'BEGIN{OFS="\t"} {$6 = prefix; print}' $OUTDIR/$SAMPLE.forPhasing.bed > $OUTDIR/$SAMPLE.phasingInput.bed
-
+awk -v prefix="$BAMprefix" 'BEGIN{OFS="\t"} {$6 = prefix; print}' $OUTDIR/$SampleID.forPhasing.bed > $OUTDIR/$SampleID.phasingInput.bed
