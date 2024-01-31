@@ -2,7 +2,7 @@
 
 ## Comprehensive analysis of somatic and parental gonosomal mosaicism using trio or singleton design.
 
-### Step 1: Pre-requisites/ Softwares Installation
+### Step 1: Pre-requisites/ Software Installation
 
 The following packages and resources are required to run the pipelines. Packages should be installed according to developer instructions.
 
