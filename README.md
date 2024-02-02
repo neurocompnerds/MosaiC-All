@@ -16,9 +16,9 @@ GATK: https://github.com/broadinstitute/gatk/releases
 |  Resources                    |     Example/Sources/Notes          | 
 |-------------------------------|------------------------------------|  
 |  Reference genome             |     e.g hs37d5.fa                  |
-|  Variant databases            |     dbSNP (e.g b37_dbsnp_138.b37.vcf)<br> gnomAD (e.g somatic-b37_af-only-gnomad.raw.sites.vcf)      |
-|  Repeats                      |     e.g all_repeats.b37.bed;<br> can be found in MosaicHunter installation (i.e $MHDIR/MosaicHunter-master/resources) |
-|  Exome errors databases       |     e.g WES_Agilent_71M.error_prone.b37.bed;<br> can be found in MosaicHunter installation (i.e $MHDIR/MosaicHunter-master/resources)                |
+|  Variant databases            |     dbSNP (e.g b37_dbsnp_138.b37.vcf)<br> gnomAD (e.g somatic-b37_af-only-gnomad.raw.sites.vcf). Obtain these from the [GATK resource bundle](https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle)     |
+|  Repeats                      |     e.g all_repeats.b37.bed;<br> can be found in the [MosaicHunter repository](https://github.com/zzhang526/MosaicHunter/tree/master/resources) |
+|  Exome errors databases       |     e.g WES_Agilent_71M.error_prone.b37.bed;<br> can be found in the [MosaicHunter repository](https://github.com/zzhang526/MosaicHunter/tree/master/resources)                |
 |  Panel of Normals (PON)        |     Should be prepared based on samples that are not part of the analysis.<br>As a suggestion for large cohort analysis, samples can be divided into two batches to create two PONs (PON_A and PON_B).<br> PONs are prepared based on GATK option-CreateSomaticPanelOfNormals (i.e https://gatk.broadinstitute.org/hc/en-us/articles/4405451431963-CreateSomaticPanelOfNormals-BETA)          |
 
 ### Step 2: Config-file
@@ -26,7 +26,7 @@ The config-file (Mosaic-All.config) is used to specify locations of required sof
 
 MosaiC-ALL/config/Mosaic-All.config
 
-### Step 3: Variant calling using four tools (for M3 and pGoM pipelines)
+### Step 3: Variant calling using three tools (for M3 and pGoM pipelines)
 
 #### 3.1 Summary: 
 Variant detection from either singleton or trio WES data is performed using three mosaic variant callers (MosaicHunter, MosaicForecast, Mutect2). Germline variants are called using GATK4 best practices workflow which should be run separately (https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels). 
@@ -35,19 +35,19 @@ The wrapper-script (MasterScript_MosaiC-All.sh) will run all tools for mosaic va
 
 #### 3.2 Command:
 
-> MosaiC-All/MasterScript_MosaiC-All.sh -s $SampleID.list -o $Outputs -c MosaiC-All/config/Mosaic-All.config
+`MosaiC-All/MasterScript_MosaiC-All.sh -s SampleID.list -o /path/to/output/directory -c MosaiC-All/config/Mosaic-All.config`
 
-This script was designed for slurm workload manager in an HPC environment, but can run locally with some adjustments.
+This script was designed for slurm workload manager in an HPC environment, but it can be adapted to run locally with some adjustments.
 
 #### 3.3 Requirements:-
 
-1. $SampleID.list: A tab-separated-file as following format based on the bam.files of each sample (e.g 001P.realigned.bam)
+1. SampleID.list: A tab-separated-file as following format based on the bam.files of each sample (e.g 001P.realigned.bam)
 
 |  Directory of bam files  | ProbandID | Gender   | MotherID | FatherID | 
 |--------------------------|-----------|----------|----------|----------|
 |   ./path                 |   001P    |   F      |  001M    |   001F   |
 
-2. $Outputs: An Output directory to store all final outputs
+2. /path/to/output/directory: An output directory to store all final outputs
    
 3. MosaiC-ALL/config/Mosaic-All.config: A config file prepared as described in Step 1 and 2.
    
@@ -58,11 +58,11 @@ Aims:
 - to filter MFcalls and
 - Merge callsets from all tools.
 
-> sbatch MosaiC-ALL/postprocessing/M3_CombineCalls.sh -s $sampleID -d $Outputs
+`sbatch MosaiC-ALL/postprocessing/M3_CombineCalls.sh -s sampleID -o /path/to/output/directory`
 
 Requirements:-
 - sampleID (i.e 001P)
-- Outputs (Output directory as specified in Step 3)
+- /path/to/output/directory (Output directory as specified in Step 3)
 
 #### 4.2 Example R script for finding overlaps (M3pipeline.R)
 Aims:
@@ -77,8 +77,8 @@ The script MosaiC-ALL/postprocessing/M3pipeline.R is an example script for perfo
 Aims: 
 - To filter parental mosaic variant calls based on transmission to children
 
-> sbatch /MosaiC-ALL/postprocessing/pGoM.sh -v $VCFDIR -s $OUTDIR/FamilyID.txt -o $OUTDIR
-- VCFDIR					(directory for family VCFs)
-- FAMILYID   			(familyID.txt:list of familyIDs in a txt file; $FAMILYID*.vcf)
-- OUTDIR					(output directory) 
+`sbatch /MosaiC-ALL/postprocessing/pGoM.sh -v /path/to/directory_of_vcf -s FamilyID.txt -o /path/to/output/directory`
+- /path/to/directory_of_vcf					(Directory that contains one VCF for each family trio).
+- FamilyID.txt   			(List of familyIDs in a txt file; you can use the SampleID.list file for this).
+- /path/to/output/directory					(A location for the output files).
 
