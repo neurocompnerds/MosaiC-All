@@ -72,28 +72,30 @@ GATKHC$POS<-as.numeric(GATKHC$POS)
 
 # 5.FLAG THE OVERLAP DETECTION (each tool and prefilter_pGoM) and TIDY UP
 ##5.1 Single Variant caller tool
-Mut_pGoM <- inner_join(Mutect2, GATKHC, by = c("CHROM", "POS", "SampleID", "REF", "ALT"))%>%mutate(VC="MUT")
-  MH_pGoM <- inner_join(MH, GATKHC, by = c("CHROM", "POS", "SampleID", "REF", "ALT"))%>%mutate(VC="MH")
-  MF_pGoM <- inner_join(MF, GATKHC, by = c("CHROM", "POS", "SampleID", "REF", "ALT"))%>%mutate(VC="MF")
+Mut_pGoM <- inner_join(Mutect2, GATKHC, by = c("CHROM", "POS", "SampleID", "REF", "ALT"))%>%mutate(VC_MUT="MUT")
+  MH_pGoM <- inner_join(MH, GATKHC, by = c("CHROM", "POS", "SampleID", "REF", "ALT"))%>%mutate(VC_MH="MH")
+  MF_pGoM <- inner_join(MF, GATKHC, by = c("CHROM", "POS", "SampleID", "REF", "ALT"))%>%mutate(VC_MF="MF")
 
 ##5.2 More than 2 Variant callers
 #merge three VC outputs (from 5.1), which will give three columns of VC
 MF_MH<-full_join(MH_pGoM,MF_pGoM,by=c("CHROM", "POS", "SampleID", "REF", "ALT"))
   MF_MH_MUT<-full_join(MF_MH,Mut_pGoM,by=c("CHROM", "POS", "SampleID", "REF", "ALT"))
 #flag VC that were not identified by respective tool
-MF_MH_MUT$VC.x <- ifelse(is.na(MF_MH_MUT$VC.x), "NO", MF_MH_MUT$VC.x)
-  MF_MH_MUT$VC.y <- ifelse(is.na(MF_MH_MUT$VC.y), "NO", MF_MH_MUT$VC.y)
-  MF_MH_MUT$VC <- ifelse(is.na(MF_MH_MUT$VC), "NO", MF_MH_MUT$VC)
+MF_MH_MUT$VC_MUT <- ifelse(is.na(MF_MH_MUT$VC_MUT), "NO", MF_MH_MUT$VC_MUT)
+  MF_MH_MUT$VC_MH <- ifelse(is.na(MF_MH_MUT$VC_MH), "NO", MF_MH_MUT$VC_MH)
+  MF_MH_MUT$VC_MF <- ifelse(is.na(MF_MH_MUT$VC_MF), "NO", MF_MH_MUT$VC_MF)
 #Flag variants based on which tool or tools identified
-ALL<-filter(MF_MH_MUT,VC.x=="MF" & VC.y=="MH" & VC=="MUT")%>%mutate(Group="ALL")
-  MUT_MH<-filter(MF_MH_MUT,VC.x=="NO" & VC.y=="MH" & VC=="MUT")%>%mutate(Group="MUT_MH")
-  MUT_MF<-filter(MF_MH_MUT,VC.x=="MF" & VC.y=="NO" & VC=="MUT")%>%mutate(Group="MUT_MF")
-  MH_MF<-filter(MF_MH_MUT,VC.x=="MF" & VC.y=="MH" & VC=="NO")%>%mutate(Group="MH_MF")
-  MH_only<-filter(MF_MH_MUT,VC.x=="NO" & VC.y=="MH" & VC=="NO")%>%mutate(Group="MH_ONLY")
-  MUT_only<-filter(MF_MH_MUT,VC.x=="NO" & VC.y=="NO" & VC=="MUT")%>%mutate(Group="MUT_ONLY")
-  MF_only<-filter(MF_MH_MUT,VC.x=="MF" & VC.y=="NO" & VC=="NO")%>%mutate(Group="MF_ONLY")
+ALL<-filter(MF_MH_MUT,VC_MF=="MF" & VC_MH=="MH" & VC_MUT=="MUT")%>%mutate(Group="ALL")
+  MUT_MH<-filter(MF_MH_MUT,VC_MF=="NO" & VC_MH=="MH" & VC_MUT=="MUT")%>%mutate(Group="MUT_MH")
+  MUT_MF<-filter(MF_MH_MUT,VC_MF=="MF" & VC_MH=="NO" & VC_MUT=="MUT")%>%mutate(Group="MUT_MF")
+  MH_MF<-filter(MF_MH_MUT,VC_MF=="MF" & VC_MH=="MH" & VC_MUT=="NO")%>%mutate(Group="MH_MF")
+  MH_only<-filter(MF_MH_MUT,VC_MF=="NO" & VC_MH=="MH" & VC_MUT=="NO")%>%mutate(Group="MH_ONLY")
+  MUT_only<-filter(MF_MH_MUT,VC_MF=="NO" & VC_MH=="NO" & VC_MUT=="MUT")%>%mutate(Group="MUT_ONLY")
+  MF_only<-filter(MF_MH_MUT,VC_MF=="MF" & VC_MH=="NO" & VC_MUT=="NO")%>%mutate(Group="MF_ONLY")
+  NONE<-filter(MF_MH_MUT,VC_MF=="NO" & VC_MH=="NO" & VC_MUT=="NO")%>%mutate(Group="NONE")
+
 #Compile all into one file   
-pGoM<-rbind(ALL,MUT_MH,MUT_MF,MH_MF,MH_only,MUT_only,MF_only)%>%unique()
+pGoM<-rbind(ALL,MUT_MH,MUT_MF,MH_MF,MH_only,MUT_only,MF_only,NONE)%>%unique()
 
 # 6. SAVE FILE
-write.csv(df_result, file = paste0(pGoM_finalOutput, ".csv"))
+write.csv(pGoM, file = paste0(pGoM_finalOutput, ".csv"))
