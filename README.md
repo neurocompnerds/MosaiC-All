@@ -46,6 +46,7 @@ This script was designed for slurm workload manager in an HPC environment, but i
 |  Directory of bam files  | ProbandID | Gender   | MotherID | FatherID | 
 |--------------------------|-----------|----------|----------|----------|
 |   ./path                 |   001P    |   F      |  001M    |   001F   |
+|   ./path                 |   003P    |   M      |  003M    |   003F   |
 
 2. /path/to/output/directory: An output directory to store all final outputs
    
@@ -58,9 +59,12 @@ Aims:
 - to filter MFcalls and
 - Merge callsets from all tools.
 
+Command
+
 `sbatch MosaiC-ALL/postprocessing/M3_CombineCalls.sh -s sampleID -o /path/to/output/directory`
 
-Requirements:-
+Requirements:
+
 1. sampleID (i.e 001P)
 2. /path/to/output/directory (Output directory as specified in Step 3)
 
@@ -80,21 +84,28 @@ Aims:
 5.1 Prefilter
 - Identify inherited variants that expected to be mosaic based on AAF and GT, using GATKHC outputs
 
-Command
+Command:
+
 `sbatch /MosaiC-ALL/postprocessing/pGoM.sh -v /path/to/directory_of_vcf -s FamilyID.txt -o /path/to/output/directory`
 
-Requirements
--v 	input directory (where can we find the family.vcf)
--s 	A file e.g. sampleID.list (one header row and then tab-delimited columns \$BAMdir,\$ProbandID,\$Gender,\$Mother,\$Father)
+Requirements:
+
+1. input directory (where can we find the family.vcf).
+
+2. sampleID list (one header row and then tab-delimited columns \$BAMdir,\$ProbandID,\$Gender,\$Mother,\$Father).
+   
 |  Directory of Bam files  | ProbandID | Gender   | MotherID | FatherID | FamilyVCF | 
 |--------------------------|-----------|----------|----------|----------|-----------|
 |   ./path                 |   001P    |   F      |  001M    |   001F   | Trio001.vcf |
--o 	/path/to/output/directory					(A location for the output files).
+|   ./path                 |   004P    |   F      |  004M    |   004F   | 004.family.vcf |
+
+3. /path/to/output/directory	(A location for the output files).
 
 5.2 Postfilter
-- Using MosaiC-ALL/postprocessing/pGoMpipeline.R, prefiltered-pGoM variants are determined to be mosaic based on its identification by one or more mosaic variant calling tool
+- Mosaic variants are identified among prefiltered pGoM variants using one or more mosaic variant calling tools
+- Example script: MosaiC-ALL/postprocessing/pGoMpipeline.R
 
-Requirements
+Requirements:
 1. Three Output files from MosaiC-ALL/postprocessing/M3_CombineCalls.sh
 2. pGoM.sh output file
 3. Amend the working directory and output_file prefix in the R.script
