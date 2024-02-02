@@ -162,6 +162,6 @@ for SAMPLEID in "${SAMPLEID[@]}"; do
  	echo "pGoM Pipeline for $ProbandID is completed" >> $LOGDIR/$ProbandID.pGoM.pipeline.log
 
   	##Tidy up for postprocessing in R by removing the headers and combining both parents (of all samples) into a single file
-	awk -v ID="$FatherID" '$0 !~ /^##/ {print ID "\t" "GATKHC_filtered" "\t" $0}' $OUTDIR/$ProbandID.fa.final.vcf >> $OUTDIR/pGoM_prefilter_List.txt   
-	awk -v ID="$MotherID" '$0 !~ /^##/ {print ID "\t" "GATKHC_filtered" "\t" $0}' $OUTDIR/$ProbandID.mo.final.vcf >> $OUTDIR/pGoM_prefilter_List.txt
+	awk -v ID="$FatherID" '$0 !~ /^##/ {print (NR==1) ? "SampleID\tpGoM\t" $0 : ID "\tpGoM_prefilter\t" $0}' $OUTDIR/$ProbandID.fa.final.vcf >> $OUTDIR/pGoM_prefilter_List.txt   
+	awk -v ID="$MotherID" '$0 !~ /^##/ {print (NR==1) ? "SampleID\tpGoM\t" $0 : ID "\tpGoM_prefilter\t" $0}' $OUTDIR/$ProbandID.mo.final.vcf >> $OUTDIR/pGoM_prefilter_List.txt
 done
