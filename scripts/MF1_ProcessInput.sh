@@ -1,6 +1,6 @@
 #!/bin/sh -l
 #SBATCH -J MF1_PrepareInputFile.sh
-#SBATCH -o /home/%u/Mosaic-All/Log/MF.Input.slurm-%j.out
+#SBATCH -o /hpcfs/groups/phoenix-hpc-neurogenetics/scripts/git/neurocompnerds/Mosaic/MosaiC-All/TestRun/MF.Input.slurm-%j.out
 
 #SBATCH -p skylake,icelake
 #SBATCH -N 1

@@ -108,6 +108,7 @@ for SAMPLEID in "${SAMPLEID[@]}"; do
     if [[ -n "$MotherID" && -n "$FatherID" ]]; then
         sbatch $SCRIPTDIR/scripts/MosaicHunter_WES_Trio.sh -s $ProbandID -b $BAMDIR -d $OUTDIR -g $Gender -f $FatherID -m $MotherID -c $CONFIG_FILE
     else
+	echo "## MH INFO: No parents provided, so, the proband is assumed singleton, thus, singlemodeMH will be used" >> $OUTDIR/$SampleID.pipeline.log
         sbatch $SCRIPTDIR/scripts/MosaicHunter_WES_Singlemode.sh -s $ProbandID -b $BAMDIR -d $OUTDIR -g $Gender -c $CONFIG_FILE
     fi
 		
@@ -115,52 +116,66 @@ for SAMPLEID in "${SAMPLEID[@]}"; do
 	# Check if either MotherID or FatherID is present
 	if [[ -n "$MotherID" ]]; then
     	sbatch "$SCRIPTDIR/scripts/MosaicHunter_WES_Singlemode.sh" -s "$MotherID" -b "$BAMDIR" -d "$OUTDIR" -g "F" -c "$CONFIG_FILE"
+	else
+	echo "## INFO: MotherID is empty." >> "$OUTDIR/$SampleID.pipeline.log"
   	fi
 
   	if [[ -n "$FatherID" ]]; then
        	sbatch "$SCRIPTDIR/scripts/MosaicHunter_WES_Singlemode.sh" -s "$FatherID" -b "$BAMDIR" -d "$OUTDIR" -g "M" -c "$CONFIG_FILE"
-  	fi
+  	else
+	echo "## INFO: FatherID is empty." >> "$OUTDIR/$SampleID.pipeline.log"
+	fi
 			
     #2.Mutect2 and MosaicForecast
 
 	#Check if the PON contains the sample in the family
-    for SampleID in "$ProbandID" "$MotherID" "$FatherID"; do 
+    	for SampleID in "$ProbandID" "$MotherID" "$FatherID"; do 
+
+	if [[ -n "$SampleID" ]]; then
 
 	# Store the result of the grep command in a variable
-		normalSample=$(bcftools query -l $PON_A | grep "$SampleID")
+		normalSample=$(bcftools view $PON_A |  grep -oE -- "$SampleID")
 
 		# Check if $SampleID is present in the result
 		if [ -n "$normalSample" ]; then
-    		echo "## WARN: $SampleID is present in $PON_A. Checking for this sample in $PON_B." >> $OUTDIR/$SampleID.pipeline.log
-    		normalSample_B=$(bcftools query -l $PON_B | grep "$SampleID")
+    		echo "## Mutect2 WARN: $SampleID is present in $PON_A. Checking for this sample in $PON_B." >> $OUTDIR/$SampleID.pipeline.log
+    		normalSample_B=$(bcftools view $PON_B | grep -oE -- "$SampleID")
 	    	#check sample in PON_B
 	   		if [ -z "$normalSample_B" ]; then
-                echo "## INFO: $SampleID is not present in $PON_B. So, let's do Mutect2 on this sample using $PON_B" >> $OUTDIR/$SampleID.pipeline.log
+                	echo "## Mutect2 INFO: $SampleID is not present in $PON_B. So, let's do Mutect2 on this sample using $PON_B" >> $OUTDIR/$SampleID.pipeline.log
        			PON=$PON_B
 		  	else
-   				echo "## WARN: $SampleID present in both Panel of Normal VCFs, you will need to provide another one and set this in $CONFIG_FILE. Mutect2 was not performed for this sample." >> $OUTDIR/$SampleID.pipeline.log
+   			echo "## WARN: $SampleID present in both Panel of Normal VCFs, you will need to provide another one and set this in $CONFIG_FILE. Mutect2 was not performed for this sample." >> $OUTDIR/$SampleID.pipeline.log
 	  		fi
 		else
-		   	# Submit the Mutect2 job using PON_A
-			echo "## INFO: $SampleID is not present in $PON_A. So, let's do Mutect2 on this sample using $PON_A" >> $OUTDIR/$SampleID.pipeline.log
-            PON=$PON_A
+		# Submit the Mutect2 job using PON_A
+		echo "## Mutect2 INFO: $SampleID is not present in $PON_A. So, let's do Mutect2 on this sample using $PON_A" >> $OUTDIR/$SampleID.pipeline.log
+            	PON=$PON_A
 		fi
 
-		# Run Mutect2 and MosaicForecast using the selected PON
+	# Run Mutect2 and MosaicForecast using the selected PON
         Mutect2="sbatch $SCRIPTDIR/scripts/Mutect2.singlemode.sh -b $BAMDIR -s $SampleID -c $CONFIG_FILE -o $OUTDIR -p $PON"
         Mutect2JobID=$($Mutect2 | awk '{print $NF}')
+
         #execute FilterMutect2 which depends on Mutect2
         sbatch --export=ALL --dependency=afterok:${Mutect2JobID} $SCRIPTDIR/scripts/Mutect2.FilterMutect2.sh -s $SampleID -v $OUTDIR -c $CONFIG_FILE
+
         #execute MosaicForecast (step1) which depends on Mutect2
         MF1="sbatch --export=ALL --dependency=afterok:${Mutect2JobID} $SCRIPTDIR/scripts/MF1_ProcessInput.sh -s $SampleID -b $BAMDIR -o $OUTDIR -c $CONFIG_FILE"
         MF1_job_id=$($MF1 | awk '{print $NF}')
+
         #execute MosaicForecast (step2) which depends on MosaicForecast (step1)
         MF2="sbatch --export=ALL --dependency=afterok:${MF1_job_id} $SCRIPTDIR/scripts/MF2_Extractreadlevel-singularity.sh -b $BAMDIR -s $SampleID -c $CONFIG_FILE -o $OUTDIR"
         MF2_job_id=$($MF2 | awk '{print $NF}')
+
         #execute MosaicForecast (step3) which depends on MosaicForecast (step2)
         MF3="sbatch --export=ALL --dependency=afterok:${MF2_job_id} $SCRIPTDIR/scripts/MF3.GenotypePredictions-singularity.sh -s $SampleID -c $CONFIG_FILE -o $OUTDIR"
         MF3_job_id=$($MF3 | awk '{print $NF}')
-        sbatch --export=ALL --dependency=afterok:${Mutect2JobID} $SCRIPTDIR/scripts/Mutect2.FilterMutect2.sh -s $SampleID -v $OUTDIR -c $CONFIG_FILE
+
+	
+	else
+	echo "##Mutect2 and MF INFO: MotherID or FatherID is empty. Skipping the loop." >> "$OUTDIR/$SampleID.pipeline.log"
+	fi
 	
 	done
 	

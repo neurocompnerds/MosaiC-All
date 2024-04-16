@@ -1,6 +1,6 @@
 #!/bin/sh
 #SBATCH -J MosaicHunter_Single.sh
-#SBATCH -o /home/%u/Mosaic-All/Log/MH_Singleton-slurm-%j.out
+#SBATCH -o /hpcfs/groups/phoenix-hpc-neurogenetics/scripts/git/neurocompnerds/Mosaic/MosaiC-All/TestRun/MH_Singleton-slurm-%j.out
 
 #SBATCH -p skylake
 #SBATCH -N 1
@@ -86,12 +86,12 @@ module load BLAT/3.5-foss-2016b
 
 #specify variables and directories based on config files
 
-ProbandBamFile=$(find "$BAMDIR" -type f -name "$SampleID.*.bam")
+ProbandBamFile=$(find "$BAMDIR" -type f -name "$SampleID*.bam")
 source $CONFIG_FILE
 
 #1.prefilter
 
-java -jar $MHDIR/build/mosaichunter.jar -C $MHDIR/conf/exome_parameters.properties \
+java -jar $MHDIR/build/mosaichunter.jar -C $MHDIR/conf/$CONFIG/exome_parameters.properties \
 -P reference_file=$REFGEN \
 -P input_file=$ProbandBamFile \
 -P heterozygous_filter.sex=$Gender \
@@ -112,7 +112,7 @@ Depth=$(echo "$Dp" | sed 's/^ *//g')
 
 #3.execute mosaic variant calling
 
-java -Djava.io.tmpdir=${TMPDIR} -jar $MHDIR/build/mosaichunter.jar -C $MHDIR/conf/exome.properties \
+java -Djava.io.tmpdir=${TMPDIR} -jar $MHDIR/build/mosaichunter.jar -C $MHDIR/conf/$CONFIG/exome.properties \
 -P reference_file=$REFGEN \
 -P input_file=$ProbandBamFile \
 -P mosaic_filter.sex=$Gender \

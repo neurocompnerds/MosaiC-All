@@ -1,6 +1,6 @@
 #!/bin/sh
 #SBATCH -J FilterMutect.sh
-#SBATCH -o /home/%u/Mosaic-All/Log/filter-slurm-%j.out
+#SBATCH -o /hpcfs/groups/phoenix-hpc-neurogenetics/scripts/git/neurocompnerds/Mosaic/MosaiC-All/TestRun/filter-slurm-%j.out
 
 #SBATCH -p skylake,icelake
 #SBATCH -N 1

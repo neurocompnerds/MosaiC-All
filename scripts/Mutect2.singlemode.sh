@@ -1,6 +1,6 @@
 #!/bin/sh
 #SBATCH -J Mutect2.singlemode.sh
-#SBATCH -o /home/%u/Mosaic-All/Log/Mutect2-slurm-%j.out
+#SBATCH -o /hpcfs/groups/phoenix-hpc-neurogenetics/scripts/git/neurocompnerds/Mosaic/MosaiC-All/TestRun/Mutect2-slurm-%j.out
 
 #SBATCH -p skylake,icelake
 #SBATCH -N 1
@@ -72,7 +72,7 @@ module load SAMtools/1.8-foss-2016b
 module load GATK/4.4.0.0-GCCcore-11.2.0-Java-17.0.6
 
 source $CONFIG_FILE
-ProbandBamFile=$(find "$BAMDIR" -type f -name "$SampleID.*.bam")
+ProbandBamFile=$(find "$BAMDIR" -type f -name "$SampleID*.bam")
 
 #execute the script
 gatk Mutect2 \

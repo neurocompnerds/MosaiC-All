@@ -1,6 +1,6 @@
 #!/bin/sh
 #SBATCH -J MosaicHunter_Trio.sh
-#SBATCH -o /home/%u/Mosaic-All/Log/MH_Trio-slurm-%j.out
+#SBATCH -o /hpcfs/groups/phoenix-hpc-neurogenetics/scripts/git/neurocompnerds/Mosaic/MosaiC-All/TestRun/MH_Trio-slurm-%j.out
 
 #SBATCH -p skylake,icelake
 #SBATCH -N 1
@@ -84,9 +84,9 @@ for ARG in $BAMDIR $OUTDIR $CONFIG_FILE $ProbandID $Gender $MotherID $FatherID; 
 done
 
 #define variables and directory for MosaicHunter
-ProbandBamFile=$(find "$BAMDIR" -type f -name "$ProbandID.*.bam")
-MotherBamFile=$(find "$BAMDIR" -type f -name "$MotherID.*.bam")
-FatherBamFile=$(find "$BAMDIR" -type f -name "$FatherID.*.bam")
+ProbandBamFile=$(find "$BAMDIR" -type f -name "$ProbandID*.bam")
+MotherBamFile=$(find "$BAMDIR" -type f -name "$MotherID*.bam")
+FatherBamFile=$(find "$BAMDIR" -type f -name "$FatherID*.bam")
 
 source $CONFIG_FILE
 
@@ -98,7 +98,7 @@ module load BLAT/3.5-foss-2016b
 
 #1.prefilter
 
-java -jar $MHDIR/build/mosaichunter.jar -C $MHDIR/conf/exome_parameters.properties \
+java -jar $MHDIR/build/mosaichunter.jar -C $MHDIR/conf/$CONFIG/exome_parameters.properties \
 -P reference_file=$REFGEN \
 -P input_file=$ProbandBamFile \
 -P heterozygous_filter.sex=$Gender \
@@ -119,12 +119,12 @@ Depth=$(echo "$Dp" | sed 's/^ *//g')
 
 #3.execute mosaic variant calling
 
-java -jar $MHDIR/build/mosaichunter.jar -C $MHDIR/conf/exome.properties \
+java -jar $MHDIR/build/mosaichunter.jar -C $MHDIR/conf/$CONFIG/exome.properties \
 -P reference_file=$REFGEN \
 -P input_file=$ProbandBamFile \
 -P depth=$Depth \
--P mosaic_filter.father_bam_file=$MotherBamFile \
--P mosaic_filter.mother_bam_file=$FatherBamFile \
+-P mosaic_filter.father_bam_file=$FatherBamFile \
+-P mosaic_filter.mother_bam_file=$MotherBamFile \
 -P mosaic_filter.sex=$Gender \
 -P mosaic_filter.alpha_param=$Alpha \
 -P mosaic_filter.beta_param=$Beta \

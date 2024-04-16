@@ -1,6 +1,6 @@
 #!/bin/sh -l
 #SBATCH -J MF_genotypePredictions-singularity.sh
-#SBATCH -o /home/%u/Mosaic-All/Log/genotype.GA.slurm-%j.out
+#SBATCH -o /hpcfs/groups/phoenix-hpc-neurogenetics/scripts/git/neurocompnerds/Mosaic/MosaiC-All/TestRun/genotype.GA.slurm-%j.out
 
 #SBATCH -p skylake,icelake
 #SBATCH -N 1

@@ -1,0 +1,4 @@
+GIT=./MosaiC-All
+CONFIG=$GIT/config/Mosaic-All.hg19.test.config
+$GIT/MASTERSCRIPT_MosaiC-All.sh -s $GIT/TestRun/SampleID_Test -o $GIT/TestRun/Output -c $CONFIG
+
