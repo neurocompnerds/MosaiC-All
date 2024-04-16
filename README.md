@@ -35,7 +35,7 @@ The wrapper-script (MasterScript_MosaiC-All.sh) will run all tools for mosaic va
 
 #### 3.2 Command:
 
-`MosaiC-All/MasterScript_MosaiC-All.sh -s SampleID.list -o /path/to/output/directory -c MosaiC-All/config/Mosaic-All.config`
+`MosaiC-All/MASTERSCRIPT_MosaiC-All.sh -s SampleID.list -o /path/to/output/directory -c MosaiC-All/config/Mosaic-All.config`
 
 This script was designed for slurm workload manager in an HPC environment, but it can be adapted to run locally with some adjustments.
 
