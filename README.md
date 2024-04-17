@@ -6,10 +6,16 @@
 
 The following packages and resources are required to run the pipelines. Packages should be installed according to developer instructions.
 
-#### 1.1 Downloadable sources<br>
+#### 1.1 Software Installation
+
 MosaicHunter: https://github.com/zzhang526/MosaicHunter<br>
 MosaicForecast: https://github.com/parklab/MosaicForecast<br>
 GATK: https://github.com/broadinstitute/gatk/releases
+
+Alternatively, the docker image or detailed instructions of each tool is available in following locations:-
+MosaicHunter: https://hub.docker.com/r/rborgesm/mosaichunter
+MosaicForecast: https://hub.docker.com/r/yanmei/mosaicforecast
+GATK: https://gatk.broadinstitute.org/hc/en-us/articles/360035889991--How-to-Run-GATK-in-a-Docker-container
 
 #### 1.2 General Resources
 
@@ -19,27 +25,39 @@ GATK: https://github.com/broadinstitute/gatk/releases
 |  Variant databases            |     dbSNP (e.g b37_dbsnp_138.b37.vcf)<br> gnomAD (e.g somatic-b37_af-only-gnomad.raw.sites.vcf). Obtain these from the [GATK resource bundle](https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle)     |
 |  Repeats                      |     e.g all_repeats.b37.bed;<br> can be found in the [MosaicHunter repository](https://github.com/zzhang526/MosaicHunter/tree/master/resources) |
 |  Exome errors databases       |     e.g WES_Agilent_71M.error_prone.b37.bed;<br> can be found in the [MosaicHunter repository](https://github.com/zzhang526/MosaicHunter/tree/master/resources)                |
-|  Panel of Normals (PON)        |     Should be prepared based on samples that are not part of the analysis.<br>As a suggestion for large cohort analysis, samples can be divided into two batches to create two PONs (PON_A and PON_B).<br> PONs are prepared based on GATK option-CreateSomaticPanelOfNormals (i.e https://gatk.broadinstitute.org/hc/en-us/articles/4405451431963-CreateSomaticPanelOfNormals-BETA)          |
+|  Panel of Normals (PON)       |     Should be prepared based on samples that are not part of the analysis.<br>As a suggestion for large cohort analysis, samples can be divided into two batches to create two PONs (PON_A and PON_B).<br> PONs are prepared based on GATK option-CreateSomaticPanelOfNormals (i.e https://gatk.broadinstitute.org/hc/en-us/articles/4405451431963-CreateSomaticPanelOfNormals-BETA)          |
 
 ### Step 2: Config-file
-The config-file (Mosaic-All.config) is used to specify locations of required software and resources (as prepared in Step 1). 
+The config-file (MosaiC-ALL/config/Mosaic-All.config) is used to specify locations of required software and resources (as prepared in Step 1). 
+Specify the neccessary directories, genomebuild etc in the config file as per instructions mentioned in the config file.
 
-MosaiC-ALL/config/Mosaic-All.config
+### Step 3: Demo using a test data (./MosaiC-All/TestRun/)
+To test the installation and variant calling process, we have provided a test data which was extracted from MosaicForecast publication. 
+The resources used for testdata can be found in the ./MosaiC-All/TestRun/Resources.
 
-### Step 3: Variant calling using three tools (for M3 and pGoM pipelines)
+Please specify the following resources in the config file:-
+RESOURCES="./MosaiC-All/TestRun/Resources"
+DBSNP=${RESOURCES}/b37_dbsnp_138.b37.vcf
+REPEATS=${RESOURCES}/all_repeats.b37.bed #This can be found in subfolder of MosaicHunter (./MosaicHunter-master/resources)
+COMMONERROR=${RESOURCES}/WES_Agilent_71M.error_prone.b37.bed #This can be found in subfolder of MosaicHunter (./MosaicHunter-master/resources)
+PON_A=${RESOURCES}/somatic-b37_Mutect2-exome-panel.vcf #This can be downloaded from https://storage.googleapis.com/gatk-best-practices/somatic-b37
+PON_B=${RESOURCES}/somatic-b37_Mutect2-exome-panel.vcf #For testdata purpose, we just define the same Panel of Normals used for $PON_A
+GERMLINE_RESOURCES=${RESOURCES}/somatic-b37_af-only-gnomad.raw.sites.vcf #This can downloaded from https://storage.googleapis.com/gatk-best-practices/somatic-b37/af-only-gnomad.raw.sites.vcf
 
-#### 3.1 Summary: 
+### Step 4: Variant calling using three tools (for M3 and pGoM pipelines)
+
+#### 4.1 Summary: 
 Variant detection from either singleton or trio WES data is performed using three mosaic variant callers (MosaicHunter, MosaicForecast, Mutect2). Germline variants are called using GATK4 best practices workflow which should be run separately (https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels). 
 
 The wrapper-script (MasterScript_MosaiC-All.sh) will run all tools for mosaic variant calling using the following command:
 
-#### 3.2 Command:
+#### 4.2 Command:
 
 `MosaiC-All/MASTERSCRIPT_MosaiC-All.sh -s SampleID.list -o /path/to/output/directory -c MosaiC-All/config/Mosaic-All.config`
 
 This script was designed for slurm workload manager in an HPC environment, but it can be adapted to run locally with some adjustments.
 
-#### 3.3 Requirements:-
+#### 4.3 Requirements:-
 
 1. SampleID.list: A tab-separated-file as following format based on the bam.files of each sample (e.g 001P.realigned.bam)
 
@@ -52,9 +70,9 @@ This script was designed for slurm workload manager in an HPC environment, but i
    
 3. MosaiC-ALL/config/Mosaic-All.config: A config file prepared as described in Step 1 and 2.
    
-### Step 4: Analysis for somatic mosaicism (M3 pipeline)
+### Step 5: Analysis for somatic mosaicism (M3 pipeline)
 
-#### 4.1 Merging mosaic variant calls 
+#### 5.1 Merging mosaic variant calls 
 Aims:
 - to filter MFcalls and
 - Merge callsets from all tools.
@@ -68,7 +86,7 @@ Requirements:
 1. sampleID (i.e 001P)
 2. /path/to/output/directory (Output directory as specified in Step 3)
 
-#### 4.2 Example R script for finding overlaps (M3pipeline.R)
+#### 5.2 Example R script for finding overlaps (M3pipeline.R)
 Aims:
 - To count how many tools called each variant
 - Followed by filtering out variants that were called by only by one tool
@@ -76,12 +94,12 @@ Aims:
 The script MosaiC-ALL/postprocessing/M3pipeline.R is an example script for performing these filtering steps in R.
 
 
-### Step 5: Analysis for parental gonosomal mosaicism (pGoM)
+### Step 6: Analysis for parental gonosomal mosaicism (pGoM)
 
 Aims: 
 - To filter parental mosaic variant calls based on transmission to children
 
-5.1 Prefilter
+6.1 Prefilter
 - Identify inherited variants that expected to be mosaic based on AAF and GT, using GATKHC outputs
 
 Command:
@@ -101,7 +119,7 @@ Requirements:
 
 3. /path/to/output/directory	(A location for the output files).
 
-5.2 Postfilter
+6.2 Postfilter
 - Mosaic variants are identified among prefiltered pGoM variants using one or more mosaic variant calling tools
 - Example script: MosaiC-ALL/postprocessing/pGoMpipeline.R
 
