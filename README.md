@@ -31,33 +31,20 @@ GATK: https://gatk.broadinstitute.org/hc/en-us/articles/360035889991--How-to-Run
 The config-file (MosaiC-ALL/config/Mosaic-All.config) is used to specify locations of required software and resources (as prepared in Step 1). 
 Specify the neccessary directories, genomebuild etc in the config file as per instructions mentioned in the config file.
 
-### Step 3: Demo using a test data (./MosaiC-All/TestRun/)
-To test the installation and variant calling process, we have provided a test data which was extracted from MosaicForecast publication. 
-The resources used for testdata can be found in the ./MosaiC-All/TestRun/Resources.
+### Step 3: Variant calling using three tools (for M3 and pGoM pipelines)
 
-Please specify the following resources in the config file:-
-RESOURCES="./MosaiC-All/TestRun/Resources"
-DBSNP=${RESOURCES}/b37_dbsnp_138.b37.vcf
-REPEATS=${RESOURCES}/all_repeats.b37.bed #This can be found in subfolder of MosaicHunter (./MosaicHunter-master/resources)
-COMMONERROR=${RESOURCES}/WES_Agilent_71M.error_prone.b37.bed #This can be found in subfolder of MosaicHunter (./MosaicHunter-master/resources)
-PON_A=${RESOURCES}/somatic-b37_Mutect2-exome-panel.vcf #This can be downloaded from https://storage.googleapis.com/gatk-best-practices/somatic-b37
-PON_B=${RESOURCES}/somatic-b37_Mutect2-exome-panel.vcf #For testdata purpose, we just define the same Panel of Normals used for $PON_A
-GERMLINE_RESOURCES=${RESOURCES}/somatic-b37_af-only-gnomad.raw.sites.vcf #This can downloaded from https://storage.googleapis.com/gatk-best-practices/somatic-b37/af-only-gnomad.raw.sites.vcf
-
-### Step 4: Variant calling using three tools (for M3 and pGoM pipelines)
-
-#### 4.1 Summary: 
+#### 3.1 Summary: 
 Variant detection from either singleton or trio WES data is performed using three mosaic variant callers (MosaicHunter, MosaicForecast, Mutect2). Germline variants are called using GATK4 best practices workflow which should be run separately (https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels). 
 
 The wrapper-script (MasterScript_MosaiC-All.sh) will run all tools for mosaic variant calling using the following command:
 
-#### 4.2 Command:
+#### 3.2 Command:
 
 `MosaiC-All/MASTERSCRIPT_MosaiC-All.sh -s SampleID.list -o /path/to/output/directory -c MosaiC-All/config/Mosaic-All.config`
 
 This script was designed for slurm workload manager in an HPC environment, but it can be adapted to run locally with some adjustments.
 
-#### 4.3 Requirements:-
+#### 3.3 Requirements:-
 
 1. SampleID.list: A tab-separated-file as following format based on the bam.files of each sample (e.g 001P.realigned.bam)
 
@@ -70,9 +57,9 @@ This script was designed for slurm workload manager in an HPC environment, but i
    
 3. MosaiC-ALL/config/Mosaic-All.config: A config file prepared as described in Step 1 and 2.
    
-### Step 5: Analysis for somatic mosaicism (M3 pipeline)
+### Step 4: Analysis for somatic mosaicism (M3 pipeline)
 
-#### 5.1 Merging mosaic variant calls 
+#### 4.1 Merging mosaic variant calls 
 Aims:
 - to filter MFcalls and
 - Merge callsets from all tools.
@@ -86,7 +73,7 @@ Requirements:
 1. sampleID (i.e 001P)
 2. /path/to/output/directory (Output directory as specified in Step 3)
 
-#### 5.2 Example R script for finding overlaps (M3pipeline.R)
+#### 4.2 Example R script for finding overlaps (M3pipeline.R)
 Aims:
 - To count how many tools called each variant
 - Followed by filtering out variants that were called by only by one tool
@@ -94,12 +81,12 @@ Aims:
 The script MosaiC-ALL/postprocessing/M3pipeline.R is an example script for performing these filtering steps in R.
 
 
-### Step 6: Analysis for parental gonosomal mosaicism (pGoM)
+### Step 5: Analysis for parental gonosomal mosaicism (pGoM)
 
 Aims: 
 - To filter parental mosaic variant calls based on transmission to children
 
-6.1 Prefilter
+5.1 Prefilter
 - Identify inherited variants that expected to be mosaic based on AAF and GT, using GATKHC outputs
 
 Command:
@@ -119,7 +106,7 @@ Requirements:
 
 3. /path/to/output/directory	(A location for the output files).
 
-6.2 Postfilter
+5.2 Postfilter
 - Mosaic variants are identified among prefiltered pGoM variants using one or more mosaic variant calling tools
 - Example script: MosaiC-ALL/postprocessing/pGoMpipeline.R
 
@@ -127,3 +114,42 @@ Requirements:
 1. Three Output files from MosaiC-ALL/postprocessing/M3_CombineCalls.sh
 2. pGoM.sh output file
 3. Amend the working directory and output_file prefix in the R.script
+
+## Demo using a test data (./MosaiC-All/TestRun/)
+
+To test the installation and variant calling process, we have provided a test data which was extracted from MosaicForecast publication. 
+
+### 1.Config and Resources
+The resources used for testdata can be found in the ./MosaiC-All/TestRun/Resources. 
+Please specify the following resources in the **config** file:-
+
+- RESOURCES="./MosaiC-All/TestRun/Resources"
+
+- DBSNP=${RESOURCES}/b37_dbsnp_138.b37.vcf
+
+- REPEATS=${RESOURCES}/all_repeats.b37.bed
+  _#This can be found in subfolder of MosaicHunter (./MosaicHunter-master/resources)_
+
+- COMMONERROR=${RESOURCES}/WES_Agilent_71M.error_prone.b37.bed
+  _#This can be found in subfolder of MosaicHunter (./MosaicHunter-master/resources)_
+
+- PON_A=${RESOURCES}/somatic-b37_Mutect2-exome-panel.vcf
+  _#This can be downloaded from https://storage.googleapis.com/gatk-best-practices/somatic-b37_
+
+- PON_B=${RESOURCES}/somatic-b37_Mutect2-exome-panel.vcf
+  _#For testdata purpose, we just define the same Panel of Normals used for $PON_A_
+
+- GERMLINE_RESOURCES=${RESOURCES}/somatic-b37_af-only-gnomad.raw.sites.vcf
+  _#This can downloaded from https://storage.googleapis.com/gatk-best-practices/somatic-b37/af-only-gnomad.raw.sites.vcf_
+
+### 2.Command
+
+Execute the following command, which will perform variant calling and store the outputs in the $GIT/TestRun/Output
+
+GIT=./MosaiC-All
+CONFIG=$GIT/config/Mosaic-All.config
+$GIT/MASTERSCRIPT_MosaiC-All.sh -s $GIT/TestRun/SampleID_Test -o $GIT/TestRun/Output -c $CONFIG
+
+### 3.Outputs
+
+The expected outputs are stored in $GIT/TestRun/Output_Expected, which can be used to compare with the given outputs. Also, we provide the M3 variants upon post-processing step (FinalList_M3).
