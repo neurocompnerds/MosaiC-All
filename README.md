@@ -12,13 +12,13 @@ MosaicHunter: https://github.com/zzhang526/MosaicHunter<br>
 MosaicForecast: https://github.com/parklab/MosaicForecast<br>
 GATK: https://github.com/broadinstitute/gatk/releases
 
-Alternatively, the docker image or detailed instructions of each tool is available in following locations:-
+Alternatively, the docker image or detailed instructions of each tool is available in following locations:-<br>
 
-MosaicHunter: https://hub.docker.com/r/rborgesm/mosaichunter
+MosaicHunter: https://hub.docker.com/r/rborgesm/mosaichunter<br>
 
-MosaicForecast: https://hub.docker.com/r/yanmei/mosaicforecast
+MosaicForecast: https://hub.docker.com/r/yanmei/mosaicforecast<br>
 
-GATK: https://gatk.broadinstitute.org/hc/en-us/articles/360035889991--How-to-Run-GATK-in-a-Docker-container
+GATK: https://hub.docker.com/r/broadinstitute/gatk/tags<br>
 
 #### 1.2 General Resources
 
