@@ -25,11 +25,9 @@ Packages should be installed according to developer instructions. You can find t
 
 We recommend installation via the docker images for each tool, which are available in the following locations:<br>
 
-MosaicHunter: https://hub.docker.com/r/rborgesm/mosaichunter<br>
-
-MosaicForecast: https://hub.docker.com/r/yanmei/mosaicforecast<br>
-
-GATK: https://hub.docker.com/r/broadinstitute/gatk/tags<br>
+1. MosaicHunter: https://hub.docker.com/r/rborgesm/mosaichunter<br>
+2. MosaicForecast: https://hub.docker.com/r/yanmei/mosaicforecast<br>
+3. GATK: https://hub.docker.com/r/broadinstitute/gatk/tags<br>
 
 #### 1.2 General Resources
 
