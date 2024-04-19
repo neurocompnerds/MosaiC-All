@@ -77,7 +77,7 @@ This script was designed for slurm workload manager in an HPC environment, but i
 
 #### 4.1 Merging mosaic variant calls 
 Aims:
-- To filter MFcalls and
+- To filter MF calls and
 - Merge callsets from all tools.
 
 Command
