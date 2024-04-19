@@ -1,6 +1,6 @@
 #!/bin/sh
 #SBATCH -J MosaicHunter_Single.sh
-#SBATCH -o /hpcfs/groups/phoenix-hpc-neurogenetics/scripts/git/neurocompnerds/Mosaic/MosaiC-All/TestRun/MH_Singleton-slurm-%j.out
+#SBATCH -o /home/%u/Mosaic-All/Log/MH_Singleton-slurm-%j.out
 
 #SBATCH -p skylake
 #SBATCH -N 1
@@ -8,6 +8,7 @@
 #SBATCH --time=8:00:00
 #SBATCH --mem=100GB
 #SBATCH --gres=tmpfs:40G
+
 # Notification configuration
 #SBATCH --mail-type=END
 #SBATCH --mail-type=FAIL
@@ -37,10 +38,10 @@ echo "
 #
 #OUTPUT lists
 #1.\$OUTDIR/\${SampleID[$SLURM_ARRAY_TASK_ID]}                            -> Two folders containing outputs from MH execution that are removed later to save on storage
-#2.\$OUTDIR/\${SampleID[$SLURM_ARRAY_TASK_ID]}.final.passed.tsv           -> Raw variants output file
-#3.\$OUTDIR/\${SampleID[$SLURM_ARRAY_TASK_ID]}.forAnnovar.singlemode.vcf  -> List of variants with useful info only
+#2.\$OUTDIR/\${SampleID[$SLURM_ARRAY_TASK_ID]}.MH.final.passed.tsv           -> Raw variants output file
+#3.\$OUTDIR/\${SampleID[$SLURM_ARRAY_TASK_ID]}.MH.forAnnovar.singlemode.vcf  -> List of variants with useful info only
 #4.\$OUTDIR/\${SampleID[$SLURM_ARRAY_TASK_ID]}.log                        -> StdOutput.lof file from MH
-#5.\$OUTDIR/\${SampleID[$SLURM_ARRAY_TASK_ID]}.summary.log                -> Logfile produced by MH
+#5.\$OUTDIR/\${SampleID[$SLURM_ARRAY_TASK_ID]}.MH.summary.log                -> Logfile produced by MH
 "
 }
 
@@ -128,16 +129,20 @@ echo "## TNFO: (MosaicHunter_WES_Singlemode.sh) Somatic variant calling complete
 
 #5.Process the outputs files
 
-cat $OUTDIR/$SampleID/final.passed.tsv  > $OUTDIR/$SampleID.final.passed.tsv
-cat $OUTDIR/$SampleID/final.passed.tsv | awk '{print $1, $2, $7, $9}' | tr " " "\t" > $OUTDIR/$SampleID.MH.forAnnovar.singlemode.vcf
+cat $OUTDIR/$SampleID/final.passed.tsv  > $OUTDIR/$SampleID.MH.$CONFIG.final.passed.tsv
+cat $OUTDIR/$SampleID/final.passed.tsv | awk '{print $1, $2, $7, $9}' | tr " " "\t" > $OUTDIR/$SampleID.MH.$CONFIG.forAnnovar.singlemode.vcf
 
 #6 log file
 
-grep "input_file =" $OUTDIR/$SampleID/stdout_*.log > $OUTDIR/$SampleID.summary.log
-tail  $OUTDIR/$SampleID/stdout_*.log -n16 >> $OUTDIR/$SampleID.summary.log
-cat $OUTDIR/$SampleID/stdout_*.log >> $OUTDIR/$SampleID.stdout.log
+grep "input_file =" $OUTDIR/$SampleID/stdout_*.log > $OUTDIR/$SampleID.MH.summary.log
+tail  $OUTDIR/$SampleID/stdout_*.log -n16 >> $OUTDIR/$SampleID.MH.summary.log
+cat $OUTDIR/$SampleID/stdout_*.log >> $OUTDIR/$SampleID.MH.stdout.log
 
 echo "## TNFO: (MosaicHunter_WES_Singlemode.sh) done for $SampleID" >> $OUTDIR/$SampleID.pipeline.log
+
+#Remove Folders
+rm -r $OUTDIR/$SampleID.parameters.log
+rm -r $OUTDIR/$SampleID
 
 #Remove Folders
 rm -r $OUTDIR/$SampleID.parameters.log
