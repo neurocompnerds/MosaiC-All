@@ -1,6 +1,6 @@
 #!/bin/sh -l
 #SBATCH -J MF_Extractreadlevel-singularity.sh
-#SBATCH -o /hpcfs/groups/phoenix-hpc-neurogenetics/scripts/git/neurocompnerds/Mosaic/MosaiC-All/TestRun/MF.extract.slurm-%j.out
+#SBATCH -o /home/%u/Mosaic-All/Log/MF.extract.slurm-%j.out
 
 #SBATCH -p skylake,a100,icelake
 #SBATCH -N 1
@@ -8,6 +8,7 @@
 #SBATCH --time=07:00:00
 #SBATCH --mem=40GB
 #SBATCH --gres=tmpfs:150G
+
 # Notification configuration
 #SBATCH --mail-type=END
 #SBATCH --mail-type=FAIL
@@ -81,14 +82,14 @@ REFSEQ=$(basename $REFGEN)
 /usr/bin/mkdir -p ${TMPDIR}
 /usr/bin/cp -r ${BAMFILE} ${TMPDIR}
 /usr/bin/cp -r ${BAMINDEX} ${TMPDIR}
-/usr/bin/cp -r $OUTDIR/$SampleID.phasingInput.bed ${TMPDIR}
+/usr/bin/cp -r $OUTDIR/$SampleID.MF.$CONFIG.phasingInput.bed ${TMPDIR}
 
 ls ${TMPDIR}
 
 
 #execute the read-level extractions
-singularity run -B ${REFGEN_DIR}:/RefSeq -B $MFORECAST:/MForecastDir -B ${TMPDIR}:/tmp $MFORECAST/mosaicforecast_0.0.1.sif ReadLevel_Features_extraction.py /tmp/$SampleID.phasingInput.bed /tmp/$SampleID.features.bed /tmp /RefSeq/$REFSEQ /MForecastDir/$CONFIG/k24.umap.wg.bw ${SLURM_NTASKS} bam
+singularity run -B ${REFGEN_DIR}:/RefSeq -B $MFORECAST:/MForecastDir -B ${TMPDIR}:/tmp $MFORECAST/mosaicforecast_0.0.1.sif ReadLevel_Features_extraction.py /tmp/$SampleID.MF.$CONFIG.phasingInput.bed /tmp/$SampleID.features.bed /tmp /RefSeq/$REFSEQ /MForecastDir/$CONFIG/k24.umap.wg.bw ${SLURM_NTASKS} bam
 
-/usr/bin/cp -r ${TMPDIR}/$SampleID.features.bed ${OUTDIR}/$SampleID.features.bed
+/usr/bin/cp -r ${TMPDIR}/$SampleID.features.bed ${OUTDIR}/$SampleID.MF.$CONFIG.features.bed
 
-echo "## INFO: (MF2_Extractreadlevel-singularity.sh) SUCCESS for $SampleID" >> ${OUTDIR}/$SampleID.pipeline.log
+echo "## INFO: (MF2_Extractreadlevel-singularity.sh) completed for $SampleID" >> ${OUTDIR}/$SampleID.pipeline.log
