@@ -1,6 +1,6 @@
 #!/bin/sh -l
 #SBATCH -J MF_genotypePredictions-singularity.sh
-#SBATCH -o /hpcfs/groups/phoenix-hpc-neurogenetics/scripts/git/neurocompnerds/Mosaic/MosaiC-All/TestRun/genotype.GA.slurm-%j.out
+#SBATCH -o /home/%u/Mosaic-All/Log/genotype.GA.slurm-%j.out
 
 #SBATCH -p skylake,icelake
 #SBATCH -N 1
@@ -8,6 +8,7 @@
 #SBATCH --time=00:10:00
 #SBATCH --mem=10GB
 #SBATCH --gres=tmpfs:40G
+
 #Notification configuration
 #SBATCH --mail-type=END
 #SBATCH --mail-type=FAIL
@@ -66,4 +67,4 @@ module load Singularity/3.10.5
 
 source $CONFIG_FILE
 
-singularity run -B $OUTDIR:/outDir -B $MFORECAST:/MForecastDir $MFORECAST/mosaicforecast_0.0.1.sif Prediction.R /outDir/$SampleID.features.bed /MForecastDir/models_trained/50xRFmodel_addRMSK_Refine.rds Refine /outDir/$SampleID.mosaicforecast.genotype.predictions.refined.bed
+singularity run -B $OUTDIR:/outDir -B $MFORECAST:/MForecastDir $MFORECAST/mosaicforecast_0.0.1.sif Prediction.R /outDir/$SampleID.MF.$CONFIG.features.bed /MForecastDir/models_trained/50xRFmodel_addRMSK_Refine.rds Refine /outDir/$SampleID.MF.$CONFIG.genotype.predictions.refined.bed
