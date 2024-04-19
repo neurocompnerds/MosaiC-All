@@ -4,8 +4,6 @@
 # 2. Mutect2 and FilterMutect2: Parents,Probands and Siblings (if available)
 # 3. MosaicHunter: Parents,Probands and Siblings (if available)
 # 4. MosaicForecast on Mutect2 variant callset, followed by Filter
-# UniAdelaide-HPC friendly
-# Date: 9th June 2023
 # 
 
 usage()
@@ -26,9 +24,7 @@ echo "#MasterScript: Variant calling steps, which includes
 #
 # -h or --help  Prints this message.  Or if you got one of the options above wrong you'll be reading this too!
 #
-# Original: Nandini Sandran, 9/6/2023
-# Modified: (Date; Name; Description)
-# See: https://github.com/ngs1810/MosaiC-All for history and new updates.
+# See: https://github.com/neurocompnerds/MosaiC-All for history and new updates.
 #
 "
 }
