@@ -103,7 +103,7 @@ The script MosaiC-ALL/postprocessing/M3pipeline.R is an example script for perfo
 Aims: 
 - To filter parental mosaic variant calls based on transmission to children
 
-5.1 Prefilter
+#### 5.1 Prefilter
 - Identify inherited variants that are predicted to be mosaic in a parent based on AAF and GT, using GATKHC outputs
 
 Command:
@@ -123,7 +123,7 @@ Requirements:
 
 3. /path/to/output/directory	(A location for the output files).
 
-5.2 Postfilter
+#### 5.2 Postfilter
 - Mosaic variants are identified from prefiltered pGoM variants using one or more mosaic variant calling tools
 - Example script: MosaiC-ALL/postprocessing/pGoMpipeline.R
 
