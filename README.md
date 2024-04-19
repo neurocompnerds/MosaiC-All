@@ -4,9 +4,9 @@
 
 ### Step 1: Pre-requisites/ Software Installation
 
-Packages and resources required to run the pipelines are listed in section 1.1 and 1.2. Packages should be installed according to developer instructions.
+Packages and resources required to run the pipelines are listed in section 1.1 and 1.2. 
 
-To enable testing of software installation and set up of the MosaiC-All pipeline, we have provided:
+To enable testing of software installation and set up of the MosaiC-All pipelines, we have provided:
 
 1. Toy data adapted from https://github.com/parklab/MosaicForecast/tree/master/demo
 2. Commands and resources used to run the M3 pipeline on this data
@@ -17,7 +17,7 @@ These data and resources, along with further instructions, are provided in Mosai
 
 #### 1.1 Software Installation
 
-Developer instructions and documentation can be found at:
+Packages should be installed according to developer instructions. You can find these, along with documentation for each tool at:
 
 1. MosaicHunter: https://github.com/zzhang526/MosaicHunter<br>
 2. MosaicForecast: https://github.com/parklab/MosaicForecast<br>
