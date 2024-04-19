@@ -23,7 +23,7 @@ Packages should be installed according to developer instructions. You can find t
 2. MosaicForecast: https://github.com/parklab/MosaicForecast<br>
 3. GATK: https://github.com/broadinstitute/gatk/releases
 
-We recommend installation via the docker image for each tool, which are available in the following locations:<br>
+We recommend installation via the docker images for each tool, which are available in the following locations:<br>
 
 MosaicHunter: https://hub.docker.com/r/rborgesm/mosaichunter<br>
 
