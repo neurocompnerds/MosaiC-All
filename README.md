@@ -4,13 +4,24 @@
 
 ### Step 1: Pre-requisites/ Software Installation
 
-The following packages and resources are required to run the pipelines. Packages should be installed according to developer instructions.
+Packages and resources required to run the pipelines are listed in section 1.1 and 1.2. Packages should be installed according to developer instructions.
+
+To enable testing of software installation and set up of the MosaiC-All pipeline, we have provided:
+
+1. Toy data adapted from https://github.com/parklab/MosaicForecast/tree/master/demo
+2. Commands and resources used to run the M3 pipeline on this data
+3. Output from all tools and resulting filtered variant list after post-processing
+
+These data and resources, along with further instructions, are provided in MosaiC-All/TestRun/
+  
 
 #### 1.1 Software Installation
 
-MosaicHunter: https://github.com/zzhang526/MosaicHunter<br>
-MosaicForecast: https://github.com/parklab/MosaicForecast<br>
-GATK: https://github.com/broadinstitute/gatk/releases
+Developer instructions and documentation can be found at:
+
+1. MosaicHunter: https://github.com/zzhang526/MosaicHunter<br>
+2. MosaicForecast: https://github.com/parklab/MosaicForecast<br>
+3. GATK: https://github.com/broadinstitute/gatk/releases
 
 We recommend installation via the docker image for each tool, which are available in the following locations:<br>
 
