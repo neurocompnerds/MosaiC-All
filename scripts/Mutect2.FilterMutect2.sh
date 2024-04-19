@@ -1,6 +1,6 @@
 #!/bin/sh
 #SBATCH -J FilterMutect.sh
-#SBATCH -o /hpcfs/groups/phoenix-hpc-neurogenetics/scripts/git/neurocompnerds/Mosaic/MosaiC-All/TestRun/filter-slurm-%j.out
+#SBATCH -o /home/%u/Mosaic-All/Log/filter-slurm-%j.out
 
 #SBATCH -p skylake,icelake
 #SBATCH -N 1
@@ -63,9 +63,9 @@ done
 #check and specify
 source $CONFIG_FILE
 
-if [ -z "$VCFDIR/$SampleID.$CONFIG.PON.gnomad.vcf" ]; then # If no vcfDir name specified then do not proceed
+if [ -z "$VCFDIR/$SampleID.Mutect2.$CONFIG.PON.gnomad.vcf" ]; then # If no vcfDir name specified then do not proceed
         usage
-        echo "## ERROR: The file $VCFDIR/$SampleID.$CONFIG.PON.gnomad.vcf does not exist." >> $VCFDIR/$SampleID.pipeline.log
+        echo "## ERROR: The file $VCFDIR/$SampleID.Mutect2.$CONFIG.PON.gnomad.vcf does not exist." >> $VCFDIR/$SampleID.pipeline.log
         exit 1
 fi
 
@@ -79,14 +79,15 @@ module load GATK/4.4.0.0-GCCcore-11.2.0-Java-17.0.6
 #1. To "tag" each variants
 
 gatk FilterMutectCalls \
--V $VCFDIR/$SampleID.$CONFIG.PON.gnomad.vcf \
+-V $VCFDIR/$SampleID.Mutect2.$CONFIG.PON.gnomad.vcf \
 -R $REFGEN \
 --min-reads-per-strand 2 \
--O $VCFDIR/$SampleID.singlemode.filtered.vcf > $VCFDIR/$SampleID.filtered.log 2>&1
+-O $VCFDIR/$SampleID.Mutect2.$CONFIG.singlemode.filtered.vcf > $VCFDIR/$SampleID.Mutect2.$CONFIG.filtered.log 2>&1
 
 
 #2. To filter manually
 
 module load BCFtools/1.17-GCC-11.2.0
 
-bcftools view -O v -f PASS -i '(FORMAT/AD[0:1] >= 5 & FORMAT/DP[0]>=20) && (FORMAT/AF[0:0] <=0.4 || FORMAT/AF[0:0]>=0.7)' $VCFDIR/$SampleID.singlemode.filtered.vcf > $VCFDIR/$SampleID.mutect2.singlemode.PASS.aaf.vcf
+bcftools view -O v -f PASS -i '(FORMAT/AD[0:1] >= 5 & FORMAT/DP[0]>=20) && (FORMAT/AF[0:0] <=0.4 || FORMAT/AF[0:0]>=0.7)' $VCFDIR/$SampleID.Mutect2.$CONFIG.singlemode.filtered.vcf > $VCFDIR/$SampleID.Mutect2.$CONFIG.singlemode.PASS.aaf.vcf
+
