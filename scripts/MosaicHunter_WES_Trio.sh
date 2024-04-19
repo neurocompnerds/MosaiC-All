@@ -1,12 +1,13 @@
 #!/bin/sh
 #SBATCH -J MosaicHunter_Trio.sh
-#SBATCH -o /hpcfs/groups/phoenix-hpc-neurogenetics/scripts/git/neurocompnerds/Mosaic/MosaiC-All/TestRun/MH_Trio-slurm-%j.out
+#SBATCH -o /home/%u/MosaiC-All/Log/MH_Trio-slurm-%j.out
 
 #SBATCH -p skylake,icelake
 #SBATCH -N 1
 #SBATCH -n 2
 #SBATCH --time=8:00:00
 #SBATCH --mem=60GB
+
 # Notification configuration
 #SBATCH --mail-type=END
 #SBATCH --mail-type=FAIL
@@ -138,17 +139,19 @@ echo "## INFO: (MosaicHunter_WES_Trio.sh) Somatic variant calling completed for 
 
 #5.Process the outputs files
 
-cp $OUTDIR/$ProbandID/final.passed.tsv $OUTDIR/$ProbandID.final.passed.tsv
-awk '{print $1, $2, $7, $9}' $OUTDIR/$ProbandID/final.passed.tsv | tr " " "\t" > $OUTDIR/$ProbandID.MH.forAnnovar.triomode.vcf
-#cat $MHDIR/Head.vcf > $OUTDIR/$ProbandID.final.triomode.vcf
-#cat $OUTDIR/$ProbandID.forAnnovar.vcf | awk 'BEGIN{FS="\t"} {print $1, $2, ".", $3, $4, "50", "PASS", "NS=18;DP=10"}' | tr " " "\t" > $OUTDIR/$ProbandID.final.triomode.vcf
+cp $OUTDIR/$ProbandID/final.passed.tsv $OUTDIR/$ProbandID.MH.$CONFIG.final.passed.tsv
+awk '{print $1, $2, $7, $9}' $OUTDIR/$ProbandID/final.passed.tsv | tr " " "\t" > $OUTDIR/$ProbandID.MH.$CONFIG.forAnnovar.triomode.vcf
 
 #6 log file
-grep "input_file =" $OUTDIR/$ProbandID/stdout_*.log > $OUTDIR/$ProbandID.summary.log
-tail  $OUTDIR/$ProbandID/stdout_*.log -n16 >> $OUTDIR/$ProbandID.summary.log
-cat $OUTDIR/$ProbandID/stdout_*.log >> $OUTDIR/$ProbandID.stdout.log
+grep "input_file =" $OUTDIR/$ProbandID/stdout_*.log > $OUTDIR/$ProbandID.MH.summary.log
+tail  $OUTDIR/$ProbandID/stdout_*.log -n16 >> $OUTDIR/$ProbandID.MH.summary.log
+cat $OUTDIR/$ProbandID/stdout_*.log >> $OUTDIR/$ProbandID.MH.stdout.log
 
 echo "## INFO: (MosaicHunter_WES_Trio.sh) done for $ProbandID" >> $OUTDIR/$ProbandID.pipeline.log
+
+#Remove Folders as this takes lots of memory
+rm -r $OUTDIR/$ProbandID.parameters.log
+rm -r $OUTDIR/$ProbandID
 
 #Remove Folders as this takes lots of memory
 rm -r $OUTDIR/$ProbandID.parameters.log
