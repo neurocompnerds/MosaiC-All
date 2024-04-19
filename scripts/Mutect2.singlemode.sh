@@ -1,6 +1,6 @@
 #!/bin/sh
 #SBATCH -J Mutect2.singlemode.sh
-#SBATCH -o /hpcfs/groups/phoenix-hpc-neurogenetics/scripts/git/neurocompnerds/Mosaic/MosaiC-All/TestRun/Mutect2-slurm-%j.out
+#SBATCH -o /home/%u/Mosaic-All/Log/Mutect2-slurm-%j.out
 
 #SBATCH -p skylake,icelake
 #SBATCH -N 1
@@ -82,7 +82,6 @@ gatk Mutect2 \
 --germline-resource $GERMLINE_RESOURCES \
 --panel-of-normals $PON \
 --af-of-alleles-not-in-resource -1 \
--O $OUTDIR/$SampleID.$CONFIG.PON.gnomad.vcf
-
+-O $OUTDIR/$SampleID.Mutect2.$CONFIG.PON.gnomad.vcf
 
 
