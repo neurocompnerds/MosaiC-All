@@ -1,6 +1,6 @@
 #!/bin/sh
 #SBATCH -J CombineCalls
-#SBATCH -o /hpcfs/groups//phoenix-hpc-neurogenetics/a1742674/hg38_OUTPUTS/CC-slurm-%j.out
+#SBATCH -o /home/%u/Mosaic-All/Log/CC-slurm-%j.out
 
 #SBATCH -p skylake,icelake
 #SBATCH -N 1
@@ -56,13 +56,14 @@ for ARG in $SampleID $DIR; do
     fi
 done
 
-##Define Suffix of each output files
-MUT="mutect2.singlemode.PASS.aaf.vcf"
-MH="final.passed.tsv" 
-MF="Refined.dpaf.MosaicOnly.txt"
+##Define suffix for Files
+MUT="Mutect2.$CONFIG.singlemode.PASS.aaf.vcf"
+MH="MH.$CONFIG.final.passed.tsv" 
+MF1="MF.$CONFIG.genotype.predictions.refined.bed"
+MF2="MF.$CONFIG.Refined.dpaf.MosaicOnly.txt"
 
 # Check if input files exist
-for FILE in "$DIR/$SampleID.$MUT" "$DIR/$SampleID.$MH" "$DIR/$SampleID.mosaicforecast.genotype.predictions.refined.bed"; do
+for FILE in "$DIR/$SampleID.$MUT" "$DIR/$SampleID.$MH" "$DIR/$SampleID.MF1"; do
     if [ ! -f "$FILE" ]; then
         echo "Error: File $FILE does not exist." >> $DIR/$SampleID.postprocessing.log
         exit 1
@@ -76,8 +77,7 @@ awk -v ID="$SampleID" '$0 !~ /^##/ {print ID "\t" "Mutect2" "\t" $0}' $DIR/$Samp
 awk -v ID="$SampleID" '$0 !~ /^##/ {print ID "\t" "MH" "\t" $0}' $DIR/$SampleID.$MH >> $DIR/MH.variants.txt
 
 #MosaicForecast
-MF_output=$SampleID.mosaicforecast.genotype.predictions.refined.bed
-awk '$35=="mosaic" {OFS="\t"; print}' $DIR/$MF_output > $DIR/$SampleID.RefinedMosaicOnly.txt
+awk '$35=="mosaic" {OFS="\t"; print}' $DIR/$SampleID.$MF1 > $DIR/$SampleID.RefinedMosaicOnly.txt
 awk '$25>=20  {OFS="\t"; print}' $DIR/$SampleID.RefinedMosaicOnly.txt > $DIR/$SampleID.Refined.dp20.MosaicOnly.txt
-awk '$24>=0.03  {OFS="\t"; print}' $DIR/$SampleID.Refined.dp20.MosaicOnly.txt > $DIR/$SampleID.Refined.dpaf.MosaicOnly.txt
-awk -v ID="$SampleID" '$0 !~ /^##/ {print ID "\t" "MF" "\t" $0}' $DIR/$SampleID.$MF >> $DIR/MF.variants.txt
+awk '$24>=0.03  {OFS="\t"; print}' $DIR/$SampleID.Refined.dp20.MosaicOnly.txt > $DIR/$SampleID.$MF2
+awk -v ID="$SampleID" '$0 !~ /^##/ {print ID "\t" "MF" "\t" $0}' $DIR/$SampleID.$MF2 >> $DIR/MF.variants.txt
