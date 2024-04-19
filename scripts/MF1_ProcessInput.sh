@@ -1,6 +1,6 @@
 #!/bin/sh -l
 #SBATCH -J MF1_PrepareInputFile.sh
-#SBATCH -o /hpcfs/groups/phoenix-hpc-neurogenetics/scripts/git/neurocompnerds/Mosaic/MosaiC-All/TestRun/MF.Input.slurm-%j.out
+#SBATCH -o /home/%u/Mosaic-All/Log/MF.Input.slurm-%j.out
 
 #SBATCH -p skylake,icelake
 #SBATCH -N 1
@@ -70,10 +70,11 @@ BAMprefix=$(basename "$BAMFILE" | sed 's/\.[^.]*$//')
 
 tmp_file=$(mktemp)  # Create a temporary file
 
-grep -v "#" $OUTDIR/$SampleID.$CONFIG.PON.gnomad.vcf | tr " " "\t" > "$tmp_file"
+grep -v "#" $OUTDIR/$SampleID.Mutect2.$CONFIG.PON.gnomad.vcf | tr " " "\t" > "$tmp_file"
 
 awk -F  '\t' '{print $1, $2-1, $2, $4, $5}' "$tmp_file" > "$OUTDIR/$SampleID.forPhasing.bed"
 
 rm "$tmp_file"  # Remove the temporary file
 
-awk -v prefix="$BAMprefix" 'BEGIN{OFS="\t"} {$6 = prefix; print}' $OUTDIR/$SampleID.forPhasing.bed > $OUTDIR/$SampleID.phasingInput.bed
+awk -v prefix="$BAMprefix" 'BEGIN{OFS="\t"} {$6 = prefix; print}' $OUTDIR/$SampleID.forPhasing.bed > $OUTDIR/$SampleID.MF.$CONFIG.phasingInput.bed
+
