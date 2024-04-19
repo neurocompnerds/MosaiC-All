@@ -38,8 +38,7 @@ The following resources are required and should be downloaded or generated:
 |  Resources                    |     Example/Sources/Notes          | 
 |-------------------------------|------------------------------------|  
 |  Reference genome             |     Fasta file for the genome build to which your data was mapped e.g hs37d5.fa                  |
-|  Variant databases            |     Variant population frequencies
-dbSNP (e.g b37_dbsnp_138.b37.vcf)<br> 
+|  Variant databases            |     Variant population frequencies: dbSNP (e.g b37_dbsnp_138.b37.vcf)<br> 
 gnomAD (e.g somatic-b37_af-only-gnomad.raw.sites.vcf). Obtain these from the [GATK resource bundle](https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle)     |
 |  Repeat regions                    |     Repeat regions for filtering e.g all_repeats.b37.bed;<br> can be found in the [MosaicHunter repository](https://github.com/zzhang526/MosaicHunter/tree/master/resources) |
 |  Exome error prone regions       |     Regions known to be error prone e.g WES_Agilent_71M.error_prone.b37.bed;<br> can be found in the [MosaicHunter repository](https://github.com/zzhang526/MosaicHunter/tree/master/resources)                |
