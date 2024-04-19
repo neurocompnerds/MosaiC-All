@@ -9,8 +9,8 @@ Packages and resources required to run the pipelines are listed in section 1.1 a
 To enable testing of software installation and set up of the MosaiC-All pipelines, we have provided:
 
 1. Toy data adapted from https://github.com/parklab/MosaicForecast/tree/master/demo
-2. Commands and resources used to run the M3 pipeline on this data
-3. Output from all tools and resulting filtered variant list after post-processing
+2. Commands and resources used to run the M3 pipeline on this data.
+3. Output from all tools and resulting filtered variant list after post-processing.
 
 These data and resources, along with further instructions, are provided in MosaiC-All/TestRun/
   
