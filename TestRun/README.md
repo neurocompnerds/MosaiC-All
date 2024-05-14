@@ -9,6 +9,7 @@ Please specify the following resources in the **config** file:-
 - RESOURCES="./MosaiC-All/TestRun/Resources"
 
 - DBSNP=${RESOURCES}/b37_dbsnp_138.b37.vcf
+  _#This can be found in https://storage.cloud.google.com/gcp-public-data--broad-references/hg19/v0/dbsnp_138.b37.vcf.gz_
 
 - REPEATS=${RESOURCES}/all_repeats.b37.bed
   _#This can be found in subfolder of MosaicHunter (./MosaicHunter-master/resources)_
