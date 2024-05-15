@@ -1,0 +1,4 @@
+Pipeline for 1465_1024-pfc-bulk, ,  in /hpcfs/groups/phoenix-hpc-neurogenetics/scripts/git/neurocompnerds/Mosaic/MosaiC-All/TestRun/BAM
+## Mutect2 INFO: 1465_1024-pfc-bulk is not present in /hpcfs/groups/phoenix-hpc-neurogenetics/scripts/git/neurocompnerds/Mosaic/MosaiC-All/TestRun/somatic-b37_Mutect2-exome-panel.vcf. So, let's do Mutect2 on this sample using /hpcfs/groups/phoenix-hpc-neurogenetics/scripts/git/neurocompnerds/Mosaic/MosaiC-All/TestRun/somatic-b37_Mutect2-exome-panel.vcf
+## TNFO: (MosaicHunter_WES_Singlemode.sh) Somatic variant calling completed for 1465_1024-pfc-bulk
+## TNFO: (MosaicHunter_WES_Singlemode.sh) done for 1465_1024-pfc-bulk
