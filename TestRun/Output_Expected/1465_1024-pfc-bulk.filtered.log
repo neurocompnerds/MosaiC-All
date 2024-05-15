@@ -1,0 +1,44 @@
+Using GATK jar /gpfs/apps/icl/software/GATK/4.4.0.0-GCCcore-11.2.0-Java-17.0.6/gatk-package-4.4.0.0-local.jar
+Running:
+    java -Dsamjdk.use_async_io_read_samtools=false -Dsamjdk.use_async_io_write_samtools=true -Dsamjdk.use_async_io_write_tribble=false -Dsamjdk.compression_level=2 -jar /gpfs/apps/icl/software/GATK/4.4.0.0-GCCcore-11.2.0-Java-17.0.6/gatk-package-4.4.0.0-local.jar FilterMutectCalls -V /hpcfs/groups/phoenix-hpc-neurogenetics/scripts/git/neurocompnerds/Mosaic/MosaiC-All/TestRun/Output_Test_02/1465_1024-pfc-bulk.hg19.PON.gnomad.vcf -R /hpcfs/groups/phoenix-hpc-neurogenetics/RefSeq/hs37d5.fa --min-reads-per-strand 2 -O /hpcfs/groups/phoenix-hpc-neurogenetics/scripts/git/neurocompnerds/Mosaic/MosaiC-All/TestRun/Output_Test_02/1465_1024-pfc-bulk.singlemode.filtered.vcf
+19:33:04.358 INFO  NativeLibraryLoader - Loading libgkl_compression.so from jar:file:/gpfs/apps/icl/software/GATK/4.4.0.0-GCCcore-11.2.0-Java-17.0.6/gatk-package-4.4.0.0-local.jar!/com/intel/gkl/native/libgkl_compression.so
+19:33:04.403 INFO  FilterMutectCalls - ------------------------------------------------------------
+19:33:04.406 INFO  FilterMutectCalls - The Genome Analysis Toolkit (GATK) v4.4.0.0
+19:33:04.406 INFO  FilterMutectCalls - For support and documentation go to https://software.broadinstitute.org/gatk/
+19:33:04.406 INFO  FilterMutectCalls - Executing as a1742674@p1-cpu-36 on Linux v4.18.0-305.el8.x86_64 amd64
+19:33:04.406 INFO  FilterMutectCalls - Java runtime: OpenJDK 64-Bit Server VM v17.0.6+10
+19:33:04.407 INFO  FilterMutectCalls - Start Date/Time: April 12, 2024 at 7:33:04 PM ACST
+19:33:04.407 INFO  FilterMutectCalls - ------------------------------------------------------------
+19:33:04.407 INFO  FilterMutectCalls - ------------------------------------------------------------
+19:33:04.407 INFO  FilterMutectCalls - HTSJDK Version: 3.0.5
+19:33:04.408 INFO  FilterMutectCalls - Picard Version: 3.0.0
+19:33:04.408 INFO  FilterMutectCalls - Built for Spark Version: 3.3.1
+19:33:04.408 INFO  FilterMutectCalls - HTSJDK Defaults.COMPRESSION_LEVEL : 2
+19:33:04.408 INFO  FilterMutectCalls - HTSJDK Defaults.USE_ASYNC_IO_READ_FOR_SAMTOOLS : false
+19:33:04.408 INFO  FilterMutectCalls - HTSJDK Defaults.USE_ASYNC_IO_WRITE_FOR_SAMTOOLS : true
+19:33:04.409 INFO  FilterMutectCalls - HTSJDK Defaults.USE_ASYNC_IO_WRITE_FOR_TRIBBLE : false
+19:33:04.409 INFO  FilterMutectCalls - Deflater: IntelDeflater
+19:33:04.409 INFO  FilterMutectCalls - Inflater: IntelInflater
+19:33:04.409 INFO  FilterMutectCalls - GCS max retries/reopens: 20
+19:33:04.409 INFO  FilterMutectCalls - Requester pays: disabled
+19:33:04.410 INFO  FilterMutectCalls - Initializing engine
+19:33:04.575 INFO  FeatureManager - Using codec VCFCodec to read file file:///hpcfs/groups/phoenix-hpc-neurogenetics/scripts/git/neurocompnerds/Mosaic/MosaiC-All/TestRun/Output_Test_02/1465_1024-pfc-bulk.hg19.PON.gnomad.vcf
+19:33:04.609 INFO  FilterMutectCalls - Done initializing engine
+19:33:04.678 INFO  ProgressMeter - Starting traversal
+19:33:04.679 INFO  ProgressMeter -        Current Locus  Elapsed Minutes    Variants Processed  Variants/Minute
+19:33:04.679 INFO  FilterMutectCalls - Starting pass 0 through the variants
+19:33:05.032 INFO  FilterMutectCalls - Finished pass 0 through the variants
+19:33:05.078 INFO  FilterMutectCalls - Starting pass 1 through the variants
+19:33:05.246 INFO  FilterMutectCalls - Finished pass 1 through the variants
+19:33:05.253 INFO  FilterMutectCalls - Starting pass 2 through the variants
+19:33:05.375 INFO  FilterMutectCalls - Finished pass 2 through the variants
+19:33:05.376 INFO  FilterMutectCalls - Starting pass 3 through the variants
+19:33:05.607 INFO  FilterMutectCalls - Finished pass 3 through the variants
+19:33:05.619 INFO  FilterMutectCalls - No variants filtered by: AllowAllVariantsVariantFilter
+19:33:05.620 INFO  FilterMutectCalls - 0 read(s) filtered by: AllowAllReadsReadFilter 
+
+19:33:05.621 INFO  ProgressMeter -           1:36656322              0.0                  1156          73708.8
+19:33:05.621 INFO  ProgressMeter - Traversal complete. Processed 1156 total variants in 0.0 minutes.
+19:33:05.706 INFO  FilterMutectCalls - Shutting down engine
+[April 12, 2024 at 7:33:05 PM ACST] org.broadinstitute.hellbender.tools.walkers.mutect.filtering.FilterMutectCalls done. Elapsed time: 0.02 minutes.
+Runtime.totalMemory()=270532608

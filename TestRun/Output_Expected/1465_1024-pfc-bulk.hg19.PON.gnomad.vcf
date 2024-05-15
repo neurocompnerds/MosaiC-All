@@ -1,0 +1,419 @@
+##fileformat=VCFv4.2
+##FORMAT=<ID=AD,Number=R,Type=Integer,Description="Allelic depths for the ref and alt alleles in the order listed">
+##FORMAT=<ID=AF,Number=A,Type=Float,Description="Allele fractions of alternate alleles in the tumor">
+##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Approximate read depth (reads with MQ=255 or with bad mates are filtered)">
+##FORMAT=<ID=F1R2,Number=R,Type=Integer,Description="Count of reads in F1R2 pair orientation supporting each allele">
+##FORMAT=<ID=F2R1,Number=R,Type=Integer,Description="Count of reads in F2R1 pair orientation supporting each allele">
+##FORMAT=<ID=FAD,Number=R,Type=Integer,Description="Count of fragments supporting each allele.">
+##FORMAT=<ID=GQ,Number=1,Type=Integer,Description="Genotype Quality">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##FORMAT=<ID=PGT,Number=1,Type=String,Description="Physical phasing haplotype information, describing how the alternate alleles are phased in relation to one another; will always be heterozygous and is not intended to describe called alleles">
+##FORMAT=<ID=PID,Number=1,Type=String,Description="Physical phasing ID information, where each unique ID within a given sample (but not across samples) connects records within a phasing group">
+##FORMAT=<ID=PL,Number=G,Type=Integer,Description="Normalized, Phred-scaled likelihoods for genotypes as defined in the VCF specification">
+##FORMAT=<ID=PS,Number=1,Type=Integer,Description="Phasing set (typically the position of the first variant in the set)">
+##FORMAT=<ID=SB,Number=4,Type=Integer,Description="Per-sample component statistics which comprise the Fisher's Exact Test to detect strand bias.">
+##GATKCommandLine=<ID=Mutect2,CommandLine="Mutect2 --tumor-sample 1465_1024-pfc-bulk --panel-of-normals /hpcfs/groups/phoenix-hpc-neurogenetics/scripts/git/neurocompnerds/Mosaic/MosaiC-All/TestRun/somatic-b37_Mutect2-exome-panel.vcf --germline-resource /hpcfs/users/a1742674/2021/WES_Trios_Mutect2/databases/somatic-b37_af-only-gnomad.raw.sites.vcf --af-of-alleles-not-in-resource -1.0 --output /hpcfs/groups/phoenix-hpc-neurogenetics/scripts/git/neurocompnerds/Mosaic/MosaiC-All/TestRun/Output_Test_02/1465_1024-pfc-bulk.hg19.PON.gnomad.vcf --input /hpcfs/groups/phoenix-hpc-neurogenetics/scripts/git/neurocompnerds/Mosaic/MosaiC-All/TestRun/BAM/1465_1024-pfc-bulk.rehead.bam --reference /hpcfs/groups/phoenix-hpc-neurogenetics/RefSeq/hs37d5.fa --f1r2-median-mq 50 --f1r2-min-bq 20 --f1r2-max-depth 200 --flow-likelihood-parallel-threads 0 --flow-likelihood-optimized-comp false --flow-use-t0-tag false --flow-probability-threshold 0.003 --flow-remove-non-single-base-pair-indels false --flow-remove-one-zero-probs false --flow-quantization-bins 121 --flow-fill-empty-bins-value 0.001 --flow-symmetric-indel-probs false --flow-report-insertion-or-deletion false --flow-disallow-probs-larger-than-call false --flow-lump-probs false --flow-retain-max-n-probs-base-format false --flow-probability-scaling-factor 10 --flow-order-cycle-length 4 --flow-number-of-uncertain-flows-to-clip 0 --flow-nucleotide-of-first-uncertain-flow T --keep-boundary-flows false --genotype-pon-sites false --genotype-germline-sites false --mitochondria-mode false --mutect3-training-mode false --mutect3-ref-downsample 10 --mutect3-alt-downsample 20 --mutect3-non-artifact-ratio 20 --tumor-lod-to-emit 3.0 --initial-tumor-lod 2.0 --pcr-snv-qual 40 --pcr-indel-qual 40 --max-population-af 0.01 --downsampling-stride 1 --callable-depth 10 --max-suspicious-reads-per-alignment-start 0 --normal-lod 2.2 --ignore-itr-artifacts false --gvcf-lod-band -2.5 --gvcf-lod-band -2.0 --gvcf-lod-band -1.5 --gvcf-lod-band -1.0 --gvcf-lod-band -0.5 --gvcf-lod-band 0.0 --gvcf-lod-band 0.5 --gvcf-lod-band 1.0 --minimum-allele-fraction 0.0 --independent-mates false --flow-mode NONE --disable-adaptive-pruning false --kmer-size 10 --kmer-size 25 --dont-increase-kmer-sizes-for-cycles false --allow-non-unique-kmers-in-ref false --num-pruning-samples 1 --min-dangling-branch-length 4 --recover-all-dangling-branches false --max-num-haplotypes-in-population 128 --min-pruning 2 --adaptive-pruning-initial-error-rate 0.001 --pruning-lod-threshold 2.302585092994046 --pruning-seeding-lod-threshold 9.210340371976184 --max-unpruned-variants 100 --linked-de-bruijn-graph false --disable-artificial-haplotype-recovery false --enable-legacy-graph-cycle-detection false --debug-assembly false --debug-graph-transformations false --capture-assembly-failure-bam false --num-matching-bases-in-dangling-end-to-recover -1 --error-correction-log-odds -Infinity --error-correct-reads false --kmer-length-for-read-error-correction 25 --min-observations-for-kmer-to-be-solid 20 --likelihood-calculation-engine PairHMM --base-quality-score-threshold 18 --dragstr-het-hom-ratio 2 --dont-use-dragstr-pair-hmm-scores false --pair-hmm-gap-continuation-penalty 10 --expected-mismatch-rate-for-read-disqualification 0.02 --pair-hmm-implementation FASTEST_AVAILABLE --pcr-indel-model CONSERVATIVE --phred-scaled-global-read-mismapping-rate 45 --disable-symmetric-hmm-normalizing false --disable-cap-base-qualities-to-map-quality false --enable-dynamic-read-disqualification-for-genotyping false --dynamic-read-disqualification-threshold 1.0 --native-pair-hmm-threads 4 --native-pair-hmm-use-double-precision false --flow-hmm-engine-min-indel-adjust 6 --flow-hmm-engine-flat-insertion-penatly 45 --flow-hmm-engine-flat-deletion-penatly 45 --pileup-detection false --pileup-detection-enable-indel-pileup-calling false --num-artificial-haplotypes-to-add-per-allele 5 --artifical-haplotype-filtering-kmer-size 10 --pileup-detection-snp-alt-threshold 0.1 --pileup-detection-indel-alt-threshold 0.5 --pileup-detection-absolute-alt-depth 0.0 --pileup-detection-snp-adjacent-to-assembled-indel-range 5 --pileup-detection-bad-read-tolerance 0.0 --pileup-detection-proper-pair-read-badness true --pileup-detection-edit-distance-read-badness-threshold 0.08 --pileup-detection-chimeric-read-badness true --pileup-detection-template-mean-badness-threshold 0.0 --pileup-detection-template-std-badness-threshold 0.0 --bam-writer-type CALLED_HAPLOTYPES --dont-use-soft-clipped-bases false --override-fragment-softclip-check false --min-base-quality-score 10 --smith-waterman JAVA --emit-ref-confidence NONE --max-mnp-distance 1 --force-call-filtered-alleles false --reference-model-deletion-quality 30 --soft-clip-low-quality-ends false --allele-informative-reads-overlap-margin 2 --smith-waterman-dangling-end-match-value 25 --smith-waterman-dangling-end-mismatch-penalty -50 --smith-waterman-dangling-end-gap-open-penalty -110 --smith-waterman-dangling-end-gap-extend-penalty -6 --smith-waterman-haplotype-to-reference-match-value 200 --smith-waterman-haplotype-to-reference-mismatch-penalty -150 --smith-waterman-haplotype-to-reference-gap-open-penalty -260 --smith-waterman-haplotype-to-reference-gap-extend-penalty -11 --smith-waterman-read-to-haplotype-match-value 10 --smith-waterman-read-to-haplotype-mismatch-penalty -15 --smith-waterman-read-to-haplotype-gap-open-penalty -30 --smith-waterman-read-to-haplotype-gap-extend-penalty -5 --flow-assembly-collapse-hmer-size 0 --flow-assembly-collapse-partial-mode false --flow-filter-alleles false --flow-filter-alleles-qual-threshold 30.0 --flow-filter-alleles-sor-threshold 3.0 --flow-filter-lone-alleles false --flow-filter-alleles-debug-graphs false --min-assembly-region-size 50 --max-assembly-region-size 300 --active-probability-threshold 0.002 --max-prob-propagation-distance 50 --force-active false --assembly-region-padding 100 --padding-around-indels 75 --padding-around-snps 20 --padding-around-strs 75 --max-extension-into-assembly-region-padding-legacy 25 --max-reads-per-alignment-start 50 --enable-legacy-assembly-region-trimming false --interval-set-rule UNION --interval-padding 0 --interval-exclusion-padding 0 --interval-merging-rule ALL --read-validation-stringency SILENT --seconds-between-progress-updates 10.0 --disable-sequence-dictionary-validation false --create-output-bam-index true --create-output-bam-md5 false --create-output-variant-index true --create-output-variant-md5 false --max-variants-per-shard 0 --lenient false --add-output-sam-program-record true --add-output-vcf-command-line true --cloud-prefetch-buffer 40 --cloud-index-prefetch-buffer -1 --disable-bam-index-caching false --sites-only-vcf-output false --help false --version false --showHidden false --verbosity INFO --QUIET false --use-jdk-deflater false --use-jdk-inflater false --gcs-max-retries 20 --gcs-project-for-requester-pays  --disable-tool-default-read-filters false --max-read-length 2147483647 --min-read-length 30 --minimum-mapping-quality 20 --disable-tool-default-annotations false --enable-all-annotations false",Version="4.4.0.0",Date="April 12, 2024 at 7:24:06 PM ACST">
+##INFO=<ID=AS_SB_TABLE,Number=1,Type=String,Description="Allele-specific forward/reverse read counts for strand bias tests. Includes the reference and alleles separated by |.">
+##INFO=<ID=AS_UNIQ_ALT_READ_COUNT,Number=A,Type=Integer,Description="Number of reads with unique start and mate end positions for each alt at a variant site">
+##INFO=<ID=CONTQ,Number=1,Type=Float,Description="Phred-scaled qualities that alt allele are not due to contamination">
+##INFO=<ID=DP,Number=1,Type=Integer,Description="Approximate read depth; some reads may have been filtered">
+##INFO=<ID=ECNT,Number=1,Type=Integer,Description="Number of events in this haplotype">
+##INFO=<ID=GERMQ,Number=1,Type=Integer,Description="Phred-scaled quality that alt alleles are not germline variants">
+##INFO=<ID=MBQ,Number=R,Type=Integer,Description="median base quality by allele">
+##INFO=<ID=MFRL,Number=R,Type=Integer,Description="median fragment length by allele">
+##INFO=<ID=MMQ,Number=R,Type=Integer,Description="median mapping quality by allele">
+##INFO=<ID=MPOS,Number=A,Type=Integer,Description="median distance from end of read">
+##INFO=<ID=NALOD,Number=A,Type=Float,Description="Negative log 10 odds of artifact in normal with same allele fraction as tumor">
+##INFO=<ID=NCount,Number=1,Type=Integer,Description="Count of N bases in the pileup">
+##INFO=<ID=NLOD,Number=A,Type=Float,Description="Normal log 10 likelihood ratio of diploid het or hom alt genotypes">
+##INFO=<ID=OCM,Number=1,Type=Integer,Description="Number of alt reads whose original alignment doesn't match the current contig.">
+##INFO=<ID=PON,Number=0,Type=Flag,Description="site found in panel of normals">
+##INFO=<ID=POPAF,Number=A,Type=Float,Description="negative log 10 population allele frequencies of alt alleles">
+##INFO=<ID=ROQ,Number=1,Type=Float,Description="Phred-scaled qualities that alt allele are not due to read orientation artifact">
+##INFO=<ID=RPA,Number=R,Type=Integer,Description="Number of times tandem repeat unit is repeated, for each allele (including reference)">
+##INFO=<ID=RU,Number=1,Type=String,Description="Tandem repeat unit (bases)">
+##INFO=<ID=SEQQ,Number=1,Type=Integer,Description="Phred-scaled quality that alt alleles are not sequencing errors">
+##INFO=<ID=STR,Number=0,Type=Flag,Description="Variant is a short tandem repeat">
+##INFO=<ID=STRANDQ,Number=1,Type=Integer,Description="Phred-scaled quality of strand bias artifact">
+##INFO=<ID=STRQ,Number=1,Type=Integer,Description="Phred-scaled quality that alt alleles in STRs are not polymerase slippage errors">
+##INFO=<ID=TLOD,Number=A,Type=Float,Description="Log 10 likelihood ratio score of variant existing versus not existing">
+##MutectVersion=2.2
+##contig=<ID=1,length=249250621>
+##contig=<ID=2,length=243199373>
+##contig=<ID=3,length=198022430>
+##contig=<ID=4,length=191154276>
+##contig=<ID=5,length=180915260>
+##contig=<ID=6,length=171115067>
+##contig=<ID=7,length=159138663>
+##contig=<ID=8,length=146364022>
+##contig=<ID=9,length=141213431>
+##contig=<ID=10,length=135534747>
+##contig=<ID=11,length=135006516>
+##contig=<ID=12,length=133851895>
+##contig=<ID=13,length=115169878>
+##contig=<ID=14,length=107349540>
+##contig=<ID=15,length=102531392>
+##contig=<ID=16,length=90354753>
+##contig=<ID=17,length=81195210>
+##contig=<ID=18,length=78077248>
+##contig=<ID=19,length=59128983>
+##contig=<ID=20,length=63025520>
+##contig=<ID=21,length=48129895>
+##contig=<ID=22,length=51304566>
+##contig=<ID=X,length=155270560>
+##contig=<ID=Y,length=59373566>
+##contig=<ID=MT,length=16569>
+##contig=<ID=GL000207.1,length=4262>
+##contig=<ID=GL000226.1,length=15008>
+##contig=<ID=GL000229.1,length=19913>
+##contig=<ID=GL000231.1,length=27386>
+##contig=<ID=GL000210.1,length=27682>
+##contig=<ID=GL000239.1,length=33824>
+##contig=<ID=GL000235.1,length=34474>
+##contig=<ID=GL000201.1,length=36148>
+##contig=<ID=GL000247.1,length=36422>
+##contig=<ID=GL000245.1,length=36651>
+##contig=<ID=GL000197.1,length=37175>
+##contig=<ID=GL000203.1,length=37498>
+##contig=<ID=GL000246.1,length=38154>
+##contig=<ID=GL000249.1,length=38502>
+##contig=<ID=GL000196.1,length=38914>
+##contig=<ID=GL000248.1,length=39786>
+##contig=<ID=GL000244.1,length=39929>
+##contig=<ID=GL000238.1,length=39939>
+##contig=<ID=GL000202.1,length=40103>
+##contig=<ID=GL000234.1,length=40531>
+##contig=<ID=GL000232.1,length=40652>
+##contig=<ID=GL000206.1,length=41001>
+##contig=<ID=GL000240.1,length=41933>
+##contig=<ID=GL000236.1,length=41934>
+##contig=<ID=GL000241.1,length=42152>
+##contig=<ID=GL000243.1,length=43341>
+##contig=<ID=GL000242.1,length=43523>
+##contig=<ID=GL000230.1,length=43691>
+##contig=<ID=GL000237.1,length=45867>
+##contig=<ID=GL000233.1,length=45941>
+##contig=<ID=GL000204.1,length=81310>
+##contig=<ID=GL000198.1,length=90085>
+##contig=<ID=GL000208.1,length=92689>
+##contig=<ID=GL000191.1,length=106433>
+##contig=<ID=GL000227.1,length=128374>
+##contig=<ID=GL000228.1,length=129120>
+##contig=<ID=GL000214.1,length=137718>
+##contig=<ID=GL000221.1,length=155397>
+##contig=<ID=GL000209.1,length=159169>
+##contig=<ID=GL000218.1,length=161147>
+##contig=<ID=GL000220.1,length=161802>
+##contig=<ID=GL000213.1,length=164239>
+##contig=<ID=GL000211.1,length=166566>
+##contig=<ID=GL000199.1,length=169874>
+##contig=<ID=GL000217.1,length=172149>
+##contig=<ID=GL000216.1,length=172294>
+##contig=<ID=GL000215.1,length=172545>
+##contig=<ID=GL000205.1,length=174588>
+##contig=<ID=GL000219.1,length=179198>
+##contig=<ID=GL000224.1,length=179693>
+##contig=<ID=GL000223.1,length=180455>
+##contig=<ID=GL000195.1,length=182896>
+##contig=<ID=GL000212.1,length=186858>
+##contig=<ID=GL000222.1,length=186861>
+##contig=<ID=GL000200.1,length=187035>
+##contig=<ID=GL000193.1,length=189789>
+##contig=<ID=GL000194.1,length=191469>
+##contig=<ID=GL000225.1,length=211173>
+##contig=<ID=GL000192.1,length=547496>
+##contig=<ID=NC_007605,length=171823>
+##contig=<ID=hs37d5,length=35477943>
+##filtering_status=Warning: unfiltered Mutect 2 calls.  Please run FilterMutectCalls to remove false positives.
+##source=Mutect2
+##tumor_sample=1465_1024-pfc-bulk
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	1465_1024-pfc-bulk
+1	755486	.	A	C	.	.	AS_SB_TABLE=48,89|4,6;DP=178;ECNT=1;MBQ=31,17;MFRL=419,389;MMQ=60,60;MPOS=28;POPAF=2.52;TLOD=3.97	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:137,10:0.046:147:55,2:46,0:138,10:48,89,4,6
+1	755775	.	A	G	.	.	AS_SB_TABLE=15,6|83,99;DP=212;ECNT=1;MBQ=12,26;MFRL=458,412;MMQ=60,60;MPOS=39;POPAF=0.161;TLOD=453.85	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:21,182:0.944:203:2,58:3,69:19,174:15,6,83,99
+1	755887	.	C	G	.	.	AS_SB_TABLE=0,0|64,83;DP=148;ECNT=4;MBQ=0,32;MFRL=0,402;MMQ=60,60;MPOS=39;POPAF=0.014;TLOD=653.12	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:0,147:0.993:147:0,61:0,75:0,144:0|1:755887_C_G:755887:0,0,64,83
+1	755890	.	A	T	.	.	AS_SB_TABLE=0,0|66,84;DP=151;ECNT=4;MBQ=0,32;MFRL=0,402;MMQ=60,60;MPOS=37;POPAF=0.123;TLOD=665.16	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:0,150:0.993:150:0,62:0,77:0,147:0|1:755887_C_G:755887:0,0,66,84
+1	755940	.	C	T	.	.	AS_SB_TABLE=3,3|80,63;DP=153;ECNT=4;MBQ=10,32;MFRL=365,387;MMQ=60,60;MPOS=31;POPAF=0.153;TLOD=573.85	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:6,143:0.976:149:0,56:1,53:6,142:0|1:755887_C_G:755887:3,3,80,63
+1	755982	.	A	T	.	.	AS_SB_TABLE=101,51|6,1;DP=165;ECNT=4;MBQ=31,31;MFRL=366,363;MMQ=60,55;MPOS=34;POPAF=1.62;TLOD=7.38	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	1|0:152,7:0.047:159:58,0:60,6:145,7:1|0:755887_C_G:755887:101,51,6,1
+1	756228	.	TCACTACCTGCTTGTCCAGCAGGTCCACCATGTCTACACTGCCTGCCTGGCCAGCAGATCCACCCTGTCTA	T	.	.	AS_SB_TABLE=51,48|6,2;DP=133;ECNT=2;MBQ=32,30;MFRL=355,191;MMQ=60,60;MPOS=33;POPAF=2.32;TLOD=14.84	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:99,8:0.068:107:26,6:16,0:96,7:0|1:756228_TCACTACCTGCTTGTCCAGCAGGTCCACCATGTCTACACTGCCTGCCTGGCCAGCAGATCCACCCTGTCTA_T:756228:51,48,6,2
+1	756257	.	ATGTCTACACTGCCTGCCTGGCCAGCAGATCCACCC	A	.	.	AS_SB_TABLE=31,34|9,4;DP=102;ECNT=2;MBQ=26,33;MFRL=305,253;MMQ=60,60;MPOS=19;POPAF=7.30;TLOD=18.98	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	1|0:65,13:0.150:78:15,7:5,3:63,12:1|0:756228_TCACTACCTGCTTGTCCAGCAGGTCCACCATGTCTACACTGCCTGCCTGGCCAGCAGATCCACCCTGTCTA_T:756228:31,34,9,4
+1	756604	.	A	G	.	.	AS_SB_TABLE=2,2|88,71;DP=168;ECNT=1;MBQ=20,27;MFRL=639,383;MMQ=54,60;MPOS=35;POPAF=0.123;TLOD=468.47	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:4,159:0.981:163:2,77:0,54:4,157:2,2,88,71
+1	757246	.	A	C	.	.	AS_SB_TABLE=76,75|7,16;DP=177;ECNT=1;MBQ=31,9;MFRL=424,453;MMQ=60,60;MPOS=56;POPAF=2.08;TLOD=7.95	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:151,23:0.088:174:53,3:75,1:149,23:76,75,7,16
+1	811290	.	G	GCCCACGCTCC	.	.	AS_SB_TABLE=0,0|0,26;DP=33;ECNT=1;MBQ=0,32;MFRL=0,375;MMQ=60,60;MPOS=30;POPAF=0.177;RPA=1,2;RU=CCCACGCTCC;STR;TLOD=108.94	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,26:0.967:26:0,3:0,21:0,26:0,0,0,26
+1	811366	.	T	C	.	.	AS_SB_TABLE=0,12|0,8;DP=20;ECNT=9;MBQ=32,31;MFRL=408,417;MMQ=60,60;MPOS=48;POPAF=1.15;TLOD=29.71	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:12,8:0.421:20:2,0:8,8:12,8:0|1:811366_T_C:811366:0,12,0,8
+1	811372	.	A	ACTC	.	.	AS_SB_TABLE=0,14|0,8;DP=22;ECNT=9;MBQ=29,30;MFRL=394,417;MMQ=60,60;MPOS=42;POPAF=1.74;RPA=1,2;RU=CTC;STR;TLOD=29.25	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:14,8:0.385:22:2,0:9,5:14,8:0|1:811366_T_C:811366:0,14,0,8
+1	811381	.	C	T	.	.	AS_SB_TABLE=0,16|0,8;DP=24;ECNT=9;MBQ=32,32;MFRL=377,417;MMQ=60,60;MPOS=32;POPAF=1.85;TLOD=28.84	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:16,8:0.354:24:2,0:11,7:16,8:0|1:811366_T_C:811366:0,16,0,8
+1	811398	.	C	T	.	.	AS_SB_TABLE=0,10|0,7;DP=17;ECNT=9;MBQ=31,32;MFRL=0,413;MMQ=48,60;MPOS=39;POPAF=1.96;TLOD=25.96	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:10,7:0.421:17:1,0:9,6:10,7:0|1:811366_T_C:811366:0,10,0,7
+1	811401	.	TA	CG	.	.	AS_SB_TABLE=0,13|0,4;DP=17;ECNT=9;MBQ=33,28;MFRL=0,396;MMQ=49,60;MPOS=5;POPAF=7.30;TLOD=12.39	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	1|0:13,4:0.263:17:1,0:11,4:13,4:1|0:811366_T_C:811366:0,13,0,4
+1	811407	.	C	T	.	.	AS_SB_TABLE=1,13|0,3;DP=19;ECNT=9;MBQ=31,33;MFRL=23,372;MMQ=48,60;MPOS=1;POPAF=2.76;TLOD=9.37	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	1|0:14,3:0.207:17:2,0:12,2:14,3:1|0:811366_T_C:811366:1,13,0,3
+1	811415	.	C	A	.	.	AS_SB_TABLE=4,9|0,5;DP=19;ECNT=9;MBQ=31,31;MFRL=0,413;MMQ=27,60;MPOS=29;POPAF=2.24;TLOD=17.29	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:13,5:0.301:18:2,0:11,4:13,5:0|1:811366_T_C:811366:4,9,0,5
+1	811421	.	TA	AC	.	.	AS_SB_TABLE=4,9|0,4;DP=18;ECNT=9;MBQ=30,32;MFRL=0,417;MMQ=27,60;MPOS=23;POPAF=7.30;TLOD=13.37	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:13,4:0.264:17:2,0:8,4:13,4:0|1:811366_T_C:811366:4,9,0,4
+1	811431	.	C	T	.	.	AS_SB_TABLE=4,11|0,4;DP=20;ECNT=9;MBQ=25,33;MFRL=0,417;MMQ=31,60;MPOS=13;POPAF=2.08;TLOD=13.44	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:15,4:0.275:19:1,0:5,4:15,4:0|1:811366_T_C:811366:4,11,0,4
+1	811670	.	GCCCACACTCC	G	.	.	AS_SB_TABLE=0,0|1,3;DP=14;ECNT=1;MBQ=0,20;MFRL=0,107;MMQ=60,60;MPOS=52;POPAF=0.987;RPA=3,2;RU=CCCACACTCC;STR;TLOD=12.68	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,4:0.872:4:0,1:0,2:0,4:0,0,1,3
+1	811695	.	CACTCCCCCACACTCGCCCACACTCCCCCACGCTCCCCCATACTCGCCCACGCTCCCCCAT	C	.	.	AS_SB_TABLE=6,20|3,6;DP=41;ECNT=2;MBQ=24,20;MFRL=46,55;MMQ=60,38;MPOS=19;POPAF=7.30;TLOD=12.71	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:26,9:0.234:35:3,2:7,4:23,7:0|1:811695_CACTCCCCCACACTCGCCCACACTCCCCCACGCTCCCCCATACTCGCCCACGCTCCCCCAT_C:811695:6,20,3,6
+1	811765	.	C	T	.	.	AS_SB_TABLE=6,13|2,10;DP=32;ECNT=2;MBQ=24,31;MFRL=55,26;MMQ=49,60;MPOS=21;POPAF=0.697;TLOD=24.11	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	1|0:19,12:0.500:31:3,0:7,6:14,11:1|0:811695_CACTCCCCCACACTCGCCCACACTCCCCCACGCTCCCCCATACTCGCCCACGCTCCCCCAT_C:811695:6,13,2,10
+1	812267	.	A	G	.	.	AS_SB_TABLE=0,0|93,120;DP=222;ECNT=2;MBQ=0,29;MFRL=0,423;MMQ=60,60;MPOS=41;POPAF=0.00;TLOD=695.73	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,213:0.995:213:0,99:0,101:0,213:0,0,93,120
+1	812284	.	C	G	.	.	AS_SB_TABLE=0,0|103,120;DP=230;ECNT=2;MBQ=0,31;MFRL=0,428;MMQ=60,60;MPOS=37;POPAF=0.00;TLOD=755.24	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,223:0.996:223:0,101:0,104:0,223:0,0,103,120
+1	1004181	.	C	A	.	.	AS_SB_TABLE=0,43|0,18;DP=67;ECNT=2;MBQ=34,31;MFRL=556,512;MMQ=60,60;MPOS=49;POPAF=0.175;TLOD=59.39	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:43,18:0.280:61:16,4:18,9:52,18:0|1:1004181_C_A:1004181:0,43,0,18
+1	1004204	.	G	GGCCACGCGGGCTGTGCAGATGCAGGTGCGGCGGGGCGGGGCCACGCGGGCTGTGAAGGTGCAGGTGCGGCGGGGCAGA	.	.	AS_SB_TABLE=1,45|4,30;DP=80;ECNT=2;MBQ=32,33;MFRL=562,531;MMQ=60,60;MPOS=35;POPAF=0.500;TLOD=67.58	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:46,34:0.430:80:14,9:23,13:50,34:0|1:1004181_C_A:1004181:1,45,4,30
+1	1004389	.	T	TC	.	.	AS_SB_TABLE=24,34|7,36;DP=110;ECNT=2;MBQ=28,31;MFRL=614,493;MMQ=60,60;MPOS=34;POPAF=0.378;RPA=6,7;RU=C;STR;TLOD=98.35	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:58,43:0.426:101:24,18:21,18:57,43:24,34,7,36
+1	1004427	.	G	A	.	.	AS_SB_TABLE=16,25|6,22;DP=73;ECNT=2;MBQ=35,35;MFRL=595,525;MMQ=60,60;MPOS=30;POPAF=0.161;TLOD=85.09	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:41,28:0.409:69:19,15:18,13:41,28:16,25,6,22
+1	1004865	.	G	C	.	.	AS_SB_TABLE=120,65|9,8;DP=207;ECNT=1;MBQ=35,35;MFRL=566,538;MMQ=60,60;MPOS=39;POPAF=4.61;TLOD=39.67	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:185,17:0.088:202:97,8:84,9:184,17:120,65,9,8
+1	1004957	.	G	A	.	.	AS_SB_TABLE=61,49|59,33;DP=208;ECNT=2;MBQ=35,35;MFRL=538,572;MMQ=60,60;MPOS=37;POPAF=0.294;TLOD=283.11	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:110,92:0.455:202:50,49:58,39:109,91:61,49,59,33
+1	1004980	.	G	A	.	.	AS_SB_TABLE=62,49|55,32;DP=202;ECNT=2;MBQ=35,35;MFRL=542,551;MMQ=60,60;MPOS=33;POPAF=0.294;TLOD=253.68	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:111,87:0.435:198:50,41:59,38:111,87:62,49,55,32
+1	1111421	.	G	C	.	.	AS_SB_TABLE=23,38|1,1;DP=65;ECNT=4;MBQ=31,20;MFRL=457,110;MMQ=60,60;MPOS=39;POPAF=3.08;TLOD=5.42	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:61,2:0.032:63:24,1:33,0:60,1:0|1:1111421_G_C:1111421:23,38,1,1
+1	1111423	.	G	GGA	.	.	AS_SB_TABLE=23,38|1,1;DP=65;ECNT=4;MBQ=32,20;MFRL=457,110;MMQ=60,60;MPOS=37;POPAF=2.24;RPA=2,3;RU=GA;STR;TLOD=5.41	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:61,2:0.032:63:25,1:33,0:60,1:0|1:1111421_G_C:1111421:23,38,1,1
+1	1111458	.	C	A	.	.	AS_SB_TABLE=38,26|4,2;DP=74;ECNT=4;MBQ=31,22;MFRL=436,344;MMQ=60,60;MPOS=53;PON;POPAF=2.21;TLOD=14.80	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:64,6:0.073:70:23,4:34,1:64,5:0|1:1111458_C_A:1111458:38,26,4,2
+1	1111477	.	A	G	.	.	AS_SB_TABLE=47,18|5,2;DP=74;ECNT=4;MBQ=30,26;MFRL=445,311;MMQ=60,60;MPOS=48;PON;POPAF=1.48;TLOD=16.14	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:65,7:0.084:72:25,3:28,1:65,6:0|1:1111458_C_A:1111458:47,18,5,2
+1	2591350	.	C	T	.	.	AS_SB_TABLE=51,56|8,7;DP=127;ECNT=2;MBQ=31,26;MFRL=441,432;MMQ=23,23;MPOS=43;POPAF=1.72;TLOD=17.51	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:107,15:0.113:122:45,7:53,5:107,14:0|1:2591350_C_T:2591350:51,56,8,7
+1	2591397	.	T	A	.	.	AS_SB_TABLE=53,77|44,0;DP=175;ECNT=2;MBQ=32,32;MFRL=424,525;MMQ=23,23;MPOS=43;POPAF=0.148;TLOD=74.16	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	1|0:130,44:0.256:174:42,37:71,3:127,44:1|0:2591350_C_T:2591350:53,77,44,0
+1	2591763	.	T	A	.	.	AS_SB_TABLE=20,111|0,9;DP=140;ECNT=2;MBQ=32,29;MFRL=459,469;MMQ=24,24;MPOS=41;POPAF=2.42;TLOD=7.35	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:131,9:0.062:140:19,0:91,6:131,9:0|1:2591763_T_A:2591763:20,111,0,9
+1	2591769	.	AG	A	.	.	AS_SB_TABLE=21,120|0,5;DP=148;ECNT=2;MBQ=32,32;MFRL=469,480;MMQ=24,23;MPOS=51;POPAF=2.59;TLOD=9.21	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	1|0:141,5:0.040:146:24,0:104,4:142,5:1|0:2591763_T_A:2591763:21,120,0,5
+1	2592073	.	G	C	.	.	AS_SB_TABLE=24,38|1,2;DP=67;ECNT=1;MBQ=32,32;MFRL=420,502;MMQ=24,35;MPOS=44;POPAF=1.74;TLOD=3.55	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:62,3:0.061:65:23,1:30,2:60,3:24,38,1,2
+1	2592339	.	A	G	.	.	AS_SB_TABLE=4,25|0,7;DP=38;ECNT=1;MBQ=31,15;MFRL=395,477;MMQ=24,24;MPOS=43;POPAF=2.49;TLOD=4.58	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:29,7:0.174:36:11,3:14,0:29,7:4,25,0,7
+1	5002367	.	C	T	.	.	AS_SB_TABLE=48,64|38,50;DP=205;ECNT=1;MBQ=32,32;MFRL=438,417;MMQ=60,60;MPOS=37;POPAF=0.177;TLOD=252.66	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:112,88:0.438:200:48,41:60,44:112,87:48,64,38,50
+1	5002457	.	G	T	.	.	AS_SB_TABLE=37,57|40,63;DP=201;ECNT=1;MBQ=32,32;MFRL=455,425;MMQ=60,60;MPOS=36;POPAF=0.201;TLOD=309.53	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:94,103:0.520:197:49,59:43,41:94,102:37,57,40,63
+1	5002626	.	C	T	.	.	AS_SB_TABLE=47,49|46,38;DP=186;ECNT=1;MBQ=28,33;MFRL=436,420;MMQ=60,60;MPOS=37;POPAF=0.271;TLOD=250.71	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:96,84:0.470:180:54,43:37,38:94,83:47,49,46,38
+1	5002713	.	T	C	.	.	AS_SB_TABLE=48,61|52,35;DP=200;ECNT=1;MBQ=32,32;MFRL=422,434;MMQ=60,60;MPOS=35;POPAF=0.352;TLOD=244.93	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:109,87:0.445:196:57,44:48,39:108,87:48,61,52,35
+1	5003147	.	G	T	.	.	AS_SB_TABLE=22,49|17,33;DP=123;ECNT=3;MBQ=31,33;MFRL=403,419;MMQ=60,60;MPOS=17;POPAF=0.386;TLOD=163.75	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:71,50:0.419:121:29,17:31,31:71,51:0|1:5003147_G_T:5003147:22,49,17,33
+1	5003158	.	G	GTT	.	.	AS_SB_TABLE=24,48|14,33;DP=119;ECNT=3;MBQ=31,31;MFRL=408,421;MMQ=60,60;MPOS=9;POPAF=7.30;RPA=8,10;RU=T;STR;TLOD=153.30	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:72,47:0.396:119:30,10:27,23:72,47:0|1:5003147_G_T:5003147:24,48,14,33
+1	5003167	.	G	T	.	.	AS_SB_TABLE=26,42|6,21;DP=98;ECNT=3;MBQ=32,32;MFRL=399,425;MMQ=60,60;MPOS=11;POPAF=0.333;TLOD=92.10	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:68,27:0.302:95:28,9:28,16:68,29:0|1:5003147_G_T:5003147:26,42,6,21
+1	5003341	.	CA	C	.	.	AS_SB_TABLE=24,4|21,4;DP=83;ECNT=1;MBQ=32,32;MFRL=428,398;MMQ=60,60;MPOS=46;POPAF=0.530;RPA=19,18;RU=A;STR;TLOD=35.75	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:28,25:0.473:53:17,14:7,10:28,25:24,4,21,4
+1	5003504	.	G	A	.	.	AS_SB_TABLE=58,38|49,38;DP=187;ECNT=1;MBQ=31,32;MFRL=408,382;MMQ=60,60;MPOS=37;POPAF=0.293;TLOD=240.94	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:96,87:0.474:183:40,43:51,37:95,86:58,38,49,38
+1	5003782	.	GGATAGATAGATAGATAGATGATA	G	.	.	AS_SB_TABLE=54,64|41,28;DP=213;ECNT=2;MBQ=32,32;MFRL=413,437;MMQ=60,60;MPOS=45;POPAF=0.599;TLOD=245.91	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:118,69:0.380:187:54,31:41,31:116,69:0|1:5003782_GGATAGATAGATAGATAGATGATA_G:5003782:54,64,41,28
+1	5003801	.	TGATAGATA	T	.	.	AS_SB_TABLE=3,2|38,43;DP=195;ECNT=2;MBQ=0,33;MFRL=396,413;MMQ=60,60;MPOS=49;POPAF=0.857;RPA=12,10;RU=GATA;STR;TLOD=331.61	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	1|0:5,81:0.953:86:0,39:0,30:5,81:1|0:5003782_GGATAGATAGATAGATAGATGATA_G:5003782:3,2,38,43
+1	5004248	.	A	G	.	.	AS_SB_TABLE=20,38|25,29;DP=114;ECNT=2;MBQ=33,32;MFRL=430,451;MMQ=60,60;MPOS=45;POPAF=0.285;TLOD=206.56	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:58,54:0.483:112:31,25:26,27:58,54:0|1:5004248_A_G:5004248:20,38,25,29
+1	5004255	.	C	T	.	.	AS_SB_TABLE=19,36|25,29;DP=109;ECNT=2;MBQ=27,33;MFRL=425,451;MMQ=60,60;MPOS=38;POPAF=0.395;TLOD=207.40	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:55,54:0.495:109:25,24:24,24:55,54:0|1:5004248_A_G:5004248:19,36,25,29
+1	6631431	.	C	T	.	.	AS_SB_TABLE=1,1|93,104;DP=206;ECNT=1;MBQ=5,32;MFRL=434,429;MMQ=60,60;MPOS=37;POPAF=0.103;TLOD=662.37	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:2,197:0.995:199:0,94:0,87:2,196:1,1,93,104
+1	6631615	.	C	T	.	.	AS_SB_TABLE=2,0|100,116;DP=223;ECNT=2;MBQ=4,32;MFRL=439,417;MMQ=60,60;MPOS=39;POPAF=0.096;TLOD=742.63	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:2,216:0.995:218:0,99:0,105:2,213:2,0,100,116
+1	6631700	.	C	T	.	.	AS_SB_TABLE=0,0|96,115;DP=217;ECNT=2;MBQ=0,32;MFRL=0,418;MMQ=60,60;MPOS=36;POPAF=0.096;TLOD=734.78	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,211:0.995:211:0,81:0,105:0,206:0,0,96,115
+1	6632325	.	ATT	A	.	.	AS_SB_TABLE=10,2|21,39;DP=119;ECNT=2;MBQ=32,32;MFRL=419,398;MMQ=60,60;MPOS=29;POPAF=0.273;RPA=21,19;RU=T;STR;TLOD=137.02	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:12,60:0.847:72:6,29:3,16:12,60:0|1:6632325_ATT_A:6632325:10,2,21,39
+1	6632345	.	TTG	T	.	.	AS_SB_TABLE=43,61|10,0;DP=121;ECNT=2;MBQ=32,22;MFRL=399,413;MMQ=60,60;MPOS=18;POPAF=2.27;TLOD=6.80	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	1|0:104,10:0.074:114:43,4:32,2:103,10:1|0:6632325_ATT_A:6632325:43,61,10,0
+1	7042757	.	A	G	.	.	AS_SB_TABLE=29,12|32,15;DP=90;ECNT=1;MBQ=32,31;MFRL=479,423;MMQ=60,60;MPOS=12;POPAF=0.410;TLOD=139.47	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:41,47:0.540:88:9,12:11,13:22,26:29,12,32,15
+1	7043819	.	T	G	.	.	AS_SB_TABLE=129,381|0,3;DP=528;ECNT=4;MBQ=20,20;MFRL=394,557;MMQ=60,60;MPOS=68;POPAF=7.30;TLOD=6.55	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:510,3:0.012:513:82,0:62,1:166,1:0|1:7043819_T_G:7043819:129,381,0,3
+1	7043822	.	G	A	.	.	AS_SB_TABLE=126,381|0,3;DP=516;ECNT=4;MBQ=20,11;MFRL=394,557;MMQ=60,60;MPOS=65;POPAF=7.30;TLOD=6.57	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:507,3:0.012:510:86,0:67,0:164,1:0|1:7043819_T_G:7043819:126,381,0,3
+1	7043834	.	T	G	.	.	AS_SB_TABLE=96,352|12,5;DP=486;ECNT=4;MBQ=20,10;MFRL=394,398;MMQ=60,60;MPOS=9;POPAF=7.30;TLOD=6.12	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:448,17:0.039:465:72,0:60,2:145,5:96,352,12,5
+1	7043875	.	A	G	.	.	AS_SB_TABLE=129,278|3,3;DP=416;ECNT=4;MBQ=20,21;MFRL=375,246;MMQ=60,60;MPOS=32;POPAF=7.30;TLOD=6.76	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:407,6:0.014:413:71,0:56,1:135,1:129,278,3,3
+1	7044157	.	GGTGA	G	.	.	AS_SB_TABLE=27,2|9,15;DP=56;ECNT=4;MBQ=31,30;MFRL=370,318;MMQ=60,60;MPOS=4;POPAF=1.82;TLOD=82.29	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:29,24:0.429:53:5,3:2,5:11,8:0|1:7044157_GGTGA_G:7044157:27,2,9,15
+1	7044166	.	A	G	.	.	AS_SB_TABLE=33,2|9,9;DP=53;ECNT=4;MBQ=32,25;MFRL=384,309;MMQ=60,60;MPOS=2;POPAF=2.05;TLOD=67.54	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:35,18:0.333:53:7,2:4,2:13,6:0|1:7044157_GGTGA_G:7044157:33,2,9,9
+1	7044257	.	T	G	.	.	AS_SB_TABLE=201,15|12,3;DP=237;ECNT=4;MBQ=31,8;MFRL=421,384;MMQ=60,60;MPOS=55;POPAF=7.30;TLOD=5.12	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:216,15:0.075:231:36,0:27,0:72,5:201,15,12,3
+1	7044266	.	T	G	.	.	AS_SB_TABLE=231,16|0,12;DP=262;ECNT=4;MBQ=31,10;MFRL=416,274;MMQ=60,60;MPOS=10;POPAF=7.30;TLOD=7.61	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:247,12:0.055:259:43,0:30,1:83,4:231,16,0,12
+1	10547263	.	C	T	.	.	AS_SB_TABLE=9,8|12,4;DP=34;ECNT=1;MBQ=28,32;MFRL=382,412;MMQ=60,60;MPOS=22;POPAF=0.125;TLOD=45.67	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:17,16:0.497:33:5,7:6,8:17,16:9,8,12,4
+1	10547538	.	C	CTT,CTTTTTTTT	.	.	AS_SB_TABLE=0,13|1,9|6,3;DP=102;ECNT=1;MBQ=23,23,33;MFRL=397,373,450;MMQ=60,60,60;MPOS=28,27;POPAF=7.30,7.30;RPA=22,24,30;RU=T;STR;TLOD=15.75,10.03	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1/2:13,10,9:0.329,0.289:32:1,1,5:7,5,2:13,10,9:0,13,7,12
+1	10547687	.	G	A	.	.	AS_SB_TABLE=35,44|60,50;DP=192;ECNT=1;MBQ=28,33;MFRL=401,409;MMQ=60,60;MPOS=32;POPAF=0.178;TLOD=334.92	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:79,110:0.587:189:43,51:29,56:78,110:35,44,60,50
+1	10549380	.	A	G	.	.	AS_SB_TABLE=46,74|49,78;DP=258;ECNT=1;MBQ=32,30;MFRL=408,409;MMQ=60,60;MPOS=36;POPAF=0.365;TLOD=348.55	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:120,127:0.520:247:53,59:60,60:118,127:46,74,49,78
+1	16637469	.	A	AAAAC	.	.	AS_SB_TABLE=0,0|58,104;DP=192;ECNT=1;MBQ=0,32;MFRL=0,357;MMQ=60,60;MPOS=45;POPAF=0.166;RPA=5,6;RU=AAAC;STR;TLOD=712.94	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,162:0.994:162:0,63:0,76:0,162:0,0,58,104
+1	16637685	.	A	G	.	.	AS_SB_TABLE=3,0|75,100;DP=182;ECNT=2;MBQ=27,32;MFRL=460,336;MMQ=60,60;MPOS=37;POPAF=0.553;TLOD=584.41	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:3,175:0.984:178:2,89:0,78:3,173:3,0,75,100
+1	16637737	.	C	T	.	.	AS_SB_TABLE=3,0|94,94;DP=200;ECNT=2;MBQ=29,32;MFRL=350,350;MMQ=60,60;MPOS=44;POPAF=0.542;TLOD=625.47	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:3,188:0.984:191:1,85:1,85:3,186:3,0,94,94
+1	16637989	.	AAAAAAAAAAAT	A	.	.	AS_SB_TABLE=35,34|28,29;DP=148;ECNT=2;MBQ=32,32;MFRL=396,388;MMQ=60,60;MPOS=33;POPAF=2.09;TLOD=134.96	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:69,57:0.454:126:24,26:38,25:69,57:0|1:16637989_AAAAAAAAAAAT_A:16637989:35,34,28,29
+1	16637991	.	AAAAAAAAATAT	A	.	.	AS_SB_TABLE=7,9|49,42;DP=144;ECNT=2;MBQ=33,32;MFRL=391,395;MMQ=60,60;MPOS=39;POPAF=0.845;TLOD=118.74	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	1|0:16,91:0.849:107:1,15:3,25:16,91:1|0:16637989_AAAAAAAAAAAT_A:16637989:7,9,49,42
+1	16638454	.	C	G	.	.	AS_SB_TABLE=59,66|51,63;DP=246;ECNT=1;MBQ=32,32;MFRL=412,425;MMQ=60,60;MPOS=42;POPAF=1.12;TLOD=320.53	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:125,114:0.476:239:65,48:54,60:125,113:59,66,51,63
+1	19218227	.	A	G	.	.	AS_SB_TABLE=65,49|57,46;DP=225;ECNT=1;MBQ=32,32;MFRL=420,435;MMQ=60,60;MPOS=32;POPAF=2.00;TLOD=290.05	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:114,103:0.476:217:50,48:56,50:114,103:65,49,57,46
+1	19218612	.	G	A	.	.	AS_SB_TABLE=59,40|45,47;DP=195;ECNT=1;MBQ=31,32;MFRL=403,385;MMQ=60,60;MPOS=39;POPAF=1.16;TLOD=266.37	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:99,92:0.484:191:43,40:52,48:98,92:59,40,45,47
+1	19219052	.	C	CGGGGGG	.	.	AS_SB_TABLE=36,17|8,0;DP=84;ECNT=1;MBQ=31,27;MFRL=434,514;MMQ=60,60;MPOS=16;POPAF=7.30;RPA=9,15;RU=G;STR;TLOD=19.39	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:53,8:0.137:61:27,5:15,1:53,8:36,17,8,0
+1	19219286	.	C	G	.	.	AS_SB_TABLE=44,41|51,51;DP=193;ECNT=1;MBQ=32,28;MFRL=413,438;MMQ=60,60;MPOS=36;POPAF=1.16;TLOD=265.36	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:85,102:0.539:187:45,50:35,42:85,100:44,41,51,51
+1	19219402	.	C	T	.	.	AS_SB_TABLE=57,54|62,44;DP=226;ECNT=1;MBQ=28,33;MFRL=435,442;MMQ=60,60;MPOS=37;POPAF=2.30;TLOD=309.64	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:111,106:0.488:217:51,56:50,46:111,105:57,54,62,44
+1	19219805	.	C	T	.	.	AS_SB_TABLE=50,49|53,46;DP=205;ECNT=1;MBQ=28,32;MFRL=417,413;MMQ=60,60;MPOS=33;POPAF=1.10;TLOD=288.32	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:99,99:0.501:198:51,57:37,37:99,98:50,49,53,46
+1	19219987	.	A	C	.	.	AS_SB_TABLE=53,58|47,62;DP=223;ECNT=1;MBQ=32,32;MFRL=419,436;MMQ=60,60;MPOS=36;POPAF=1.62;TLOD=309.39	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:111,109:0.494:220:65,53:41,49:110,107:53,58,47,62
+1	21314454	.	TG	CA	.	.	AS_SB_TABLE=0,0|56,38;DP=95;ECNT=1;MBQ=0,32;MFRL=0,425;MMQ=60,60;MPOS=31;POPAF=7.30;TLOD=415.14	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,94:0.990:94:0,41:0,47:0,94:0,0,56,38
+1	21314929	.	C	T	.	.	AS_SB_TABLE=55,61|60,58;DP=241;ECNT=1;MBQ=32,33;MFRL=422,420;MMQ=60,60;MPOS=38;POPAF=1.92;TLOD=347.86	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:116,118:0.503:234:63,54:48,60:116,117:55,61,60,58
+1	21315544	.	AGGAGAGGAGGGGAGGGGAGGGGAGGGGAGG	A	.	.	AS_SB_TABLE=9,29|2,1;DP=63;ECNT=2;MBQ=32,30;MFRL=417,318;MMQ=60,60;MPOS=41;POPAF=2.99;TLOD=8.18	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:38,3:0.098:41:15,2:9,1:38,3:9,29,2,1
+1	21315574	.	G	GGAGA,GGGAGAGGAGA	.	.	AS_SB_TABLE=0,1|1,0|1,1;DP=28;ECNT=2;MBQ=9,31,20;MFRL=341,327,420;MMQ=60,60,60;MPOS=54,27;POPAF=7.30,7.30;TLOD=3.21,4.43	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1/2:1,1,2:0.308,0.579:4:0,1,1:0,0,0:1,1,2:0,1,2,1
+1	21316050	.	CA	C	.	.	AS_SB_TABLE=3,1|12,1;DP=59;ECNT=1;MBQ=32,32;MFRL=443,432;MMQ=60,60;MPOS=27;POPAF=0.701;RPA=26,25;RU=A;STR;TLOD=24.51	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:4,13:0.762:17:3,9:2,3:5,13:3,1,12,1
+1	21696858	.	A	G	.	.	AS_SB_TABLE=0,0|82,54;DP=140;ECNT=1;MBQ=0,32;MFRL=0,410;MMQ=60,60;MPOS=47;POPAF=0.105;TLOD=475.38	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,136:0.993:136:0,63:0,68:0,136:0,0,82,54
+1	21697469	.	C	T	.	.	AS_SB_TABLE=0,1|108,112;DP=231;ECNT=2;MBQ=14,33;MFRL=564,414;MMQ=60,60;MPOS=37;POPAF=0.105;TLOD=772.96	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:1,220:0.995:221:0,91:0,116:1,218:0,1,108,112
+1	21697502	.	A	G	.	.	AS_SB_TABLE=0,0|134,105;DP=244;ECNT=2;MBQ=0,32;MFRL=0,415;MMQ=60,60;MPOS=37;POPAF=0.105;TLOD=818.32	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,239:0.996:239:0,97:0,126:0,237:0,0,134,105
+1	21697916	.	T	TA	.	.	AS_SB_TABLE=1,0|32,39;DP=105;ECNT=3;MBQ=32,32;MFRL=326,406;MMQ=60,60;MPOS=29;POPAF=0.374;RPA=14,15;RU=A;STR;TLOD=169.79	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:1,71:0.978:72:0,23:1,33:1,71:1,0,32,39
+1	21698015	.	A	C	.	.	AS_SB_TABLE=0,0|95,81;DP=177;ECNT=3;MBQ=0,32;MFRL=0,408;MMQ=60,60;MPOS=38;POPAF=0.114;TLOD=674.03	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:0,176:0.994:176:0,41:0,101:0,174:0|1:21698015_A_C:21698015:0,0,95,81
+1	21698035	.	A	G	.	.	AS_SB_TABLE=0,0|105,69;DP=178;ECNT=3;MBQ=0,27;MFRL=0,401;MMQ=60,60;MPOS=41;POPAF=0.183;TLOD=713.98	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:0,174:0.994:174:0,44:0,86:0,173:0|1:21698015_A_C:21698015:0,0,105,69
+1	21698223	.	G	C	.	.	AS_SB_TABLE=1,0|104,105;DP=223;ECNT=1;MBQ=5,27;MFRL=555,408;MMQ=60,60;MPOS=43;POPAF=0.173;TLOD=611.72	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:1,209:0.995:210:0,93:0,82:1,209:1,0,104,105
+1	21698634	.	G	T	.	.	AS_SB_TABLE=1,0|93,98;DP=196;ECNT=1;MBQ=9,32;MFRL=494,429;MMQ=60,60;MPOS=50;POPAF=0.178;TLOD=664.15	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:1,191:0.995:192:0,101:0,83:1,191:1,0,93,98
+1	21698703	.	CT	C	.	.	AS_SB_TABLE=3,0|18,40;DP=118;ECNT=1;MBQ=31,31;MFRL=404,416;MMQ=60,60;MPOS=31;POPAF=0.353;RPA=21,20;RU=T;STR;TLOD=107.10	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:3,58:0.954:61:1,25:2,19:3,58:3,0,18,40
+1	26242882	.	G	A	.	.	AS_SB_TABLE=0,0|125,97;DP=225;ECNT=1;MBQ=0,33;MFRL=0,428;MMQ=60,60;MPOS=43;POPAF=0.186;TLOD=794.91	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,222:0.996:222:0,93:0,121:0,221:0,0,125,97
+1	26243448	.	C	G	.	.	AS_SB_TABLE=0,0|101,90;DP=197;ECNT=1;MBQ=0,32;MFRL=0,412;MMQ=60,60;MPOS=33;POPAF=0.150;TLOD=645.72	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,191:0.995:191:0,92:0,81:0,189:0,0,101,90
+1	26243724	.	CT	C	.	.	AS_SB_TABLE=17,0|54,64;DP=176;ECNT=2;MBQ=32,32;MFRL=418,412;MMQ=60,60;MPOS=27;POPAF=0.214;RPA=16,15;RU=T;STR;TLOD=219.56	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:17,118:0.897:135:9,61:6,52:17,118:0|1:26243724_CT_C:26243724:17,0,54,64
+1	26243740	.	TG	T	.	.	AS_SB_TABLE=69,75|15,0;DP=176;ECNT=2;MBQ=32,13;MFRL=415,420;MMQ=60,60;MPOS=17;POPAF=2.41;TLOD=12.23	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	1|0:144,15:0.070:159:72,3:65,3:143,15:1|0:26243724_CT_C:26243724:69,75,15,0
+1	26244848	.	A	ATT	.	.	AS_SB_TABLE=0,0|6,23;DP=73;ECNT=1;MBQ=0,33;MFRL=0,424;MMQ=60,60;MPOS=26;POPAF=0.281;RPA=18,20;RU=T;STR;TLOD=82.97	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,29:0.975:29:0,16:0,10:0,29:0,0,6,23
+1	28600147	.	T	G	.	.	AS_SB_TABLE=46,60|36,50;DP=194;ECNT=1;MBQ=33,32;MFRL=439,404;MMQ=60,60;MPOS=34;POPAF=2.20;TLOD=235.05	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:106,86:0.442:192:55,48:47,32:106,84:46,60,36,50
+1	28600988	.	G	C	.	.	AS_SB_TABLE=49,38|69,66;DP=229;ECNT=1;MBQ=32,31;MFRL=425,411;MMQ=60,60;MPOS=45;POPAF=2.19;TLOD=392.83	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:87,135:0.608:222:43,67:39,59:86,134:49,38,69,66
+1	31689030	.	T	C	.	.	AS_SB_TABLE=52,45|53,57;DP=211;ECNT=1;MBQ=32,28;MFRL=411,407;MMQ=60,60;MPOS=44;POPAF=7.30;TLOD=287.42	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:97,110:0.527:207:52,55:42,45:97,109:52,45,53,57
+1	31689537	.	T	TTTTATTTA,TTTTATTTATTTATTTA	.	.	AS_SB_TABLE=0,0|23,23|35,24;DP=208;ECNT=1;MBQ=0,32,32;MFRL=0,377,394;MMQ=60,60,60;MPOS=41,49;POPAF=0.506,7.30;RPA=10,12,14;RU=TTTA;STR;TLOD=173.59,229.74	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1/2:0,46,59:0.448,0.545:105:0,20,30:0,16,21:0,46,59:0,0,58,47
+1	32160918	.	A	G	.	.	AS_SB_TABLE=34,57|30,71;DP=196;ECNT=1;MBQ=32,32;MFRL=423,408;MMQ=60,60;MPOS=37;POPAF=0.169;TLOD=289.90	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:91,101:0.531:192:42,51:36,43:88,99:34,57,30,71
+1	32161924	.	T	TCCCCCCCCCCCCC	.	.	AS_SB_TABLE=0,77|14,0;DP=108;ECNT=2;MBQ=23,22;MFRL=395,419;MMQ=60,60;MPOS=18;POPAF=7.30;RPA=8,21;RU=C;STR;TLOD=18.76	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:77,14:0.145:91:16,7:26,0:76,13:0,77,14,0
+1	32161942	.	T	C	.	.	AS_SB_TABLE=5,38|9,47;DP=102;ECNT=2;MBQ=33,27;MFRL=393,394;MMQ=60,60;MPOS=36;POPAF=0.288;TLOD=136.11	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:43,56:0.560:99:16,20:22,27:43,55:5,38,9,47
+1	33801138	.	C	T	.	.	AS_SB_TABLE=78,46|73,65;DP=272;ECNT=1;MBQ=32,32;MFRL=411,409;MMQ=60,60;MPOS=36;POPAF=0.507;TLOD=400.44	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:124,138:0.522:262:66,66:50,63:124,135:78,46,73,65
+1	33801576	.	TTTGTTG	T	.	.	AS_SB_TABLE=38,36|43,33;DP=179;ECNT=3;MBQ=32,32;MFRL=421,441;MMQ=60,60;MPOS=54;POPAF=3.29;RPA=7,5;RU=TTG;STR;TLOD=289.96	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:74,76:0.504:150:28,46:27,24:75,76:0|1:33801576_TTTGTTG_T:33801576:38,36,43,33
+1	33801599	.	T	TGTTGTTGTTG	.	.	AS_SB_TABLE=46,35|46,34;DP=170;ECNT=3;MBQ=32,32;MFRL=445,410;MMQ=60,60;MPOS=37;POPAF=0.559;TLOD=266.93	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	1|0:81,80:0.495:161:48,32:28,29:80,79:1|0:33801576_TTTGTTG_T:33801576:46,35,46,34
+1	33801602	.	T	G	.	.	AS_SB_TABLE=48,36|46,34;DP=172;ECNT=3;MBQ=32,32;MFRL=443,410;MMQ=60,60;MPOS=45;POPAF=0.488;TLOD=265.82	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	1|0:84,80:0.485:164:48,33:30,29:83,79:1|0:33801576_TTTGTTG_T:33801576:48,36,46,34
+1	33801706	.	T	C	.	.	AS_SB_TABLE=50,27|63,23;DP=169;ECNT=1;MBQ=32,32;MFRL=402,414;MMQ=60,60;MPOS=37;POPAF=0.274;TLOD=244.40	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:77,86:0.530:163:37,41:37,38:76,86:50,27,63,23
+1	33802351	.	C	T	.	.	AS_SB_TABLE=59,54|59,55;DP=229;ECNT=1;MBQ=27,33;MFRL=418,407;MMQ=60,60;MPOS=38;POPAF=0.412;TLOD=338.12	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:113,114:0.506:227:48,51:52,59:112,113:59,54,59,55
+1	34879367	.	A	G	.	.	AS_SB_TABLE=36,47|45,42;DP=175;ECNT=1;MBQ=33,28;MFRL=423,437;MMQ=60,60;MPOS=49;POPAF=0.175;TLOD=218.85	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:83,87:0.509:170:33,43:46,35:83,87:36,47,45,42
+1	34879538	.	G	T	.	.	AS_SB_TABLE=56,60|60,57;DP=237;ECNT=2;MBQ=32,32;MFRL=419,404;MMQ=60,60;MPOS=46;POPAF=1.49;TLOD=343.66	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:116,117:0.503:233:64,56:46,58:116,117:56,60,60,57
+1	34879571	.	A	C	.	.	AS_SB_TABLE=63,59|60,50;DP=250;ECNT=2;MBQ=32,31;MFRL=418,405;MMQ=60,60;MPOS=38;POPAF=0.169;TLOD=309.90	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:122,110:0.476:232:66,52:47,54:122,110:63,59,60,50
+1	34879683	.	T	C	.	.	AS_SB_TABLE=73,53|54,56;DP=239;ECNT=2;MBQ=32,32;MFRL=410,423;MMQ=60,60;MPOS=46;POPAF=0.167;TLOD=313.07	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:126,110:0.463:236:56,54:69,52:126,109:73,53,54,56
+1	34879756	.	GA	TC	.	.	AS_SB_TABLE=73,50|56,57;DP=244;ECNT=2;MBQ=31,32;MFRL=416,420;MMQ=60,60;MPOS=37;POPAF=7.30;TLOD=431.68	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:123,113:0.481:236:46,50:67,58:122,113:73,50,56,57
+1	34879996	.	T	C	.	.	AS_SB_TABLE=64,64|75,50;DP=258;ECNT=1;MBQ=33,32;MFRL=407,403;MMQ=60,60;MPOS=36;POPAF=0.169;TLOD=362.10	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:128,125:0.491:253:65,56:57,62:127,122:64,64,75,50
+1	35684888	.	A	T	.	.	AS_SB_TABLE=1,1|80,91;DP=187;ECNT=1;MBQ=26,33;MFRL=455,403;MMQ=60,60;MPOS=31;POPAF=0.255;TLOD=521.79	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:2,171:0.984:173:1,48:0,49:2,169:1,1,80,91
+1	36036713	.	T	A	.	.	AS_SB_TABLE=84,82|0,21;DP=193;ECNT=1;MBQ=31,12;MFRL=415,415;MMQ=60,60;MPOS=53;POPAF=7.30;TLOD=4.71	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:166,21:0.063:187:73,2:58,2:163,20:84,82,0,21
+1	36036838	.	CAGAAA	C	.	.	AS_SB_TABLE=64,54|59,40;DP=229;ECNT=1;MBQ=32,32;MFRL=413,435;MMQ=60,60;MPOS=39;POPAF=2.39;TLOD=371.15	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:118,99:0.457:217:53,42:50,50:118,99:64,54,59,40
+1	36656300	.	C	G	.	.	AS_SB_TABLE=119,93|1,7;DP=230;ECNT=6;MBQ=32,32;MFRL=403,111;MMQ=60,60;MPOS=10;POPAF=7.30;TLOD=13.48	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:212,8:0.040:220:100,2:91,1:209,8:0|1:36656300_C_G:36656300:119,93,1,7
+1	36656305	.	A	G	.	.	AS_SB_TABLE=117,92|1,7;DP=217;ECNT=6;MBQ=32,26;MFRL=401,111;MMQ=60,60;MPOS=13;POPAF=7.30;TLOD=13.56	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:209,8:0.041:217:98,0:87,0:205,8:0|1:36656300_C_G:36656300:117,92,1,7
+1	36656308	.	CT	TG	.	.	AS_SB_TABLE=113,95|1,3;DP=212;ECNT=6;MBQ=32,33;MFRL=400,104;MMQ=60,60;MPOS=15;POPAF=7.30;TLOD=7.75	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:208,4:0.024:212:98,0:91,0:206,4:0|1:36656300_C_G:36656300:113,95,1,3
+1	36656312	.	T	TCACC	.	.	AS_SB_TABLE=113,97|1,3;DP=214;ECNT=6;MBQ=32,33;MFRL=402,104;MMQ=60,60;MPOS=11;POPAF=7.30;TLOD=7.72	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:210,4:0.023:214:100,0:88,1:209,4:0|1:36656300_C_G:36656300:113,97,1,3
+1	36656313	.	TTCTG	T	.	.	AS_SB_TABLE=114,100|1,3;DP=218;ECNT=6;MBQ=32,32;MFRL=402,104;MMQ=60,60;MPOS=8;POPAF=7.30;TLOD=7.69	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:214,4:0.023:218:96,0:90,0:212,4:0|1:36656300_C_G:36656300:114,100,1,3
+1	36656322	.	C	T	.	.	AS_SB_TABLE=109,98|1,2;DP=210;ECNT=6;MBQ=31,23;MFRL=403,96;MMQ=60,59;MPOS=16;POPAF=7.30;TLOD=4.97	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:207,3:0.019:210:91,0:89,0:207,3:0|1:36656300_C_G:36656300:109,98,1,2
+1	39347969	.	C	A	.	.	AS_SB_TABLE=9,2|27,21;DP=59;ECNT=7;MBQ=32,32;MFRL=389,411;MMQ=60,60;MPOS=53;POPAF=0.526;TLOD=202.52	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:11,48:0.803:59:8,24:2,23:11,48:0|1:39347969_C_A:39347969:9,2,27,21
+1	39347971	.	AATATATATAT	A	.	.	AS_SB_TABLE=28,22|8,2;DP=60;ECNT=7;MBQ=32,32;MFRL=410,377;MMQ=60,60;MPOS=54;POPAF=2.28;RPA=26,21;RU=AT;STR;TLOD=17.43	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:50,10:0.176:60:25,7:24,2:50,10:28,22,8,2
+1	39347972	.	ATATATATATATATATATATATATATATATAT	A	.	.	AS_SB_TABLE=7,4|27,21;DP=66;ECNT=7;MBQ=32,32;MFRL=384,411;MMQ=60,60;MPOS=52;POPAF=0.420;TLOD=198.69	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:11,48:0.831:59:1,24:0,24:10,48:0|1:39347969_C_A:39347969:7,4,27,21
+1	39348005	.	T	A	.	.	AS_SB_TABLE=13,5|27,21;DP=67;ECNT=7;MBQ=33,32;MFRL=374,411;MMQ=60,60;MPOS=51;POPAF=0.362;TLOD=198.67	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:18,48:0.732:66:11,23:4,23:17,48:0|1:39347969_C_A:39347969:13,5,27,21
+1	39348027	.	C	CAT	.	.	AS_SB_TABLE=0,0|56,33;DP=91;ECNT=7;MBQ=0,32;MFRL=0,410;MMQ=60,60;MPOS=31;POPAF=0.075;RPA=4,5;RU=AT;STR;TLOD=377.10	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,89:0.989:89:0,43:0,28:0,88:0,0,56,33
+1	39348089	.	G	A	.	.	AS_SB_TABLE=0,0|84,50;DP=138;ECNT=7;MBQ=0,33;MFRL=0,421;MMQ=60,60;MPOS=37;POPAF=0.022;TLOD=481.88	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,134:0.993:134:0,75:0,54:0,134:0,0,84,50
+1	39348165	.	G	A	.	.	AS_SB_TABLE=60,25|58,39;DP=187;ECNT=7;MBQ=27,32;MFRL=422,432;MMQ=60,60;MPOS=37;POPAF=0.429;TLOD=280.61	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:85,97:0.543:182:35,45:22,40:85,97:60,25,58,39
+1	39348950	.	G	GAAA	.	.	AS_SB_TABLE=27,27|13,10;DP=125;ECNT=6;MBQ=32,32;MFRL=388,371;MMQ=60,60;MPOS=35;POPAF=1.05;RPA=11,14;RU=A;STR;TLOD=78.52	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:54,23:0.309:77:24,7:22,6:54,24:27,27,13,10
+1	39348958	.	A	AT	.	.	AS_SB_TABLE=27,25|17,18;DP=117;ECNT=6;MBQ=32,32;MFRL=386,415;MMQ=60,60;MPOS=55;POPAF=1.38;TLOD=109.71	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:52,35:0.405:87:22,16:20,12:52,35:27,25,17,18
+1	39348960	.	A	T	.	.	AS_SB_TABLE=27,26|30,28;DP=115;ECNT=6;MBQ=32,33;MFRL=385,397;MMQ=60,60;MPOS=29;POPAF=7.30;TLOD=204.52	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:53,58:0.524:111:26,27:19,22:53,58:27,26,30,28
+1	39348970	.	T	TACAC	.	.	AS_SB_TABLE=35,23|24,22;DP=130;ECNT=6;MBQ=33,33;MFRL=384,417;MMQ=60,60;MPOS=32;POPAF=7.30;RPA=21,23;RU=AC;STR;TLOD=112.46	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:58,46:0.432:104:25,18:17,17:59,46:35,23,24,22
+1	39348972	.	C	T	.	.	AS_SB_TABLE=27,24|13,13;DP=126;ECNT=6;MBQ=32,33;MFRL=415,380;MMQ=60,60;MPOS=33;POPAF=0.807;TLOD=84.28	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:51,26:0.344:77:25,14:18,10:51,27:27,24,13,13
+1	39349010	.	CACAT	C	.	.	AS_SB_TABLE=41,40|38,23;DP=143;ECNT=6;MBQ=32,32;MFRL=387,389;MMQ=60,60;MPOS=37;POPAF=2.20;TLOD=92.83	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:81,61:0.413:142:30,13:31,10:86,61:41,40,38,23
+1	39349328	.	AT	A	.	.	AS_SB_TABLE=34,40|48,28;DP=184;ECNT=1;MBQ=32,32;MFRL=376,402;MMQ=60,60;MPOS=37;POPAF=0.427;RPA=14,13;RU=T;STR;TLOD=132.50	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:74,76:0.510:150:36,37:23,28:73,76:34,40,48,28
+1	40129377	.	GGCCATAGCT	G	.	.	AS_SB_TABLE=0,0|232,184;DP=466;ECNT=1;MBQ=0,22;MFRL=0,437;MMQ=60,60;MPOS=37;POPAF=0.090;RPA=2,1;RU=GCCATAGCT;STR;TLOD=1803.24	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,416:0.995:416:0,86:0,107:0,202:0,0,232,184
+1	40130159	.	T	TCTC	.	.	AS_SB_TABLE=14,44|2,2;DP=80;ECNT=4;MBQ=20,20;MFRL=360,141;MMQ=60,60;MPOS=31;POPAF=1.68;RPA=3,4;RU=CTC;STR;TLOD=7.07	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:58,4:0.070:62:8,1:14,0:24,1:0|1:40130159_T_TCTC:40130159:14,44,2,2
+1	40130162	.	CCTCCTCTCCT	C,CCTCCTCCTCTCCTCTCCTCTCCT,CCTCCTCTCCTCTCCTCTCCTCTCCTCTCCT,CCTCCTCCTCTCCTCTCCTCTCCTCTCCTCTCCT	.	.	AS_SB_TABLE=10,4|2,2|4,2|4,12|0,8;DP=106;ECNT=4;MBQ=20,20,24,20,20;MFRL=180,140,97,367,409;MMQ=60,60,60,60,60;MPOS=48,16,40,42;POPAF=7.30,7.30,7.30,7.30;TLOD=15.69,10.90,30.11,11.46	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1/2/3/4:14,4,6,16,8:0.051,0.131,0.300,0.163:48:3,1,2,2,1:1,0,0,5,2:7,1,2,7,3:10,4,10,24
+1	40130163	.	CT	C	.	.	AS_SB_TABLE=12,64|8,2;DP=90;ECNT=4;MBQ=20,26;MFRL=360,254;MMQ=60,60;MPOS=30;POPAF=3.63;TLOD=12.03	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	1|0:76,10:0.111:86:13,2:19,1:32,4:1|0:40130159_T_TCTC:40130159:12,64,8,2
+1	40130165	.	CCTCT	C	.	.	AS_SB_TABLE=14,64|8,2;DP=104;ECNT=4;MBQ=20,25;MFRL=360,254;MMQ=60,60;MPOS=5;POPAF=3.96;TLOD=11.97	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	1|0:78,10:0.107:88:12,2:18,1:33,4:1|0:40130159_T_TCTC:40130159:14,64,8,2
+1	40131089	.	G	T	.	.	AS_SB_TABLE=118,106|140,82;DP=452;ECNT=1;MBQ=20,22;MFRL=439,419;MMQ=60,60;MPOS=35;POPAF=0.896;TLOD=554.66	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:224,222:0.500:446:59,52:47,51:110,110:118,106,140,82
+1	42707630	.	A	G	.	.	AS_SB_TABLE=0,0|97,142;DP=246;ECNT=1;MBQ=0,30;MFRL=0,422;MMQ=60,60;MPOS=36;POPAF=0.197;TLOD=777.54	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,239:0.996:239:0,109:0,111:0,237:0,0,97,142
+1	42707875	.	GA	G	.	.	AS_SB_TABLE=39,39|45,38;DP=181;ECNT=1;MBQ=32,32;MFRL=418,420;MMQ=60,60;MPOS=34;POPAF=2.11;RPA=10,9;RU=A;STR;TLOD=161.02	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:78,83:0.521:161:30,40:37,33:77,83:39,39,45,38
+1	42708237	.	CAA	C,CA	.	.	AS_SB_TABLE=1,1|40,32|36,34;DP=172;ECNT=1;MBQ=30,32,32;MFRL=461,427,402;MMQ=60,60,60;MPOS=45,35;POPAF=0.652,0.438;RPA=16,14,15;RU=A;STR;TLOD=121.42,124.85	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1/2:2,72,70:0.493,0.498:144:1,29,35:1,37,27:2,72,70:1,1,76,66
+1	42708626	.	C	CTAT	.	.	AS_SB_TABLE=1,0|116,110;DP=243;ECNT=1;MBQ=27,32;MFRL=315,421;MMQ=60,60;MPOS=40;POPAF=0.133;RPA=2,3;RU=TAT;STR;TLOD=800.74	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:1,226:0.996:227:0,93:1,101:1,224:1,0,116,110
+1	42708852	.	T	C	.	.	AS_SB_TABLE=0,0|104,121;DP=237;ECNT=1;MBQ=0,28;MFRL=0,418;MMQ=60,60;MPOS=40;POPAF=0.133;TLOD=708.58	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,225:0.996:225:0,104:0,104:0,225:0,0,104,121
+1	44211697	.	T	C	.	.	AS_SB_TABLE=0,0|248,272;DP=534;ECNT=1;MBQ=0,20;MFRL=0,433;MMQ=60,60;MPOS=43;POPAF=0.151;TLOD=1493.57	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,520:0.996:520:0,128:0,112:0,257:0,0,248,272
+1	44212133	.	AT	A	.	.	AS_SB_TABLE=0,0|54,120;DP=274;ECNT=2;MBQ=0,20;MFRL=0,414;MMQ=60,60;MPOS=26;POPAF=0.295;RPA=18,17;RU=T;STR;TLOD=199.95	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,174:0.990:174:1,31:1,44:4,82:0,0,54,120
+1	44212283	.	G	A	.	.	AS_SB_TABLE=94,70|66,90;DP=332;ECNT=2;MBQ=20,20;MFRL=394,426;MMQ=60,60;MPOS=28;POPAF=0.467;TLOD=302.52	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:164,156:0.488:320:33,29:24,25:63,60:94,70,66,90
+1	44212453	.	G	T	.	.	AS_SB_TABLE=98,120|8,0;DP=242;ECNT=1;MBQ=20,16;MFRL=376,433;MMQ=60,60;MPOS=38;POPAF=3.01;TLOD=5.70	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:218,8:0.040:226:42,0:46,1:107,4:98,120,8,0
+1	44212903	.	A	C	.	.	AS_SB_TABLE=218,180|0,14;DP=434;ECNT=2;MBQ=20,16;MFRL=402,468;MMQ=60,60;MPOS=34;POPAF=7.30;TLOD=4.43	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:398,14:0.031:412:99,1:69,0:195,7:218,180,0,14
+1	44212942	.	A	G	.	.	AS_SB_TABLE=0,0|200,186;DP=402;ECNT=2;MBQ=0,20;MFRL=0,392;MMQ=60,60;MPOS=35;POPAF=0.151;TLOD=1035.03	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,386:0.995:386:0,91:0,80:0,180:0,0,200,186
+1	44213051	.	C	G	.	.	AS_SB_TABLE=76,98|74,96;DP=358;ECNT=2;MBQ=20,20;MFRL=386,391;MMQ=60,60;MPOS=34;POPAF=0.607;TLOD=419.88	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:174,170:0.491:344:42,40:41,43:87,84:76,98,74,96
+1	44213089	.	A	G	.	.	AS_SB_TABLE=76,102|100,104;DP=386;ECNT=2;MBQ=20,20;MFRL=412,381;MMQ=60,60;MPOS=29;POPAF=0.456;TLOD=520.42	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:178,204:0.535:382:39,52:44,45:86,99:76,102,100,104
+1	44213178	.	C	A	.	.	AS_SB_TABLE=0,2|108,178;DP=290;ECNT=2;MBQ=4,20;MFRL=404,425;MMQ=60,60;MPOS=48;POPAF=0.152;TLOD=776.78	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:2,286:0.991:288:0,64:0,68:1,140:0,2,108,178
+1	44213232	.	AT	A	.	.	AS_SB_TABLE=8,24|6,22;DP=164;ECNT=2;MBQ=20,20;MFRL=489,445;MMQ=60,60;MPOS=29;POPAF=0.613;RPA=23,22;RU=T;STR;TLOD=15.15	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:32,28:0.448:60:3,5:8,5:15,12:8,24,6,22
+1	44213482	.	C	A	.	.	AS_SB_TABLE=78,52|54,54;DP=246;ECNT=1;MBQ=30,20;MFRL=407,426;MMQ=60,60;MPOS=54;POPAF=0.607;TLOD=273.27	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:130,108:0.459:238:29,31:34,22:65,55:78,52,54,54
+1	51856378	.	G	A	.	.	AS_SB_TABLE=120,108|116,102;DP=502;ECNT=1;MBQ=20,20;MFRL=432,416;MMQ=60,40;MPOS=37;POPAF=0.542;TLOD=504.81	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:228,218:0.478:446:41,31:37,50:92,84:120,108,116,102
+1	51857127	.	T	TAATAA	.	.	AS_SB_TABLE=56,44|84,60;DP=362;ECNT=1;MBQ=26,23;MFRL=451,400;MMQ=60,60;MPOS=44;POPAF=0.979;RPA=8,9;RU=AATAA;STR;TLOD=525.93	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:100,144:0.575:244:23,27:20,30:46,64:56,44,84,60
+1	53075793	.	A	G	.	.	AS_SB_TABLE=0,0|24,31;DP=61;ECNT=1;MBQ=0,26;MFRL=0,399;MMQ=60,60;MPOS=12;POPAF=0.132;TLOD=154.06	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,55:0.974:55:0,14:0,19:0,35:0,0,24,31
+1	53075917	.	ATT	A	.	.	AS_SB_TABLE=0,0|138,190;DP=353;ECNT=1;MBQ=0,20;MFRL=0,406;MMQ=60,60;MPOS=32;POPAF=0.207;RPA=13,11;RU=T;STR;TLOD=792.85	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,328:0.994:328:0,80:0,72:0,163:0,0,138,190
+1	53076210	.	C	T	.	.	AS_SB_TABLE=0,0|250,196;DP=476;ECNT=1;MBQ=0,20;MFRL=0,421;MMQ=60,60;MPOS=32;POPAF=0.131;TLOD=1309.26	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,446:0.996:446:0,114:0,102:0,220:0,0,250,196
+1	53076416	.	T	C	.	.	AS_SB_TABLE=0,2|228,256;DP=494;ECNT=1;MBQ=20,20;MFRL=526,418;MMQ=60,60;MPOS=38;POPAF=0.061;TLOD=1376.93	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:2,484:0.992:486:0,113:1,112:1,238:0,2,228,256
+1	53076625	.	A	G	.	.	AS_SB_TABLE=0,0|234,210;DP=466;ECNT=2;MBQ=0,20;MFRL=0,429;MMQ=60,60;MPOS=39;POPAF=0.063;TLOD=1166.37	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,444:0.996:444:0,109:0,88:0,221:0,0,234,210
+1	53076663	.	T	C	.	.	AS_SB_TABLE=0,0|268,202;DP=492;ECNT=2;MBQ=0,23;MFRL=0,428;MMQ=60,60;MPOS=36;POPAF=0.131;TLOD=1382.62	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,470:0.996:470:0,116:0,107:0,231:0,0,268,202
+1	53076916	.	CCGTG	C	.	.	AS_SB_TABLE=170,238|0,6;DP=430;ECNT=1;MBQ=20,20;MFRL=401,89;MMQ=60,60;MPOS=13;POPAF=7.30;TLOD=18.57	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:408,6:0.020:414:100,2:77,1:194,3:170,238,0,6
+1	53077233	.	T	C	.	.	AS_SB_TABLE=214,146|4,2;DP=376;ECNT=5;MBQ=20,31;MFRL=407,100;MMQ=60,60;MPOS=7;POPAF=7.30;TLOD=13.91	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:360,6:0.023:366:77,1:73,2:167,3:0|1:53077233_T_C:53077233:214,146,4,2
+1	53077234	.	GTGA	G	.	.	AS_SB_TABLE=218,150|4,2;DP=380;ECNT=5;MBQ=21,27;MFRL=407,100;MMQ=60,60;MPOS=8;POPAF=7.30;TLOD=13.88	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:368,6:0.023:374:79,1:76,2:171,3:0|1:53077233_T_C:53077233:218,150,4,2
+1	53077241	.	T	TCAC	.	.	AS_SB_TABLE=208,148|4,2;DP=364;ECNT=5;MBQ=27,32;MFRL=409,100;MMQ=60,60;MPOS=12;POPAF=7.30;TLOD=13.95	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:356,6:0.024:362:76,1:77,2:164,3:0|1:53077233_T_C:53077233:208,148,4,2
+1	53077242	.	G	T	.	.	AS_SB_TABLE=210,148|4,2;DP=366;ECNT=5;MBQ=27,32;MFRL=409,100;MMQ=60,60;MPOS=16;POPAF=7.30;TLOD=13.94	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:358,6:0.024:364:71,1:77,2:165,3:0|1:53077233_T_C:53077233:210,148,4,2
+1	53077250	.	A	G	.	.	AS_SB_TABLE=200,146|4,6;DP=364;ECNT=5;MBQ=25,20;MFRL=405,100;MMQ=60,60;MPOS=24;POPAF=3.09;TLOD=19.22	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:346,10:0.031:356:72,2:75,2:155,4:0|1:53077233_T_C:53077233:200,146,4,6
+1	54585415	.	T	C	.	.	AS_SB_TABLE=44,62|59,61;DP=231;ECNT=6;MBQ=32,32;MFRL=426,424;MMQ=60,60;MPOS=36;POPAF=0.400;TLOD=343.71	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:106,120:0.534:226:46,52:54,59:104,120:44,62,59,61
+1	54585516	.	ACCAC	A	.	.	AS_SB_TABLE=12,46|24,53;DP=189;ECNT=6;MBQ=32,33;MFRL=407,411;MMQ=60,60;MPOS=42;POPAF=0.300;TLOD=318.72	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:58,77:0.572:135:11,27:29,37:61,81:0|1:54585516_ACCAC_A:54585516:12,46,24,53
+1	54585521	.	G	T	.	.	AS_SB_TABLE=12,46|24,53;DP=189;ECNT=6;MBQ=32,32;MFRL=407,411;MMQ=60,60;MPOS=43;POPAF=0.299;TLOD=318.72	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:58,77:0.572:135:9,16:27,32:61,81:0|1:54585516_ACCAC_A:54585516:12,46,24,53
+1	54585574	.	A	G	.	.	AS_SB_TABLE=9,34|18,48;DP=162;ECNT=6;MBQ=33,32;MFRL=404,394;MMQ=60,60;MPOS=36;POPAF=0.409;TLOD=254.13	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:43,66:0.612:109:10,18:20,25:43,68:0|1:54585516_ACCAC_A:54585516:9,34,18,48
+1	54585635	.	A	G	.	.	AS_SB_TABLE=49,60|20,27;DP=157;ECNT=6;MBQ=32,32;MFRL=393,379;MMQ=60,60;MPOS=42;POPAF=0.420;TLOD=172.17	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:109,47:0.440:156:19,12:19,12:108,49:0|1:54585635_A_G:54585635:49,60,20,27
+1	54585645	.	CCA	C	.	.	AS_SB_TABLE=51,62|20,30;DP=163;ECNT=6;MBQ=32,31;MFRL=394,383;MMQ=60,60;MPOS=36;POPAF=0.416;RPA=4,3;RU=CA;STR;TLOD=176.27	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:113,50:0.433:163:21,17:25,16:112,50:0|1:54585635_A_G:54585635:51,62,20,30
+1	54586538	.	T	C	.	.	AS_SB_TABLE=48,48|50,54;DP=209;ECNT=1;MBQ=32,31;MFRL=429,447;MMQ=60,60;MPOS=34;POPAF=0.316;TLOD=292.70	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:96,104:0.520:200:40,40:51,57:95,103:48,48,50,54
+1	58711944	.	T	C	.	.	AS_SB_TABLE=0,0|140,100;DP=244;ECNT=2;MBQ=0,32;MFRL=0,407;MMQ=60,60;MPOS=40;POPAF=0.325;TLOD=825.75	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,240:0.996:240:0,129:0,99:0,234:0,0,140,100
+1	58711961	.	C	T	.	.	AS_SB_TABLE=71,53|61,47;DP=239;ECNT=2;MBQ=31,32;MFRL=412,405;MMQ=60,60;MPOS=41;POPAF=1.64;TLOD=306.74	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:124,108:0.465:232:57,52:53,45:121,105:71,53,61,47
+1	58712575	.	A	G	.	.	AS_SB_TABLE=57,69|61,65;DP=263;ECNT=1;MBQ=32,32;MFRL=427,410;MMQ=60,60;MPOS=42;POPAF=1.82;TLOD=359.71	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:126,126:0.507:252:48,69:65,50:122,125:57,69,61,65
+1	58712927	.	AT	A	.	.	AS_SB_TABLE=31,59|12,31;DP=141;ECNT=3;MBQ=33,33;MFRL=420,425;MMQ=60,70;MPOS=25;POPAF=3.28;RPA=3,2;RU=T;STR;TLOD=97.56	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:90,43:0.326:133:30,16:49,18:90,42:0|1:58712927_AT_A:58712927:31,59,12,31
+1	58712938	.	CG	C	.	.	AS_SB_TABLE=11,28|29,55;DP=148;ECNT=3;MBQ=29,31;MFRL=425,420;MMQ=70,60;MPOS=36;POPAF=0.368;TLOD=207.55	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	1|0:39,84:0.681:123:13,31:18,44:38,84:1|0:58712927_AT_A:58712927:11,28,29,55
+1	58712939	.	G	C	.	.	AS_SB_TABLE=3,3|28,78;DP=147;ECNT=3;MBQ=0,29;MFRL=445,419;MMQ=60,60;MPOS=25;POPAF=0.728;TLOD=85.96	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:6,106:0.965:112:0,19:0,24:6,105:0|1:58712927_AT_A:58712927:3,3,28,78
+1	58713545	.	C	T	.	.	AS_SB_TABLE=0,0|62,102;DP=165;ECNT=1;MBQ=0,32;MFRL=0,412;MMQ=60,60;MPOS=35;POPAF=8.695e-04;TLOD=586.72	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,164:0.994:164:0,72:0,89:0,164:0,0,62,102
+1	60932767	.	C	A	.	.	AS_SB_TABLE=0,0|100,60;DP=163;ECNT=2;MBQ=0,33;MFRL=0,427;MMQ=60,40;MPOS=39;POPAF=0.020;TLOD=574.37	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,160:0.994:160:0,81:0,76:0,160:0,0,100,60
+1	60932876	.	T	G	.	.	AS_SB_TABLE=70,10|3,9;DP=100;ECNT=2;MBQ=25,7;MFRL=418,369;MMQ=60,60;MPOS=8;POPAF=1.42;TLOD=4.75	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:80,12:0.096:92:33,0:17,0:80,12:70,10,3,9
+1	60933038	.	G	GAAAAAAAAAAAGAAAAAA	.	.	AS_SB_TABLE=65,21|2,9;DP=130;ECNT=4;MBQ=32,17;MFRL=425,398;MMQ=60,60;MPOS=29;POPAF=2.84;TLOD=4.71	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:86,11:0.086:97:54,1:23,0:86,11:65,21,2,9
+1	60933051	.	C	CA	.	.	AS_SB_TABLE=34,17|36,17;DP=126;ECNT=4;MBQ=32,32;MFRL=408,428;MMQ=60,60;MPOS=24;POPAF=0.072;RPA=13,14;RU=A;STR;TLOD=93.69	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:51,53:0.496:104:29,34:12,13:53,53:34,17,36,17
+1	60933064	.	ATTT	A	.	.	AS_SB_TABLE=43,26|36,19;DP=133;ECNT=4;MBQ=32,32;MFRL=428,414;MMQ=60,60;MPOS=34;POPAF=2.33;TLOD=171.35	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:69,55:0.452:124:40,34:21,15:68,56:43,26,36,19
+1	60933068	.	G	A	.	.	AS_SB_TABLE=43,26|36,19;DP=131;ECNT=4;MBQ=32,32;MFRL=428,414;MMQ=60,60;MPOS=35;POPAF=2.33;TLOD=171.29	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:69,55:0.452:124:36,34:21,16:68,56:43,26,36,19
+1	60933287	.	G	A	.	.	AS_SB_TABLE=46,52|37,53;DP=194;ECNT=1;MBQ=32,33;MFRL=396,404;MMQ=60,60;MPOS=39;POPAF=1.51;TLOD=269.81	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:98,90:0.481:188:55,44:41,45:97,90:46,52,37,53
+1	60933624	.	C	T	.	.	AS_SB_TABLE=0,0|121,86;DP=212;ECNT=1;MBQ=0,33;MFRL=0,403;MMQ=60,60;MPOS=40;POPAF=0.025;TLOD=738.82	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,207:0.995:207:0,99:0,102:0,205:0,0,121,86
+1	60933780	.	G	T	.	.	AS_SB_TABLE=1,0|82,132;DP=221;ECNT=1;MBQ=32,33;MFRL=277,405;MMQ=60,60;MPOS=42;POPAF=0.432;TLOD=743.27	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:1,214:0.991:215:0,87:1,113:1,212:1,0,82,132
+1	61287632	.	A	C	.	.	AS_SB_TABLE=51,64|48,52;DP=225;ECNT=1;MBQ=32,32;MFRL=401,411;MMQ=60,60;MPOS=43;POPAF=0.173;TLOD=285.37	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:115,100:0.468:215:52,50:57,46:112,98:51,64,48,52
+1	61288266	.	G	A	.	.	AS_SB_TABLE=111,140|33,58;DP=351;ECNT=2;MBQ=32,32;MFRL=357,344;MMQ=60,60;MPOS=42;POPAF=0.491;TLOD=226.04	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:251,91:0.255:342:92,35:101,32:220,76:0|1:61288266_G_A:61288266:111,140,33,58
+1	61288285	.	C	T	.	.	AS_SB_TABLE=106,144|28,45;DP=329;ECNT=2;MBQ=32,33;MFRL=352,338;MMQ=60,60;MPOS=44;POPAF=0.499;TLOD=143.64	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:250,73:0.213:323:89,32:91,27:220,60:0|1:61288266_G_A:61288266:106,144,28,45
+1	68175092	.	C	T	.	.	AS_SB_TABLE=0,0|95,116;DP=217;ECNT=1;MBQ=0,32;MFRL=0,424;MMQ=60,60;MPOS=35;POPAF=0.345;TLOD=705.64	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,211:0.995:211:0,101:0,93:0,208:0,0,95,116
+1	73484880	.	A	G	.	.	AS_SB_TABLE=0,1|91,102;DP=200;ECNT=1;MBQ=12,32;MFRL=522,413;MMQ=60,60;MPOS=38;POPAF=0.032;TLOD=687.15	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:1,193:0.995:194:0,89:0,101:1,192:0,1,91,102
+1	73485698	.	CT	C	.	.	AS_SB_TABLE=57,37|51,50;DP=225;ECNT=1;MBQ=32,32;MFRL=402,398;MMQ=60,60;MPOS=34;POPAF=1.70;RPA=11,10;RU=T;STR;TLOD=188.80	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:94,101:0.519:195:52,47:35,45:94,100:57,37,51,50
+1	73485936	.	T	C	.	.	AS_SB_TABLE=0,0|123,118;DP=245;ECNT=1;MBQ=0,32;MFRL=0,398;MMQ=60,60;MPOS=37;POPAF=0.019;TLOD=838.32	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,241:0.996:241:0,119:0,114:0,238:0,0,123,118
+1	76899464	.	T	C	.	.	AS_SB_TABLE=0,0|83,121;DP=209;ECNT=1;MBQ=0,27;MFRL=0,419;MMQ=60,60;MPOS=41;POPAF=0.274;TLOD=637.16	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,204:0.995:204:0,78:0,107:0,202:0,0,83,121
+1	76900421	.	T	C	.	.	AS_SB_TABLE=38,44|28,45;DP=158;ECNT=2;MBQ=33,32;MFRL=406,421;MMQ=60,60;MPOS=49;POPAF=0.699;TLOD=200.85	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:82,73:0.475:155:35,28:42,38:80,73:38,44,28,45
+1	76900469	.	G	T,GTT	.	.	AS_SB_TABLE=3,31|4,7|8,0;DP=122;ECNT=2;MBQ=24,13,29;MFRL=415,356,380;MMQ=60,60,60;MPOS=11,26;POPAF=7.30,7.30;TLOD=4.06,7.38	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1/2:34,11,8:0.059,0.169:53:6,1,2:12,1,5:34,10,8:3,31,12,7
+1	76901499	.	C	T	.	.	AS_SB_TABLE=0,0|97,117;DP=217;ECNT=1;MBQ=0,32;MFRL=0,418;MMQ=60,60;MPOS=46;POPAF=0.128;TLOD=769.22	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,214:0.995:214:0,109:0,101:0,213:0,0,97,117
+1	79505599	.	T	A	.	.	AS_SB_TABLE=57,38|79,62;DP=244;ECNT=1;MBQ=33,32;MFRL=442,401;MMQ=60,60;MPOS=42;POPAF=0.107;TLOD=431.54	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:95,141:0.598:236:49,62:43,75:94,140:57,38,79,62
+1	79505896	.	CTGTG	C	.	.	AS_SB_TABLE=20,28|16,19;DP=169;ECNT=2;MBQ=32,32;MFRL=430,431;MMQ=60,60;MPOS=41;POPAF=0.955;RPA=21,19;RU=TG;STR;TLOD=83.69	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:48,35:0.384:83:22,15:15,12:57,35:0|1:79505896_CTGTG_C:79505896:20,28,16,19
+1	79505939	.	T	TGTAG	.	.	AS_SB_TABLE=33,42|19,39;DP=153;ECNT=2;MBQ=32,32;MFRL=419,427;MMQ=60,60;MPOS=38;POPAF=7.30;TLOD=68.99	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	1|0:75,58:0.429:133:29,21:25,22:75,57:1|0:79505896_CTGTG_C:79505896:33,42,19,39
+1	80297445	.	T	C	.	.	AS_SB_TABLE=5,6|10,5;DP=26;ECNT=1;MBQ=31,32;MFRL=411,464;MMQ=60,60;MPOS=9;POPAF=0.419;TLOD=43.50	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:11,15:0.578:26:4,5:5,9:11,15:5,6,10,5
+1	80297544	.	TCTTA	T	.	.	AS_SB_TABLE=43,30|53,39;DP=167;ECNT=2;MBQ=32,32;MFRL=410,432;MMQ=60,60;MPOS=46;POPAF=0.419;TLOD=364.06	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:73,92:0.560:165:33,38:35,50:72,92:43,30,53,39
+1	80297571	.	A	G	.	.	AS_SB_TABLE=0,0|109,87;DP=199;ECNT=2;MBQ=0,28;MFRL=0,415;MMQ=60,60;MPOS=42;POPAF=0.022;TLOD=621.85	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,196:0.995:196:0,81:0,99:0,195:0,0,109,87
+1	80297904	.	C	CAAT	.	.	AS_SB_TABLE=55,53|68,42;DP=240;ECNT=2;MBQ=32,32;MFRL=406,417;MMQ=60,60;MPOS=38;POPAF=0.421;RPA=1,2;RU=AAT;STR;TLOD=426.14	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:108,110:0.506:218:51,51:48,51:106,109:55,53,68,42
+1	80297950	.	C	T	.	.	AS_SB_TABLE=56,54|65,49;DP=234;ECNT=2;MBQ=28,33;MFRL=412,396;MMQ=60,60;MPOS=30;POPAF=0.389;TLOD=332.44	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:110,114:0.507:224:48,53:50,45:110,113:56,54,65,49
+1	80298583	.	C	CA	.	.	AS_SB_TABLE=7,20|6,5;DP=42;ECNT=2;MBQ=31,17;MFRL=441,369;MMQ=60,60;MPOS=8;POPAF=7.30;TLOD=29.24	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:27,11:0.266:38:4,1:17,2:36,11:7,20,6,5
+1	80298586	.	C	CCCCA,CCCCCCCCCCCCCCCCCCCCCGCCA	.	.	AS_SB_TABLE=1,0|4,19|11,10;DP=56;ECNT=2;MBQ=0,31,23;MFRL=432,450,380;MMQ=60,60,60;MPOS=22,1;POPAF=7.30,7.30;TLOD=75.39,61.04	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1/2:1,23,21:0.563,0.415:45:0,4,2:0,14,5:1,23,21:1,0,15,29
+1	80298833	.	T	C	.	.	AS_SB_TABLE=54,53|53,46;DP=219;ECNT=1;MBQ=33,32;MFRL=412,345;MMQ=60,60;MPOS=37;POPAF=0.461;TLOD=293.09	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:107,99:0.483:206:38,41:67,56:106,99:54,53,53,46
+1	80299020	.	A	C	.	.	AS_SB_TABLE=0,0|93,108;DP=209;ECNT=3;MBQ=0,32;MFRL=0,393;MMQ=60,60;MPOS=41;POPAF=0.022;TLOD=786.93	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,201:0.995:201:0,71:0,68:0,200:0,0,93,108
+1	80299024	.	G	A	.	.	AS_SB_TABLE=57,43|35,60;DP=207;ECNT=3;MBQ=32,33;MFRL=416,349;MMQ=60,60;MPOS=42;POPAF=0.425;TLOD=287.63	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:100,95:0.491:195:42,29:32,33:99,95:57,43,35,60
+1	80299123	.	A	ATTGT	.	.	AS_SB_TABLE=0,0|67,82;DP=160;ECNT=3;MBQ=0,33;MFRL=0,393;MMQ=60,60;MPOS=36;POPAF=0.021;TLOD=662.24	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,149:0.994:149:0,44:0,56:0,148:0,0,67,82
+1	80299516	.	T	C	.	.	AS_SB_TABLE=63,64|50,52;DP=235;ECNT=1;MBQ=32,32;MFRL=408,409;MMQ=60,60;MPOS=42;POPAF=0.418;TLOD=297.01	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:127,102:0.453:229:62,60:59,41:124,102:63,64,50,52
+1	83789750	.	A	G	.	.	AS_SB_TABLE=94,117|6,10;DP=230;ECNT=1;MBQ=32,32;MFRL=416,434;MMQ=48,42;MPOS=18;POPAF=1.35;TLOD=28.75	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:211,16:0.070:227:110,4:96,11:211,15:94,117,6,10
+1	83789946	.	A	T	.	.	AS_SB_TABLE=122,107|26,6;DP=271;ECNT=1;MBQ=33,33;MFRL=405,351;MMQ=48,40;MPOS=33;POPAF=1.08;TLOD=65.06	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:229,32:0.122:261:132,17:92,14:228,31:122,107,26,6
+1	83790243	.	C	T	.	.	AS_SB_TABLE=106,84|1,12;DP=215;ECNT=1;MBQ=30,33;MFRL=423,476;MMQ=51,27;MPOS=26;POPAF=1.85;TLOD=19.43	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:190,13:0.065:203:94,8:84,4:189,13:106,84,1,12
+1	84358339	.	GA	AT	.	.	AS_SB_TABLE=36,68|34,65;DP=207;ECNT=5;MBQ=32,33;MFRL=395,378;MMQ=60,60;MPOS=28;POPAF=7.30;TLOD=337.44	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:104,99:0.498:203:54,54:29,39:103,99:36,68,34,65
+1	84358407	.	G	GAACATATATA	.	.	AS_SB_TABLE=27,47|28,38;DP=140;ECNT=5;MBQ=32,29;MFRL=407,383;MMQ=60,60;MPOS=43;POPAF=3.40;TLOD=44.51	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:74,66:0.452:140:37,2:26,2:83,69:0|1:84358407_G_GAACATATATA:84358407:27,47,28,38
+1	84358410	.	A	AGC	.	.	AS_SB_TABLE=25,46|28,38;DP=171;ECNT=5;MBQ=32,32;MFRL=404,383;MMQ=60,60;MPOS=49;POPAF=3.20;TLOD=50.14	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:71,66:0.462:137:37,23:29,31:80,69:0|1:84358407_G_GAACATATATA:84358407:25,46,28,38
+1	84358412	.	C	CATATGTGA,CACATATATATGAGCACATATGTGA	.	.	AS_SB_TABLE=0,0|25,35|7,7;DP=163;ECNT=5;MBQ=0,32,32;MFRL=0,385,435;MMQ=60,60,60;MPOS=50,26;POPAF=7.30,7.30;TLOD=50.14,58.74	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1/2:0,60,14:0.446,0.536:74:0,3,7:0,2,5:0,63,18:0,0,32,42
+1	84358449	.	G	A	.	.	AS_SB_TABLE=0,0|35,65;DP=185;ECNT=5;MBQ=0,32;MFRL=0,401;MMQ=60,60;MPOS=41;POPAF=0.654;TLOD=203.45	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,100:0.991:100:0,33:0,42:0,100:0,0,35,65
+1	85566662	.	G	T	.	.	AS_SB_TABLE=45,32|51,34;DP=172;ECNT=1;MBQ=25,25;MFRL=419,399;MMQ=60,60;MPOS=41;POPAF=1.26;TLOD=169.13	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:77,85:0.524:162:35,28:21,27:74,84:45,32,51,34
+1	85567206	.	G	T	.	.	AS_SB_TABLE=52,59|64,55;DP=232;ECNT=1;MBQ=32,33;MFRL=395,429;MMQ=60,60;MPOS=39;POPAF=1.26;TLOD=365.58	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:111,119:0.517:230:57,61:53,56:111,119:52,59,64,55
+1	85567339	.	A	G	.	.	AS_SB_TABLE=33,36|37,41;DP=147;ECNT=5;MBQ=32,31;MFRL=397,431;MMQ=60,60;MPOS=55;POPAF=1.27;TLOD=211.79	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:69,78:0.530:147:46,41:19,29:69,78:33,36,37,41
+1	85567410	.	C	CAAAAAAAAA	.	.	AS_SB_TABLE=11,0|0,6;DP=72;ECNT=5;MBQ=32,10;MFRL=417,416;MMQ=60,60;MPOS=4;POPAF=7.30;RPA=25,34;RU=A;STR;TLOD=15.46	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:11,6:0.308:17:10,0:1,0:12,6:11,0,0,6
+1	85567435	.	AGG	A	.	.	AS_SB_TABLE=44,33|5,0;DP=89;ECNT=5;MBQ=32,33;MFRL=415,439;MMQ=60,60;MPOS=12;POPAF=2.23;TLOD=6.04	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:77,5:0.064:82:33,4:16,1:78,6:0|1:85567435_AGG_A:85567435:44,33,5,0
+1	85567437	.	G	GAAAAAAAAA	.	.	AS_SB_TABLE=44,33|5,0;DP=83;ECNT=5;MBQ=31,0;MFRL=415,439;MMQ=60,60;MPOS=10;POPAF=7.30;RPA=4,13;RU=A;STR;TLOD=6.06	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:77,5:0.064:82:32,0:18,0:78,6:0|1:85567435_AGG_A:85567435:44,33,5,0
+1	85567442	.	T	A	.	.	AS_SB_TABLE=44,37|3,1;DP=89;ECNT=5;MBQ=32,28;MFRL=419,413;MMQ=60,60;MPOS=4;POPAF=2.07;TLOD=3.64	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:81,4:0.038:85:40,1:18,1:82,4:0|1:85567435_AGG_A:85567435:44,37,3,1
+1	85567644	.	G	A	.	.	AS_SB_TABLE=51,66|49,53;DP=223;ECNT=1;MBQ=32,32;MFRL=426,391;MMQ=60,60;MPOS=39;POPAF=0.457;TLOD=288.94	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:117,102:0.465:219:47,47:62,48:115,100:51,66,49,53
+1	92448017	.	G	A	.	.	AS_SB_TABLE=1,0|145,133;DP=285;ECNT=1;MBQ=9,32;MFRL=439,421;MMQ=60,60;MPOS=42;POPAF=0.136;TLOD=992.21	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:1,278:0.996:279:0,141:0,126:1,273:1,0,145,133
+1	92448820	.	CTT	C	.	.	AS_SB_TABLE=27,0|26,48;DP=142;ECNT=2;MBQ=32,32;MFRL=387,433;MMQ=60,60;MPOS=40;POPAF=0.228;RPA=19,17;RU=T;STR;TLOD=182.69	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:27,74:0.766:101:19,39:7,21:27,74:0|1:92448820_CTT_C:92448820:27,0,26,48
+1	92448838	.	TTG	T	.	.	AS_SB_TABLE=45,55|23,0;DP=133;ECNT=2;MBQ=32,12;MFRL=422,428;MMQ=60,60;MPOS=39;POPAF=1.96;TLOD=14.44	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	1|0:100,23:0.144:123:51,5:37,2:100,23:1|0:92448820_CTT_C:92448820:45,55,23,0
+1	92449101	.	A	G	.	.	AS_SB_TABLE=0,0|68,127;DP=201;ECNT=1;MBQ=0,29;MFRL=0,407;MMQ=60,60;MPOS=37;POPAF=4.804e-03;TLOD=623.25	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,195:0.995:195:0,90:0,86:0,192:0,0,68,127
+1	94274998	.	C	T	.	.	AS_SB_TABLE=60,53|72,44;DP=238;ECNT=1;MBQ=28,33;MFRL=411,425;MMQ=60,60;MPOS=41;POPAF=0.889;TLOD=354.58	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:113,116:0.516:229:53,60:49,54:110,116:60,53,72,44
+1	94275090	.	G	A	.	.	AS_SB_TABLE=50,56|58,46;DP=210;ECNT=2;MBQ=28,32;MFRL=399,408;MMQ=60,60;MPOS=45;POPAF=0.889;TLOD=387.63	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:106,104:0.493:210:49,49:47,46:104,101:0|1:94275090_G_A:94275090:50,56,58,46
+1	94275111	.	G	A	.	.	AS_SB_TABLE=51,54|61,47;DP=215;ECNT=2;MBQ=32,32;MFRL=401,412;MMQ=60,60;MPOS=45;POPAF=2.00;TLOD=393.18	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:105,108:0.500:213:47,49:51,41:102,102:0|1:94275090_G_A:94275090:51,54,61,47
+1	94275302	.	C	T	.	.	AS_SB_TABLE=47,89|2,2;DP=143;ECNT=5;MBQ=27,20;MFRL=409,87;MMQ=60,44;MPOS=45;POPAF=3.04;TLOD=7.77	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:136,4:0.021:140:61,1:56,1:138,2:0|1:94275302_C_T:94275302:47,89,2,2
+1	94275317	.	T	C	.	.	AS_SB_TABLE=50,85|1,1;DP=137;ECNT=5;MBQ=32,20;MFRL=409,90;MMQ=60,27;MPOS=44;POPAF=2.84;TLOD=4.68	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:135,2:0.014:137:55,1:63,0:139,1:0|1:94275302_C_T:94275302:50,85,1,1
+1	94275319	.	G	A	.	.	AS_SB_TABLE=50,82|1,1;DP=134;ECNT=5;MBQ=28,20;MFRL=409,90;MMQ=60,27;MPOS=42;POPAF=2.89;TLOD=4.70	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:132,2:0.014:134:51,1:57,0:136,1:0|1:94275302_C_T:94275302:50,82,1,1
+1	94275329	.	GAT	G	.	.	AS_SB_TABLE=34,28|10,12;DP=128;ECNT=5;MBQ=32,31;MFRL=395,404;MMQ=60,60;MPOS=22;POPAF=1.68;TLOD=37.43	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:62,22:0.265:84:20,6:26,12:62,22:34,28,10,12
+1	94275331	.	T	A	.	.	AS_SB_TABLE=32,19|20,36;DP=120;ECNT=5;MBQ=33,32;MFRL=392,399;MMQ=60,60;MPOS=9;POPAF=1.30;TLOD=4.99	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:51,56:0.502:107:21,15:25,12:51,55:32,19,20,36
+1	94275467	.	G	A	.	.	AS_SB_TABLE=64,38|63,53;DP=223;ECNT=1;MBQ=31,32;MFRL=404,401;MMQ=60,60;MPOS=34;POPAF=0.530;TLOD=338.24	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:102,116:0.524:218:52,50:46,60:102,112:64,38,63,53
+1	94275748	.	C	CAAAA,CAAAAAAAAA	.	.	AS_SB_TABLE=38,16|21,3|2,4;DP=137;ECNT=1;MBQ=32,32,33;MFRL=394,460,420;MMQ=60,60,60;MPOS=29,28;POPAF=2.21,7.30;RPA=16,20,25;RU=A;STR;TLOD=85.52,5.94	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1/2:54,24,6:0.336,0.078:84:28,12,2:15,9,0:54,24,6:38,16,23,7
+1	94275888	.	C	A	.	.	AS_SB_TABLE=67,48|72,50;DP=241;ECNT=2;MBQ=32,32;MFRL=404,402;MMQ=60,60;MPOS=37;POPAF=0.889;TLOD=358.56	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:115,122:0.515:237:62,57:42,60:114,120:0|1:94275888_C_A:94275888:67,48,72,50
+1	94275908	.	C	T	.	.	AS_SB_TABLE=0,1|141,90;DP=236;ECNT=2;MBQ=34,32;MFRL=460,404;MMQ=60,60;MPOS=34;POPAF=0.237;TLOD=899.51	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:1,231:0.991:232:0,107:1,101:1,228:0|1:94275888_C_A:94275888:0,1,141,90
+1	94276144	.	C	T	.	.	AS_SB_TABLE=54,43|43,63;DP=211;ECNT=1;MBQ=32,32;MFRL=406,411;MMQ=60,60;MPOS=42;POPAF=0.889;TLOD=312.86	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:97,106:0.519:203:53,54:38,49:97,104:54,43,43,63
+1	95800888	.	T	C	.	.	AS_SB_TABLE=58,64|74,62;DP=262;ECNT=2;MBQ=33,32;MFRL=409,416;MMQ=60,60;MPOS=43;POPAF=1.05;TLOD=517.95	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:122,136:0.527:258:57,68:52,60:122,136:0|1:95800888_T_C:95800888:58,64,74,62
+1	95800898	.	A	C	.	.	AS_SB_TABLE=64,58|73,62;DP=262;ECNT=2;MBQ=33,32;MFRL=413,412;MMQ=60,60;MPOS=41;POPAF=0.159;TLOD=517.26	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:122,135:0.525:257:67,67:50,59:122,135:0|1:95800888_T_C:95800888:64,58,73,62
+1	95801267	.	C	CA	.	.	AS_SB_TABLE=33,36|42,34;DP=185;ECNT=1;MBQ=31,32;MFRL=413,411;MMQ=60,60;MPOS=33;POPAF=0.979;RPA=16,17;RU=A;STR;TLOD=117.88	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:69,76:0.520:145:25,35:29,26:69,75:33,36,42,34
+1	95801856	.	T	TTTTTTTTTTTTTTTTTTTTTTTATTATACTC	.	.	AS_SB_TABLE=110,79|0,26;DP=215;ECNT=2;MBQ=32,32;MFRL=354,412;MMQ=60,60;MPOS=0;POPAF=3.09;TLOD=81.94	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:189,26:0.147:215:95,9:74,15:191,26:0|1:95801856_T_TTTTTTTTTTTTTTTTTTTTTTTATTATACTC:95801856:110,79,0,26
+1	95801859	.	A	AGTTTCAGGGTACATGTGCACAT	.	.	AS_SB_TABLE=109,77|0,5;DP=191;ECNT=2;MBQ=32,31;MFRL=355,421;MMQ=60,60;MPOS=0;POPAF=7.30;TLOD=11.29	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:186,5:0.036:191:73,1:65,1:188,5:0|1:95801856_T_TTTTTTTTTTTTTTTTTTTTTTTATTATACTC:95801856:109,77,0,5
+1	97696711	.	A	T	.	.	AS_SB_TABLE=0,0|131,118;DP=251;ECNT=1;MBQ=0,32;MFRL=0,413;MMQ=60,60;MPOS=36;POPAF=0.562;TLOD=887.35	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,249:0.996:249:0,123:0,115:0,247:0,0,131,118
+1	97697147	.	T	C	.	.	AS_SB_TABLE=0,0|94,112;DP=212;ECNT=1;MBQ=0,32;MFRL=0,423;MMQ=60,60;MPOS=37;POPAF=0.140;TLOD=708.83	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,206:0.995:206:0,99:0,96:0,204:0,0,94,112
+1	97697280	.	TA	T	.	.	AS_SB_TABLE=83,80|17,11;DP=207;ECNT=1;MBQ=33,33;MFRL=413,380;MMQ=60,60;MPOS=30;POPAF=3.15;RPA=9,8;RU=A;STR;TLOD=37.83	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:163,28:0.150:191:62,11:91,13:161,28:83,80,17,11
+1	97698224	.	T	C	.	.	AS_SB_TABLE=0,0|124,116;DP=249;ECNT=1;MBQ=0,32;MFRL=0,416;MMQ=60,60;MPOS=41;POPAF=0.141;TLOD=824.54	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,240:0.996:240:0,110:0,112:0,237:0,0,124,116
+11	40316355	.	A	C	.	.	AS_SB_TABLE=0,0|93,140;DP=241;ECNT=1;MBQ=0,28;MFRL=0,427;MMQ=60,60;MPOS=35;POPAF=0.314;TLOD=730.05	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,233:0.996:233:0,108:0,106:0,232:0,0,93,140
+11	40316580	.	C	T	.	.	AS_SB_TABLE=86,100|2,4;DP=198;ECNT=1;MBQ=32,32;MFRL=402,455;MMQ=60,60;MPOS=25;POPAF=7.30;TLOD=8.23	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:186,6:0.036:192:80,2:96,4:184,6:86,100,2,4
+11	40316673	.	A	G	.	.	AS_SB_TABLE=0,1|89,121;DP=223;ECNT=1;MBQ=31,30;MFRL=252,395;MMQ=60,60;MPOS=41;POPAF=0.298;TLOD=687.84	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:1,210:0.991:211:0,94:1,101:1,208:0,1,89,121
+12	52644412	.	A	G	.	.	AS_SB_TABLE=51,49|53,51;DP=207;ECNT=4;MBQ=32,32;MFRL=416,429;MMQ=60,60;MPOS=46;POPAF=0.292;TLOD=305.65	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:100,104:0.512:204:50,46:47,54:99,104:51,49,53,51
+12	52644434	.	G	C	.	.	AS_SB_TABLE=47,50|50,47;DP=198;ECNT=4;MBQ=32,28;MFRL=421,419;MMQ=60,60;MPOS=34;POPAF=0.479;TLOD=263.71	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:97,97:0.502:194:41,46:53,48:96,97:47,50,50,47
+12	52644470	.	G	A	.	.	AS_SB_TABLE=50,45|42,41;DP=182;ECNT=4;MBQ=32,32;MFRL=407,419;MMQ=60,60;MPOS=36;POPAF=0.629;TLOD=218.02	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:95,83:0.464:178:39,31:47,43:94,82:50,45,42,41
+12	52644508	.	C	T	.	.	AS_SB_TABLE=95,74|3,7;DP=187;ECNT=4;MBQ=29,32;MFRL=417,441;MMQ=60,60;MPOS=32;POPAF=7.30;TLOD=17.68	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:169,10:0.061:179:71,3:84,5:169,10:95,74,3,7
+12	52644743	.	G	A	.	.	AS_SB_TABLE=0,0|117,107;DP=235;ECNT=1;MBQ=0,33;MFRL=0,425;MMQ=60,60;MPOS=34;POPAF=0.071;TLOD=802.51	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:0,224:0.996:224:0,107:0,108:0,222:0,0,117,107
+12	52645186	.	C	T	.	.	AS_SB_TABLE=52,60|55,62;DP=235;ECNT=1;MBQ=28,33;MFRL=416,428;MMQ=60,60;MPOS=34;POPAF=0.282;TLOD=353.17	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:112,117:0.508:229:46,44:60,69:112,115:52,60,55,62
+15	75916931	.	T	G	.	.	AS_SB_TABLE=0,0|8,7;DP=15;ECNT=3;MBQ=0,27;MFRL=0,433;MMQ=60,60;MPOS=13;POPAF=0.281;TLOD=66.30	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:0,15:0.941:15:0,7:0,7:0,15:0|1:75916931_T_G:75916931:0,0,8,7
+15	75916940	.	T	G	.	.	AS_SB_TABLE=0,0|9,10;DP=21;ECNT=3;MBQ=0,31;MFRL=0,424;MMQ=60,60;MPOS=14;POPAF=0.281;TLOD=81.43	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:0,19:0.954:19:0,9:0,10:0,19:0|1:75916931_T_G:75916931:0,0,9,10
+15	75916965	.	G	A	.	.	AS_SB_TABLE=14,7|13,7;DP=43;ECNT=3;MBQ=32,32;MFRL=403,424;MMQ=60,60;MPOS=22;POPAF=0.730;TLOD=57.84	GT:AD:AF:DP:F1R2:F2R1:FAD:PGT:PID:PS:SB	0|1:21,20:0.488:41:8,11:12,8:21,20:0|1:75916931_T_G:75916931:14,7,13,7
+15	75917956	.	G	A	.	.	AS_SB_TABLE=38,36|63,47;DP=186;ECNT=1;MBQ=28,32;MFRL=403,404;MMQ=60,60;MPOS=44;POPAF=0.726;TLOD=333.36	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:74,110:0.594:184:38,49:31,54:74,107:38,36,63,47
+15	75918044	.	G	A	.	.	AS_SB_TABLE=79,91|2,5;DP=179;ECNT=2;MBQ=28,33;MFRL=423,434;MMQ=60,60;MPOS=24;POPAF=7.30;TLOD=9.99	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:170,7:0.041:177:70,2:81,4:170,7:79,91,2,5
+15	75918072	.	G	A	.	.	AS_SB_TABLE=38,38|50,52;DP=184;ECNT=2;MBQ=32,32;MFRL=385,432;MMQ=60,60;MPOS=36;POPAF=0.726;TLOD=284.89	GT:AD:AF:DP:F1R2:F2R1:FAD:SB	0/1:76,102:0.573:178:31,50:43,44:75,102:38,38,50,52

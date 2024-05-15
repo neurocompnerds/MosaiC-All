@@ -1,0 +1,5 @@
+## MH INFO: No parents provided, so, the proband is assumed singleton, thus, singlemodeMH will be used
+## INFO: MotherID is empty.
+## INFO: FatherID is empty.
+##Mutect2 and MF INFO: MotherID or FatherID is empty. Skipping the loop.
+##Mutect2 and MF INFO: MotherID or FatherID is empty. Skipping the loop.
