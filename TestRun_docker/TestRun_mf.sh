@@ -19,9 +19,6 @@ REFGEN="/home/neuro/Public/RefSeqIndexAllPrograms"
 # Create output directory
 mkdir -p "$OUTDIR"
 
-# Pull Docker image
-docker image pull yanmei/mosaicforecast:0.0.1 || { echo "Failed to pull MosaicForecast Docker image."; exit 1; }
-
 # Ensure BAM file exists and is unique
 BAMFILE=$(find "$BAMDIR" -type f -name "$ProbandID*.bam")
 if [ -z "$BAMFILE" ]; then
@@ -32,6 +29,66 @@ elif [ $(echo "$BAMFILE" | wc -l) -gt 1 ]; then
     exit 1
 fi
 
+#Resources
+
+# requires model_trained folder from MF which cannot be found in docker
+git clone --depth 1 --branch master https://github.com/parklab/MosaicForecast.git --single-branch $RESOURCES
+
+# Download wigtoBigWig
+wget -q http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/wigToBigWig -P "$RESOURCES"
+chmod +x "$RESOURCES/wigToBigWig"
+
+# Download fetchChromSizes and make it executable
+wget -q http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/fetchChromSizes -P "$RESOURCES"
+chmod +x "$RESOURCES/fetchChromSizes"
+
+# Check if fetchChromSizes was downloaded and made executable successfully
+if [ -x "$RESOURCES/fetchChromSizes" ]; then
+    echo "fetchChromSizes downloaded and made executable successfully."
+else
+    echo "Error: Failed to download or make fetchChromSizes executable."
+    exit 1
+fi
+
+# Download hg19.umap.tar.gz
+wget -q https://bismap.hoffmanlab.org/raw/hg19.umap.tar.gz -P "$RESOURCES"
+
+# Check if hg19.umap.tar.gz was downloaded successfully
+if [ -e "$RESOURCES/hg19.umap.tar.gz" ]; then
+    # Extract the tar.gz file
+    tar -zxvf "$RESOURCES/hg19.umap.tar.gz" -C "$RESOURCES"
+    
+    # Check if extraction was successful
+    if [ $? -eq 0 ]; then
+        echo "Extraction of hg19.umap.tar.gz completed successfully."
+    else
+        echo "Error: Failed to extract hg19.umap.tar.gz."
+        exit 1
+    fi
+
+    # Navigate to the directory containing extracted files
+    cd "$RESOURCES/hg19" || exit
+
+    # Generate chrom sizes file
+    "$RESOURCES/fetchChromSizes" hg19 > "$RESOURCES/hg19"/hg19.chrom.sizes
+
+    # Check if chrom sizes file was generated successfully
+    if [ -e "$RESOURCES/hg19/hg19.chrom.sizes" ]; then
+        echo "Chrom sizes file generated successfully."
+        # Convert wig to bigwig
+        zcat "$RESOURCES/hg19/k24.umap.wg.gz" > "$RESOURCES/hg19/k24.umap.wg"
+        "$RESOURCES/wigToBigWig" "$RESOURCES/hg19/k24.umap.wg" "$RESOURCES/hg19/hg19.chrom.sizes" "$RESOURCES/hg19/k24.umap.wg.bw"
+    else
+        echo "Error: Failed to generate chrom sizes file."
+        exit 1
+    fi
+else
+    echo "Error: Failed to download hg19.umap.tar.gz."
+    exit 1
+fi
+
+
+# MF1.Prepare Input files
 # Assign BAM prefix
 BAMprefix=$(basename "$BAMFILE" | sed 's/\.[^.]*$//')
 
@@ -41,40 +98,39 @@ tmp_file=$(mktemp) || { echo "Failed to create temporary file."; exit 1; }
 # Process Mutect2 files
 grep -v "#" "$OUTDIR/$ProbandID.Mutect2.$CONFIG.PON.gnomad.vcf" | tr " " "\t" > "$tmp_file"
 awk -F '\t' '{print $1, $2-1, $2, $4, $5}' "$tmp_file" > "$OUTDIR/$ProbandID.forPhasing.bed"
+awk -v prefix="$BAMprefix" 'BEGIN{OFS="\t"} {$6 = prefix; print}' $OUTDIR/$ProbandID.forPhasing.bed > $OUTDIR/$ProbandID.MF.$CONFIG.phasingInput.bed
 rm "$tmp_file"  # Clean up temporary file
 
 # Ensure Docker image was pulled successfully
 docker image pull yanmei/mosaicforecast:0.0.1 || { echo "Failed to pull MosaicForecast Docker image."; exit 1; }
 
-# Run Docker command for ReadLevel Features extraction
+# MF2.Run Docker command for ReadLevel Features extraction
 docker run -it --rm \
-  -v "$GIT:/mnt/mosaic-all" \
-  -v "$TESTRUN_DIR:/mnt/testrun_docker" \
+  -v "$GIT:/MF" \
   -v "$REFGEN:/mnt/refgen" \
+  -v "$TESTRUN_DIR:/mnt/testrun_docker" \
   yanmei/mosaicforecast:0.0.1 \
   /bin/bash -c " \
-  MForecastDIR=/usr/MosaicForecast \
   ReadLevel_Features_extraction.py \
   /mnt/testrun_docker/OUTPUT/$ProbandID.MF.$CONFIG.phasingInput.bed \
   /mnt/testrun_docker/OUTPUT/$ProbandID.MF.$CONFIG.features.bed \
+  /mnt/testrun_docker/BAM \
   /mnt/refgen/hs37d5.fa \
-  /MForecastDIR/$CONFIG/k24.umap.wg.bw \
+  /mnt/testrun_docker/Resources/$CONFIG/k24.umap.wg.bw \
   2 \
   bam \
 " || { echo "ExtractFeatures for MosaicForecast failed."; exit 1; }
 
-
 # MF3.Genotype prediction
 docker run -it --rm \
-  -v "$GIT:/mnt/mosaic-all" \
+  -v "$GIT:/MF" \
   -v "$TESTRUN_DIR:/mnt/testrun_docker" \
   -v "$REFGEN:/mnt/refgen" \
-  yanmei/mosaicforecast:0.0.1 \
+  yanmei/mosaicforecast:0.0.1 \ 
   /bin/bash -c " \
-  MForecastDIR=/usr/MosaicForecast \
   Prediction.R \
   /mnt/testrun_docker/OUTPUT/$ProbandID.MF.$CONFIG.features.bed \
-  /MForecastDIR/models_trained/50xRFmodel_addRMSK_Refine.rds \
+  /mnt/testrun_docker/Resources/MF/models_trained/50xRFmodel_addRMSK_Refine.rds \
   Refine \
   /mnt/testrun_docker/OUTPUT/$ProbandID.MF.$CONFIG.genotype.predictions.refined.bed \
 " || { echo "GenotypePredictions for MosaicForecast failed."; exit 1; }
