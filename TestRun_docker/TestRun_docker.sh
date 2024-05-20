@@ -1,15 +1,48 @@
 #!/bin/bash
 
-# Define variables
-git_dir="/home/neuro/Documents/Nandini/MosaiC-All"
-#git_dir=/Users/nandinisandran/Desktop/MosaiC-All/TestRun_docker #DELETE
+usage()
+{
+echo "Executing TestRun_docker.sh
+#
+# Usage $0 -d /path/to/MosaiC-All -s 1465_1024-pfc-bulk.rehead.bam -g M [ - h | --help ]
+#
+# Options
+# -d git              REQUIRED: path to where the git is cloned into
+# -s proband_bam      REQUIRED: full name of bamfile (which is stored in $git/BAM)
+# -g gender           REQUIRED: gender
+# -h or --help  Prints this message.  Or if you got one of the options above wrong you'll be reading this too!
+#
+# See: https://github.com/neurocompnerds/MosaiC-All for history and new updates.
+#
+"
+}
 
-# Other variables should not be changed
+## Set Variables ##
+while [ "$1" != "" ]; do
+    case $1 in
+            -d )                    shift
+                                    git_dir=$1
+                                    ;;
+            -s )                    shift
+                                    proband_bam=$1
+                                    ;;
+            -g )                    shift
+                                    gender=$1
+                                    ;;
+            -h | --help )           usage
+                                    exit 0
+                                    ;;
+            *  )                    usage
+                                    exit 1
+    esac
+    shift
+done
+
+# Define variables
 testrun_dir="$git_dir/TestRun_docker"
 bam_dir="$testrun_dir/BAM"
-proband_bam_file="$bam_dir/1465_1024-pfc-bulk.rehead.bam"
+proband_bam_file="$bam_dir/$proband_bam"
 proband_id="1465_1024-pfc-bulk"
-gender="M"
 config="hg19"
 outdir="$testrun_dir/OUTPUT"
 resources="$testrun_dir/Resources"
