@@ -4,11 +4,12 @@ usage()
 {
 echo "Executing TestRun_docker.sh
 #
-# Usage $0 -d /path/to/MosaiC-All -s 1465_1024-pfc-bulk.rehead.bam -g M [ - h | --help ]
+# Usage $0 -d /path/to/MosaiC-All -s 1465_1024-pfc-bulk.rehead.bam -i 1465_1024-pfc-bulk -g M [ - h | --help ]
 #
 # Options
 # -d git              REQUIRED: path to where the git is cloned into
 # -s proband_bam      REQUIRED: full name of bamfile (which is stored in $git/BAM)
+# -i proband_id       REQUIRED: proband id for output files (can be the same as previous -s option)
 # -g gender           REQUIRED: gender
 # -h or --help  Prints this message.  Or if you got one of the options above wrong you'll be reading this too!
 #
@@ -26,6 +27,9 @@ while [ "$1" != "" ]; do
             -s )                    shift
                                     proband_bam=$1
                                     ;;
+            -i )                    shift
+                                    proband_id=$1
+                                    ;;
             -g )                    shift
                                     gender=$1
                                     ;;
@@ -41,8 +45,6 @@ done
 # Define variables
 testrun_dir="$git_dir/TestRun_docker"
 bam_dir="$testrun_dir/BAM"
-proband_bam_file="$bam_dir/$proband_bam"
-proband_id="1465_1024-pfc-bulk"
 config="hg19"
 outdir="$testrun_dir/OUTPUT"
 resources="$testrun_dir/Resources"
@@ -94,7 +96,7 @@ docker run -it --rm \
   java -Xmx4G -jar \$MHDIR/build/mosaichunter.jar \
     -C \$MHDIR/conf/exome_parameters.properties \
     -P reference_file=/mnt/testrun_docker/Resources/hs37d5.fa \
-    -P input_file=/mnt/testrun_docker/BAM/1465_1024-pfc-bulk.rehead.bam \
+    -P input_file=/mnt/testrun_docker/BAM/$proband_bam \
     -P heterozygous_filter.sex=$gender \
     -P output_dir=/mnt/testrun_docker/OUTPUT/$proband_id.parameters.log
 " || { echo "MosaicHunter prefiltering failed."; exit 1; }
@@ -116,7 +118,7 @@ docker run -it --rm \
   java -Xmx4G -jar \$MHDIR/build/mosaichunter.jar \
     -C \$MHDIR/conf/exome.properties \
     -P reference_file=/mnt/testrun_docker/Resources/hs37d5.fa \
-    -P input_file=/mnt/testrun_docker/BAM/1465_1024-pfc-bulk.rehead.bam \
+    -P input_file=/mnt/testrun_docker/BAM/$proband_bam \
     -P mosaic_filter.sex=$gender \
     -P depth=$depth \
     -P mosaic_filter.alpha_param=$alpha \
@@ -168,7 +170,7 @@ docker run -it --rm \
   /bin/bash -c "
   gatk Mutect2 \
     -R /mnt/testrun_docker/Resources/hs37d5.fa \
-    -I /mnt/testrun_docker/BAM/1465_1024-pfc-bulk.rehead.bam  \
+    -I /mnt/testrun_docker/BAM/$proband_bam  \
     --tumor-sample $proband_id \
     --germline-resource /mnt/testrun_docker/Resources/$germline_resources \
     --panel-of-normals /mnt/testrun_docker/Resources/$pon \
@@ -198,38 +200,6 @@ bcftools view -O v -f PASS -i '(FORMAT/AD[0:1] >= 5 & FORMAT/DP[0]>=20) && (FORM
 
 #####################################################################   MOSAICFORECAST   ################################################################
 #!/bin/bash
-
-# Define variables
-#git_dir="/home/neuro/Documents/Nandini/MosaiC-All"
-#git_dir=/Users/nandinisandran/Desktop/MosaiC-All/TestRun_docker
-
-# Other variables should not be changed
-#testrun_dir="$git_dir/TestRun_docker"
-#bam_dir="$testrun_dir/BAM"
-#proband_bam_file="$bam_dir/1465_1024-pfc-bulk.rehead.bam"
-#proband_id="1465_1024-pfc-bulk"
-#gender="M"
-#config="hg19"
-#outdir="$testrun_dir/OUTPUT"
-#resources="$testrun_dir/Resources"
-
-#if [ ! -d "${outdir}" ]; then
-#    mkdir -p ${outdir}
-#fi
-
-#if [ ! -d "${resources}" ]; then
-#    mkdir -p ${resources}
-#fi
-
-# download, extract and create index for reference genome
-
-#if [ ! -e "$resources/hs37d5.fa.gz" ]; then
-#    # download
-#    wget "https://storage.googleapis.com/genomics-public-data/references/hs37d5/hs37d5.fa.gz" -P "$resources"
-#    # Extract the tar.gz file
-#    gunzip "$resources/hs37d5.fa.gz"
-#    samtools faidx "$resources/hs37d5.fa"
-#fi
 
 # Ensure Docker image was pulled successfully
 docker image pull yanmei/mosaicforecast:0.0.1 || { echo "Failed to pull MosaicForecast Docker image."; exit 1; }
@@ -274,7 +244,7 @@ docker run -it --rm \
 
 # MF1.Prepare Input files
 # Assign BAM prefix
-BAMprefix=$(basename "$proband_bam_file" | sed 's/\.[^.]*$//')
+BAMprefix=$(basename "$bam_dir/$proband_bam" | sed 's/\.[^.]*$//')
 echo "$BAMprefix"
 
 # Create temporary file
