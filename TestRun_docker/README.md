@@ -13,7 +13,7 @@ To test the docker-installations and variant calling process, we have provided a
 
 Execute the following command, which will perform installation of dockers and resources required by each variant calling tool.
 
-./MosaiC-All/TestRun_docker/TestRun_docker.sh -d /path/to/MosaiC-All -s 1465_1024-pfc-bulk.rehead.bam -g M 
+```./MosaiC-All/TestRun_docker/TestRun_docker.sh -d /path/to/MosaiC-All -s 1465_1024-pfc-bulk.rehead.bam -i 1465_1024-pfc-bulk -g M ```
 
 ### 3.Outputs
 
