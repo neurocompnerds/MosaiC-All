@@ -1,40 +1,27 @@
 ## Demo using a test data (./MosaiC-All/TestRun/)
 
-To test the installation and variant calling process, we have provided a test data which was extracted from MosaicForecast publication. 
+To test the variant calling process using manual installation of softwares, we have provided a test data which was extracted from MosaicForecast publication and following instructions
 
-### 1.Config and Resources
-The resources used for testdata can be found in the ./MosaiC-All/TestRun/Resources. 
-Please specify the following resources in the **config** file:-
+### 1.Pre-requisite
 
-- RESOURCES="./MosaiC-All/TestRun/Resources"
+Packages should be installed according to developer instructions. You can find these, along with documentation for each tool at:
 
-- DBSNP=${RESOURCES}/b37_dbsnp_138.b37.vcf
-  _#This can be found in https://storage.cloud.google.com/gcp-public-data--broad-references/hg19/v0/dbsnp_138.b37.vcf.gz_
+1. MosaicHunter: https://github.com/zzhang526/MosaicHunter<br>
+2. MosaicForecast: https://github.com/parklab/MosaicForecast<br>
+3. GATK: https://github.com/broadinstitute/gatk/releases
 
-- REPEATS=${RESOURCES}/all_repeats.b37.bed
-  _#This can be found in subfolder of MosaicHunter (./MosaicHunter-master/resources)_
+### 2.Config
 
-- COMMONERROR=${RESOURCES}/WES_Agilent_71M.error_prone.b37.bed
-  _#This can be found in subfolder of MosaicHunter (./MosaicHunter-master/resources)_
+Specify the directories in which the MosaiC-All git and variant calling tools softwares were downloaded as well as where log_files should be stored in ./MosaiC-All/config/Mosaic-All.TestRun.config.
 
-- PON_A=${RESOURCES}/somatic-b37_Mutect2-exome-panel.vcf
-  _#This can be downloaded from https://console.cloud.google.com/storage/browser/gatk-best-practices/somatic-b37__
+### 3.Command
 
-- PON_B=${RESOURCES}/somatic-b37_Mutect2-exome-panel.vcf
-  _#For testdata purpose, we just define the same Panel of Normals used for $PON_A_
+Execute the following command, which will download required resources, perform variant calling and store the outputs in the $GIT/TestRun/OUTPUT
 
-- GERMLINE_RESOURCES=${RESOURCES}/somatic-b37_af-only-gnomad.raw.sites.vcf
-  _#This can downloaded from https://storage.googleapis.com/gatk-best-practices/somatic-b37/af-only-gnomad.raw.sites.vcf_
+git=/path/to/MosaiC-All
+$git/TestRun_manual.sh -d $git -s $git/TestRun/SampleID_Test -c $git/config/Mosaic-All.TestRun.config -o $git/TestRun/OUTPUT
 
-### 2.Command
+### 4.Outputs
 
-Execute the following command, which will perform variant calling and store the outputs in the $GIT/TestRun/Output
-
-GIT=./MosaiC-All
-CONFIG=$GIT/config/Mosaic-All.config
-$GIT/MASTERSCRIPT_MosaiC-All.sh -s $GIT/TestRun/SampleID_Test -o $GIT/TestRun/Output -c $CONFIG
-
-### 3.Outputs
-
-The expected outputs are stored in $GIT/TestRun/Output_Expected, which can be used to compare with the given outputs. Also, we provide the M3 variants upon post-processing step (FinalList_M3).
+The expected outputs are stored in $gitTestRun/Output_Expected, which can be used to compare with the given outputs. Also, we provide the M3 variants upon post-processing step (FinalList_M3).
 
