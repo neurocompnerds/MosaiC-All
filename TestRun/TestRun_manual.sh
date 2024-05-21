@@ -59,17 +59,17 @@ source $config_file
 
 # 1. Reference genome
 
-if [ ! -e "$REFGEN" ]; then
-    # Download the file if it doesn't exist
-    wget "https://storage.googleapis.com/genomics-public-data/references/hs37d5/hs37d5.fa.gz" -P "$resources"
-    # Extract the tar.gz file
-    gunzip "$resources/hs37d5.fa.gz"
-    samtools faidx "$resources/hs37d5.fa" -o "$resources/hs37d5.fa.fai"
-fi
+#if [ ! -e "$REFGEN" ]; then
+#    # Download the file if it doesn't exist
+#    wget "https://storage.googleapis.com/genomics-public-data/references/hs37d5/hs37d5.fa.gz" -P "$resources"
+#    # Extract the tar.gz file
+#    gunzip "$resources/hs37d5.fa.gz"
+#    samtools faidx "$resources/hs37d5.fa" -o "$resources/hs37d5.fa.fai"
+#fi
 
 # 2. dbSNP
 
-if [ !-e "$DBSNP" ]; then
+if [ ! -e "$DBSNP" ]; then
     # download
     wget "https://storage.googleapis.com/gcp-public-data--broad-references/hg19/v0/dbsnp_138.b37.vcf.gz" -P "$resources"
     # Extract the tar.gz file
@@ -78,7 +78,7 @@ fi
 
 # 3. Panel of Normals for Mutect2
 
-if [ !-e "$PON_A" ]; then
+if [ ! -e "$PON_A" ]; then
     # panel of normals
     wget https://storage.googleapis.com/gatk-best-practices/somatic-b37/Mutect2-exome-panel.vcf -P $resources
     wget https://storage.googleapis.com/gatk-best-practices/somatic-b37/Mutect2-exome-panel.vcf.idx -P $resources
@@ -89,7 +89,7 @@ fi
 
 # 4. Germline Resources for Mutect2
 
-if [ !-e "$GERMLINE_RESOURCES" ]; then
+if [ ! -e "$GERMLINE_RESOURCES" ]; then
     # panel of normals
     wget https://storage.googleapis.com/gatk-best-practices/somatic-b37/Mutect2-exome-panel.vcf -P $resources
     wget https://storage.googleapis.com/gatk-best-practices/somatic-b37/Mutect2-exome-panel.vcf.idx -P $resources
