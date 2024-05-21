@@ -24,7 +24,7 @@ We recommend installation via the docker images for each tool, which are availab
 
 ### Step 2: TestRun or Quick-Start
 
-To enable testing of software installation, we have provided toy data (from https://github.com/parklab/MosaicForecast/tree/master/demo) which can be used to test installation of variant calling tools via docker setup or manual installation:
+We have provided toy data (from https://github.com/parklab/MosaicForecast/tree/master/demo) which can be used to test installation of variant calling tools via docker setup or manual installation:
 
    - Please see **MosaiC-All/TestRun/README.md** for detailed instructions on executing the pipeline following manual installation of software. The script will download required resources, and execute variant calling steps for the test data, when paths to manually installed software are provided using the Mosaic-All.TestRun.config. 
      
