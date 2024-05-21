@@ -2,29 +2,40 @@
 
 ## Comprehensive analysis of somatic and parental gonosomal mosaicism using trio or singleton design.
 
-### Step 1: Software Installation and Test-run
+### Step 1: Software Installation
 
 There are two ways we can execute the pipelines, which is either through manual installation of respective variant calling tools or docker-setup.
-To enable testing of software installation and set up of the MosaiC-All pipelines, we have provided toy data (adapted from https://github.com/parklab/MosaicForecast/tree/master/demo) and command-lines for respective approach:-
 
 #### 1.1 Manual Software Installation
 
-Please see MosaiC-All/TestRun/README.md for further instructions on executing the pipeline. 
-The command-line will enable resources download and variant calling steps.
 Packages should be installed according to developer instructions prior to executing the pipeline. You can find these, along with documentation for each tool at:
 
 1. MosaicHunter: https://github.com/zzhang526/MosaicHunter<br>
 2. MosaicForecast: https://github.com/parklab/MosaicForecast<br>
 3. GATK: https://github.com/broadinstitute/gatk/releases
 
-
 #### 1.2 Docker setup
 
-Please see MosaiC-All/TestRun_docker/README.md for further instructions on executing the pipeline. 
-The command-line will enable installation of required softwares and resources followed by variant calling steps.
+We recommend installation via the docker images for each tool, which are available in the following locations:<br>
 
+1. MosaicHunter: https://hub.docker.com/r/rborgesm/mosaichunter<br>
+2. MosaicForecast: https://hub.docker.com/r/yanmei/mosaicforecast<br>
+3. GATK: https://hub.docker.com/r/broadinstitute/gatk/tags<br>
 
-#### 2.0 General Resources
+### Step 2: TestRun or Quick-Start
+
+To enable testing of software installation and set up of the MosaiC-All pipelines, we have provided toy data (adapted from https://github.com/parklab/MosaicForecast/tree/master/demo) and command-lines for both  approaches listed above:-
+   - Please see **MosaiC-All/TestRun/README.md** for instructions on executing the pipeline using docker setup. The command-line will enable download of resources followed by variant calling steps, given the path to each softwares.
+   - Please see **MosaiC-All/TestRun_docker/README.md** for instructions on executing the pipeline suing docker setup. The command-line will enable installation of required softwares and resources followed by    variant calling steps.
+
+### Step 3: Config-file
+
+#### 3.1 Specify the directories in config-file
+
+The config-file (MosaiC-ALL/config/Mosaic-All.config) is used to specify locations of required software and resources.. 
+Specify the locations of resources, genomebuild etc using the template config file as per included instructions.
+
+#### 3.2 General Resources
 
 The following resources are required and should be downloaded or generated:
 
@@ -35,10 +46,6 @@ The following resources are required and should be downloaded or generated:
 |  Repeat regions                    |     Repeat regions for filtering <br> e.g all_repeats.b37.bed; can be found in the [MosaicHunter repository](https://github.com/zzhang526/MosaicHunter/tree/master/resources) |
 |  Exome error prone regions       |     Regions known to be error prone for filtering <br> e.g WES_Agilent_71M.error_prone.b37.bed; can be found in the [MosaicHunter repository](https://github.com/zzhang526/MosaicHunter/tree/master/resources)                |
 |  Panel of Normals (PON)       |     PON should be prepared using samples that are not part of the analysis.As a suggestion for large cohort analysis, samples can be divided into two batches to create two PONs (PON_A and PON_B).<br> PONs are prepared based on GATK option-CreateSomaticPanelOfNormals (i.e https://gatk.broadinstitute.org/hc/en-us/articles/4405451431963-CreateSomaticPanelOfNormals-BETA)          |
-
-### Step 3: Config-file
-The config-file (MosaiC-ALL/config/Mosaic-All.config) is used to specify locations of required software and resources (as prepared in Step 1). 
-Specify the locations of resources, genomebuild etc using the template config file as per included instructions.
 
 ### Step 4: Mosaic variant calling using three tools (for M3 and pGoM pipelines)
 
