@@ -16,7 +16,7 @@ Specify the directories in which the MosaiC-All git and variant calling tools we
 
 ### 3.Command
 
-Execute the following command, which will download required resources, perform variant calling and store the outputs in the $git/TestRun/OUTPUT where git=/path/to/MosaiC-All
+Execute the following command, which will download required resources, perform variant calling and store the outputs in $git/TestRun/OUTPUT where git=/path/to/MosaiC-All
 
 ```$git/TestRun/TestRun_manual.sh -d $git -s $git/TestRun/SampleID_Test -c $git/config/Mosaic-All.TestRun.config -o $git/TestRun/OUTPUT```
 
