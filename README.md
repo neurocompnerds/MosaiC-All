@@ -25,8 +25,10 @@ We recommend installation via the docker images for each tool, which are availab
 ### Step 2: TestRun or Quick-Start
 
 To enable testing of software installation and set up of the MosaiC-All pipelines, we have provided toy data (adapted from https://github.com/parklab/MosaicForecast/tree/master/demo) and command-lines for both  approaches listed above:-
-   - Please see **MosaiC-All/TestRun/README.md** for instructions on executing the pipeline using docker setup. The command-line will enable download of resources followed by variant calling steps, given the path to each softwares.
-   - Please see **MosaiC-All/TestRun_docker/README.md** for instructions on executing the pipeline suing docker setup. The command-line will enable installation of required softwares and resources followed by    variant calling steps.
+
+   - Please see **MosaiC-All/TestRun/README.md** for detailed instructions on executing the pipeline using docker setup. The command-line will enable download of resources followed by variant calling steps, given the path to each softwares in Mosaic-All.TestRun.config. 
+     
+   - Please see **MosaiC-All/TestRun_docker/README.md** for instructions on executing the pipeline using docker setup. The command-line will enable installation of required softwares and resources followed by    variant calling steps.
 
 ### Step 3: Config-file
 
