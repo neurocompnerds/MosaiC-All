@@ -4,7 +4,7 @@
 
 ### Step 1: Software Installation
 
-There are two ways we can execute the pipelines, which is either through manual installation of respective variant calling tools or docker-setup.
+Software can be installed manually or from the docker images.
 
 #### 1.1 Manual Software Installation
 
@@ -24,17 +24,18 @@ We recommend installation via the docker images for each tool, which are availab
 
 ### Step 2: TestRun or Quick-Start
 
-To enable testing of software installation and set up of the MosaiC-All pipelines, we have provided toy data (adapted from https://github.com/parklab/MosaicForecast/tree/master/demo) and command-lines for both  approaches listed above:-
+To enable testing of software installation and set up of the MosaiC-All pipelines, we have provided toy data (adapted from https://github.com/parklab/MosaicForecast/tree/master/demo) which can be used to test installation of variant calling tools via docker setup or manual installation:
 
-   - Please see **MosaiC-All/TestRun/README.md** for detailed instructions on executing the pipeline using docker setup. The command-line will enable download of resources followed by variant calling steps, given the path to each softwares in Mosaic-All.TestRun.config. 
+   - Please see **MosaiC-All/TestRun/README.md** for detailed instructions on executing the pipeline following manual installation of software. The script will download required resources, and execute variant calling steps for the test data, when paths to manually installed software are provided using the Mosaic-All.TestRun.config. 
      
-   - Please see **MosaiC-All/TestRun_docker/README.md** for instructions on executing the pipeline using docker setup. The command-line will enable installation of required softwares and resources followed by    variant calling steps.
+   - Please see **MosaiC-All/TestRun_docker/README.md** for instructions on executing the pipeline using docker setup. The script will download required resources, and docker pull and run each tool for the test data.
 
-### Step 3: Config-file
+
+### Step 3: Detailed instructions for running MosaiC-All
 
 #### 3.1 Specify the directories in config-file
 
-The config-file (MosaiC-ALL/config/Mosaic-All.config) is used to specify locations of required software and resources.. 
+The config-file (MosaiC-ALL/config/Mosaic-All.config) is used to specify locations of required software and resources. 
 Specify the locations of resources, genomebuild etc using the template config file as per included instructions.
 
 #### 3.2 General Resources
