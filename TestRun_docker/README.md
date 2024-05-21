@@ -10,5 +10,4 @@ Execute the following command, which will perform installation of dockers and do
 
 ### 2.Outputs
 
-The expected outputs are stored in $git/TestRun/Output_Expected, which can be used to compare with the given outputs. Also, we provide the M3 variants upon post-processing step (FinalList_M3).
-
+The expected outputs can be found in $git/TestRun/Output_Expected, which can be used to compare with your results. We have also provided the list of M3 variants after the post-processing step (FinalList_M3).
