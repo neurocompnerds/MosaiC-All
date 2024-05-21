@@ -2,10 +2,9 @@
 
 To test the docker-installations and variant calling process, we have provided a test data which was extracted from MosaicForecast publication. 
 
-### 1.Pre-requisites: Make sure to have these softwares installed prior to running the command-line
-- samtools v1.20 (using htslib 1.20)
-- bcftools v1.20 (using htslib 1.20)
-- java (v16.0.1)
+### 1. Prerequisites
+This basic commands/softwares will be checked for its installation or else the script cannot be executed.
+- docker
 - wget
 - gunzip
   
