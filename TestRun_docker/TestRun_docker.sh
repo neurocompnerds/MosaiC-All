@@ -49,7 +49,7 @@ config="hg19"
 outdir="$testrun_dir/OUTPUT"
 resources="$testrun_dir/Resources"
 
-########################################################################################### PRE-CHECK #############################################################
+########################################################################################### PRE-CHECK(S) #############################################################
 
 if [ ! -d "${outdir}" ]; then
     mkdir -p ${outdir}
@@ -59,7 +59,7 @@ if [ ! -d "${resources}" ]; then
     mkdir -p ${resources}
 fi
 
-# check if docker is installed or else this will not proceed
+# check if docker, wget and gunzip are installed or else this script will not proceed
 
 if ! command -v docker &> /dev/null
 then
@@ -67,6 +67,22 @@ then
 else
     echo "Docker is installed, thus we can proceed with next part of the script"
     docker --version
+fi
+
+if ! command -v wget &> /dev/null
+then
+    echo "wget is not found, thus resources required cannot be downloaded eventually failing the script"
+else
+    echo "wget is installed, thus we can proceed with the next part of the script"
+    wget --version
+fi
+
+if ! command -v gunzip &> /dev/null
+then
+    echo "gunzip is not found, thus downloaded files cannot be uncompressed"
+else
+    echo "gunzip is installed, thus we can proceed with the next part of the script"
+    gunzip --version
 fi
 
 # check and download samtools and bcftools modules 
