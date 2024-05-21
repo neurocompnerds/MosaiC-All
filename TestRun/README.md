@@ -1,8 +1,8 @@
-## Demo using a test data (./MosaiC-All/TestRun/)
+## Demo using test data (./MosaiC-All/TestRun/)
 
-To test the variant calling process using manual installation of softwares, we have provided a test data which was extracted from MosaicForecast publication and following instructions
+To test the variant calling process following manual installation of software, we have provided test data extracted from the MosaicForecast publication.
 
-### 1.Pre-requisite
+### 1.Pre-requisites
 
 Packages should be installed according to developer instructions. You can find these, along with documentation for each tool at:
 
@@ -12,17 +12,15 @@ Packages should be installed according to developer instructions. You can find t
 
 ### 2.Config
 
-Specify the directories in which the MosaiC-All git and variant calling tools softwares were downloaded as well as where log_files should be stored in ./MosaiC-All/config/Mosaic-All.TestRun.config.
+Specify the directories in which the MosaiC-All git and variant calling tools were downloaded, as well as where log_files should be stored in ./MosaiC-All/config/Mosaic-All.TestRun.config.
 
 ### 3.Command
 
-Execute the following command, which will download required resources, perform variant calling and store the outputs in the $GIT/TestRun/OUTPUT
-
-git=/path/to/MosaiC-All
+Execute the following command, which will download required resources, perform variant calling and store the outputs in the $git/TestRun/OUTPUT where git=/path/to/MosaiC-All
 
 ```$git/TestRun/TestRun_manual.sh -d $git -s $git/TestRun/SampleID_Test -c $git/config/Mosaic-All.TestRun.config -o $git/TestRun/OUTPUT```
 
 ### 4.Outputs
 
-The expected outputs are stored in $gitTestRun/Output_Expected, which can be used to compare with the given outputs. Also, we provide the M3 variants upon post-processing step (FinalList_M3).
+The expected outputs can be found in $gitTestRun/Output_Expected, which can be used to compare with your results. We have also provided the list of M3 variants after the post-processing step (FinalList_M3).
 
