@@ -28,8 +28,7 @@ We have provided toy data (from https://github.com/parklab/MosaicForecast/tree/m
 
    - Please see **MosaiC-All/TestRun/README.md** for detailed instructions on executing the pipeline following manual installation of software. The script will download required resources, and execute variant calling steps for the test data, when paths to manually installed software are provided using the Mosaic-All.TestRun.config. 
      
-   - Please see **MosaiC-All/TestRun_docker/README.md** for instructions on executing the pipeline using docker setup. The script will download required resources, and docker pull and run each tool for the test data.
-
+   - Please see **MosaiC-All/TestRun_docker/README.md** for instructions on executing the pipeline using docker setup. The script will download the required docker images and resources and run each of the tools for the test data.
 
 ### Step 3: Detailed instructions for running MosaiC-All
 
