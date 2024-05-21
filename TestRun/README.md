@@ -22,5 +22,5 @@ Execute the following command, which will download required resources, perform v
 
 ### 4.Outputs
 
-The expected outputs can be found in $gitTestRun/Output_Expected, which can be used to compare with your results. We have also provided the list of M3 variants after the post-processing step (FinalList_M3).
+The expected outputs can be found in $git/TestRun/Output_Expected, which can be used to compare with your results. We have also provided the list of M3 variants after the post-processing step (FinalList_M3).
 
