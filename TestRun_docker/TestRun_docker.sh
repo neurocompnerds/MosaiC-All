@@ -57,6 +57,34 @@ if [ ! -d "${resources}" ]; then
     mkdir -p ${resources}
 fi
 
+# check and download samtools and bcftools modules 
+
+if ! command -v samtools &> /dev/null
+then
+    echo "Samtools not found. Downloading and installing..."
+    wget "https://github.com/samtools/samtools/releases/download/1.9/samtools-1.9.tar.bz2" -P $resources
+    tar -vxjf $resources/samtools-1.9.tar.bz2
+    cd $resources/samtools-1.9
+    make
+    echo "Samtools has been installed."
+else
+    echo "Samtools is already installed."
+    samtools --version
+fi
+
+if ! command -v bcftools &> /dev/null
+then
+    echo "BCFtools not found. Downloading and installing..."
+    wget "https://github.com/samtools/bcftools/releases/download/1.9/bcftools-1.9.tar.bz2" -P $resources
+    tar -vxjf $resources/bcftools-1.9.tar.bz2
+    cd $resources/bcftools-1.9
+    make
+    echo "BCFtools has been installed."
+else
+    echo "BCFtools is already installed."
+    bcftools --version
+fi
+
 # download, extract and create index for reference genome
 wget "https://storage.googleapis.com/genomics-public-data/references/hs37d5/hs37d5.fa.gz" -P "$resources"
 
@@ -93,7 +121,7 @@ docker run -it --rm \
   rborgesm/mosaichunter:1.0 \
   /bin/bash -c "
   MHDIR=/usr/MosaicHunter
-  java -Xmx4G -jar \$MHDIR/build/mosaichunter.jar \
+  /usr/local/openjdk-8/bin/java -Xmx4G -jar \$MHDIR/build/mosaichunter.jar \
     -C \$MHDIR/conf/exome_parameters.properties \
     -P reference_file=/mnt/testrun_docker/Resources/hs37d5.fa \
     -P input_file=/mnt/testrun_docker/BAM/$proband_bam \
@@ -115,7 +143,7 @@ docker run -it --rm \
   rborgesm/mosaichunter:1.0 \
   /bin/bash -c "
   MHDIR=/usr/MosaicHunter
-  java -Xmx4G -jar \$MHDIR/build/mosaichunter.jar \
+  /usr/local/openjdk-8/bin/java -Xmx4G -jar \$MHDIR/build/mosaichunter.jar \
     -C \$MHDIR/conf/exome.properties \
     -P reference_file=/mnt/testrun_docker/Resources/hs37d5.fa \
     -P input_file=/mnt/testrun_docker/BAM/$proband_bam \
@@ -144,7 +172,7 @@ cat $outdir/$proband_id/stdout_*.log >> "$outdir/$proband_id.MH.stdout.log"
 pon="Mutect2-exome-panel.vcf"
 germline_resources="af-only-gnomad.raw.sites.vcf"
 
-# Download resources fir Mutect2
+# Download resources for Mutect2
 
 wget https://storage.googleapis.com/gatk-best-practices/somatic-b37/Mutect2-exome-panel.vcf -P $resources
 wget https://storage.googleapis.com/gatk-best-practices/somatic-b37/Mutect2-exome-panel.vcf.idx -P $resources
@@ -154,7 +182,7 @@ wget https://storage.googleapis.com/gatk-best-practices/somatic-b37/af-only-gnom
 # Pull Docker image
 docker image pull broadinstitute/gatk:4.4.0.0 || { echo "Failed to pull Docker image."; exit 1; }
 
-#create dict
+# create dict for hs37dH.fa
 docker run -it --rm \
   -v "$testrun_dir:/mnt/testrun_docker" \
   broadinstitute/gatk:4.4.0.0 \
