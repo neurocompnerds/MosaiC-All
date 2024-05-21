@@ -49,6 +49,8 @@ config="hg19"
 outdir="$testrun_dir/OUTPUT"
 resources="$testrun_dir/Resources"
 
+########################################################################################### PRE-CHECK #############################################################
+
 if [ ! -d "${outdir}" ]; then
     mkdir -p ${outdir}
 fi
@@ -57,14 +59,24 @@ if [ ! -d "${resources}" ]; then
     mkdir -p ${resources}
 fi
 
+# check if docker is installed or else this will not proceed
+
+if ! command -v docker &> /dev/null
+then
+    echo "docker is not found, thus this script will not work"
+else
+    echo "Docker is installed, thus we can proceed with next part of the script"
+    docker --version
+fi
+
 # check and download samtools and bcftools modules 
 
 if ! command -v samtools &> /dev/null
 then
     echo "Samtools not found. Downloading and installing..."
-    wget "https://github.com/samtools/samtools/releases/download/1.9/samtools-1.9.tar.bz2" -P $resources
-    tar -vxjf $resources/samtools-1.9.tar.bz2
-    cd $resources/samtools-1.9
+    wget "https://github.com/samtools/samtools/releases/download/1.9/samtools-1.9.tar.bz2" -P /usr/bin
+    tar -vxjf /usr/bin/samtools-1.9.tar.bz2
+    cd /usr/bin/samtools-1.9
     make
     echo "Samtools has been installed."
 else
@@ -75,9 +87,9 @@ fi
 if ! command -v bcftools &> /dev/null
 then
     echo "BCFtools not found. Downloading and installing..."
-    wget "https://github.com/samtools/bcftools/releases/download/1.9/bcftools-1.9.tar.bz2" -P $resources
-    tar -vxjf $resources/bcftools-1.9.tar.bz2
-    cd $resources/bcftools-1.9
+    wget "https://github.com/samtools/bcftools/releases/download/1.9/bcftools-1.9.tar.bz2" -P /usr/bin
+    tar -vxjf /usr/bin/bcftools-1.9.tar.bz2
+    cd /usr/bin/bcftools-1.9
     make
     echo "BCFtools has been installed."
 else
