@@ -91,7 +91,7 @@ for SAMPLEID in "${SAMPLEID[@]}"; do
 
     #Defining variables from each row
 	BAMDIR=$(awk '{print $1}' <<< "$SAMPLEID ")
-    ProbandID=$(awk '{print $2}' <<< "$SAMPLEID ")
+   	ProbandID=$(awk '{print $2}' <<< "$SAMPLEID ")
    	Gender=$(awk '{print $3}' <<< "$SAMPLEID ")
    	MotherID=$(awk '{print $4}' <<< "$SAMPLEID ")
    	FatherID=$(awk '{print $5}' <<< "$SAMPLEID ")
