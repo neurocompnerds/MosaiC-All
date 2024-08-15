@@ -12,7 +12,7 @@ Packages should be installed according to developer instructions prior to execut
 
 1. MosaicHunter: https://github.com/zzhang526/MosaicHunter<br>
 2. MosaicForecast: https://github.com/parklab/MosaicForecast<br>
-3. GATK: https://github.com/broadinstitute/gatk/releases
+3. GATK: https://github.com/broadinstitute/gatk/releases<br>
 
 #### 1.2 Docker setup
 
@@ -99,7 +99,6 @@ Aims:
 
 The script MosaiC-ALL/postprocessing/M3pipeline.R is an example script for performing these filtering steps in R. 
 
-
 ### Step 6: Analysis for parental gonosomal mosaicism (pGoM)
 
 Aims: 
@@ -114,7 +113,7 @@ Command:
 
 Requirements:
 
-1. input directory (where to find the family.vcf).
+1. input directory (where to find the family.vcf)
 
 2. sampleID list (one header row and then tab-delimited columns \$BAMdir,\$ProbandID,\$Gender,\$Mother,\$Father).
    
